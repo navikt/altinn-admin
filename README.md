@@ -21,6 +21,6 @@ Application for adminstration of altinn in the role as a serviceowner.
 
 ## Contact and inquiries
 
-Code/project related questions can be sent to `tullball@nav.no`
+Code/project related questions can be sent to `nav.altinn.lokalforvaltning@nav.no`
 
 We can also be reached on Slack in `#team_altinn_difi`
