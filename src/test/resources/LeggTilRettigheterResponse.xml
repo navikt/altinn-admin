@@ -1,0 +1,15 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+    <s:Body>
+        <AddRightsBasicResponse xmlns="http://www.altinn.no/services/Register/SRR/2015/06">
+            <AddRightsBasicResult xmlns:a="http://schemas.altinn.no/services/Register/SRR/2015/06" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+                <a:AddRightResponse>
+                    <a:Condition>ALLOWEDREDIRECTDOMAIN:*.TULL.ALTINN.NO</a:Condition>
+                    <a:Reportee>958995369</a:Reportee>
+                    <a:Right>Read</a:Right>
+                    <a:ValidTo>2020-12-03T00:00:00</a:ValidTo>
+                    <a:OperationResult>Ok</a:OperationResult>
+                </a:AddRightResponse>
+            </AddRightsBasicResult>
+        </AddRightsBasicResponse>
+    </s:Body>
+</s:Envelope>

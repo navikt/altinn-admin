@@ -1,0 +1,14 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+    <s:Body>
+        <DeleteRightsBasicResponse xmlns="http://www.altinn.no/services/Register/SRR/2015/06">
+            <DeleteRightsBasicResult xmlns:a="http://schemas.altinn.no/services/Register/SRR/2015/06" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+                <a:DeleteRightResponse>
+                    <a:Condition>ALLOWEDREDIRECTDOMAIN:*T.STOREBRAND.NO;*TS.STOREBRAND.NO</a:Condition>
+                    <a:Reportee>958995369</a:Reportee>
+                    <a:Right>Read</a:Right>
+                    <a:OperationResult>Ok</a:OperationResult>
+                </a:DeleteRightResponse>
+            </DeleteRightsBasicResult>
+        </DeleteRightsBasicResponse>
+    </s:Body>
+</s:Envelope>

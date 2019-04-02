@@ -1,0 +1,44 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: altinn-admin
+  namespace: default
+  labels:
+    team: alf
+spec:
+  image: "repo.adeo.no:5443/alf/altinn-admin:@@VERSION@@"
+  team: alf
+  replicas:
+    min: 1
+    max: 1
+  port: 8080
+  liveness:
+    path: /internal/is_alive
+    initialDelay: 10
+    periodSeconds: 5
+    failureThreshold: 10
+  readiness:
+    path: /internal/is_ready
+    initialDelay: 10
+    periodSeconds: 5
+    failureThreshold: 10
+  prometheus:
+    enabled: true
+    path: /internal/prometheus
+  istio:
+    enabled: false
+  ingress:
+    disabled: false
+  vault:
+    enabled: true
+    paths:
+      - kvPath: /kv/preprod/fss/altinn-admin/default
+        mountPath: /var/run/secrets/nais.io/vault
+  webproxy: true
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 100m
+      memory: 256Mi
