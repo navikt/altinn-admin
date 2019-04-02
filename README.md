@@ -1,8 +1,8 @@
-# altinn-srr
+# altinn-admin
 
 [![Build Status](https://travis-ci.com/navikt/altinn-admin.svg?branch=master)](https://travis-ci.com/navikt/altinn-admin)
 
-Application for fetching control information from banks for audits on behalf of NAV Kontroll.
+Application for adminstration of altinn in the role as a serviceowner.
 
 ## Getting started
 
