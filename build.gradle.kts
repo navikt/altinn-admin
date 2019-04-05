@@ -5,7 +5,7 @@ import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "no.nav"
-version = "1.0.0-SNAPSHOT"
+version = "0.8.0-SNAPSHOT"
 
 val ktorVersion = "1.1.2"
 val jacksonVersion = "2.9.8"

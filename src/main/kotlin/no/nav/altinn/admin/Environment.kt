@@ -1,6 +1,5 @@
 package no.nav.altinn.admin
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.natpryce.konfig.ConfigurationProperties
 import com.natpryce.konfig.ConfigurationProperties.Companion.systemProperties
 import com.natpryce.konfig.EnvironmentVariables
@@ -8,16 +7,9 @@ import com.natpryce.konfig.Key
 import com.natpryce.konfig.intType
 import com.natpryce.konfig.overriding
 import com.natpryce.konfig.stringType
-import com.nimbusds.jose.jwk.gen.RSAKeyGenerator
 import no.altinn.schemas.services.register.srr._2015._06.*
-import no.nav.altinn.admin.common.decodeBase64
-import no.nav.altinn.admin.common.objectMapper
 import no.nav.altinn.admin.common.xmlMapper
 import java.io.File
-import java.security.KeyPair
-import java.security.KeyStore
-import java.security.PrivateKey
-import java.security.cert.X509Certificate
 
 private const val vaultApplicationPropertiesPath = "/var/run/secrets/nais.io/vault/application.properties"
 
@@ -34,14 +26,12 @@ private val config = if (System.getenv("APPLICATION_PROFILE") == "remote") {
 
 data class Environment(
     val stsUrl: String = config[Key("sts.url", stringType)],
-    val virksertPath: String = config[Key("virksomhetssertifikat.path", stringType)],
 
     val altinn: Altinn = Altinn(),
     val application: Application = Application(),
     val idPorten: IdPorten = IdPorten(),
     val jwt: Jwt = Jwt(),
     val kar: Kar = Kar(),
-    val pdfGen: PdfGen = PdfGen(),
     val smp: Smp = Smp(),
     val mock: Mock = Mock()
 
@@ -99,35 +89,9 @@ data class Environment(
         val relationshipsApiKey: String = config[Key("kar.relationships.apikey", stringType)]
     )
 
-    data class PdfGen(
-        val kontrollforesporsel: String = config[Key("pdfgen.kontrollforesporsel.url", stringType)]
-    )
-
     data class Smp(
         val url: String = config[Key("smp.url", stringType)],
         val apiKey: String = config[Key("smp.apikey", stringType)]
     )
 }
 
-private data class Virksomhetssertifikat(val base64: String, val alias: String, val password: String)
-
-internal fun Environment.getKeyPairAndCertificate(): Pair<KeyPair, ByteArray> =
-    if (application.devProfile) {
-        RSAKeyGenerator(2048).generate().toKeyPair() to "localprofile".toByteArray()
-    } else {
-        val virksomhetssertifikat = objectMapper.readValue<Virksomhetssertifikat>(
-            File(virksertPath).readText(Charsets.UTF_8)
-        )
-        KeyStore.getInstance("PKCS12").let { keyStore ->
-            keyStore.load(
-                decodeBase64(virksomhetssertifikat.base64).inputStream(),
-                virksomhetssertifikat.password.toCharArray()
-            )
-            val cert = keyStore.getCertificate(virksomhetssertifikat.alias) as X509Certificate
-
-            KeyPair(
-                cert.publicKey,
-                keyStore.getKey(virksomhetssertifikat.alias, virksomhetssertifikat.password.toCharArray()) as PrivateKey
-            ) to cert.encoded
-        }
-    }

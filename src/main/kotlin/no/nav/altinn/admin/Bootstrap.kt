@@ -75,7 +75,6 @@ fun bootstrap(applicationState: ApplicationState, environment: Environment) {
 }
 
 fun Application.mainModule(environment: Environment, applicationState: ApplicationState) {
-    val (keyPair, certificate) = environment.getKeyPairAndCertificate()
     val jwkProvider = JwkProviderBuilder(URL(environment.jwt.jwksUri))
             .cached(10, 24, TimeUnit.HOURS)
             .rateLimited(10, 1, TimeUnit.MINUTES)

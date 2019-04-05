@@ -17,7 +17,7 @@
         <syslogConfig class="org.productivity.java.syslog4j.impl.net.tcp.TCPNetSyslogConfig">
             <host>audit.nais</host>
             <port>6514</port>
-            <ident>dsop-kontroll</ident>
+            <ident>altinn-admin</ident>
             <maxMessageLength>128000</maxMessageLength>
         </syslogConfig>
     </appender>
