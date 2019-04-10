@@ -29,10 +29,7 @@ data class Environment(
 
     val altinn: Altinn = Altinn(),
     val application: Application = Application(),
-    val idPorten: IdPorten = IdPorten(),
     val jwt: Jwt = Jwt(),
-    val kar: Kar = Kar(),
-    val smp: Smp = Smp(),
     val mock: Mock = Mock()
 
 ) {
@@ -68,15 +65,6 @@ data class Environment(
         val password: String = config[Key("serviceuser.password", stringType)]
     )
 
-    data class IdPorten(
-        val configUrl: String = config[Key("idporten.config.url", stringType)],
-        val configApiKey: String = config[Key("idporten.config.apikey", stringType)],
-        val tokenUrl: String = config[Key("idporten.token.url", stringType)],
-        val tokenApiKey: String = config[Key("idporten.token.apikey", stringType)],
-        val clientId: String = config[Key("idporten.clientid", stringType)],
-        val expirySeconds: Int = config[Key("idporten.expiryseconds", intType)],
-        val scope: String = config[Key("idporten.scope", stringType)]
-    )
 
     data class Jwt(
         val audience: String = config[Key("jwt.audience", stringType)],
@@ -84,14 +72,5 @@ data class Environment(
         val jwksUri: String = config[Key("jwt.jwks.uri", stringType)]
     )
 
-    data class Kar(
-        val relationshipsUrl: String = config[Key("kar.relationships.url", stringType)],
-        val relationshipsApiKey: String = config[Key("kar.relationships.apikey", stringType)]
-    )
-
-    data class Smp(
-        val url: String = config[Key("smp.url", stringType)],
-        val apiKey: String = config[Key("smp.apikey", stringType)]
-    )
 }
 

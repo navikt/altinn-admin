@@ -23,12 +23,6 @@ fun Routing.api(
             authenticate {
                 altinnsrrservice(altinnSrrService)
             }
-
-            // TODO: remove
-//            get("token") {
-//                val accessToken = idPortenService.requestToken()
-//                call.respond(accessToken)
-//            }
         }
     }
 }
