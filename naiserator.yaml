@@ -2,7 +2,7 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: altinn-admin
-  namespace: default
+  namespace: {{NAMESPACE}}
   labels:
     team: alf
 spec:
@@ -27,12 +27,12 @@ spec:
     path: /internal/prometheus
   istio:
     enabled: false
-  ingress:
-    disabled: false
+  ingresses:
+    - {{INGRESS_URL}}
   vault:
     enabled: true
     paths:
-      - kvPath: /kv/preprod/fss/altinn-admin/default
+      - kvPath: {{TEST_VAULT_PATH}}
         mountPath: /var/run/secrets/nais.io/vault
   webproxy: true
   resources:
