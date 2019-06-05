@@ -11,12 +11,12 @@ import no.altinn.schemas.services.register.srr._2015._06.*
 import no.nav.altinn.admin.common.xmlMapper
 import java.io.File
 
-private const val vaultApplicationPropertiesPath = "/var/run/secrets/nais.io/vault/application.properties"
+//private const val vaultApplicationPropertiesPath = "/var/run/secrets/nais.io/vault/application.properties"
 
 private val config = if (System.getenv("APPLICATION_PROFILE") == "remote") {
     systemProperties() overriding
         EnvironmentVariables() overriding
-        ConfigurationProperties.fromFile(File(vaultApplicationPropertiesPath)) overriding
+        //ConfigurationProperties.fromFile(File(vaultApplicationPropertiesPath)) overriding
         ConfigurationProperties.fromResource("application.properties")
 } else {
     systemProperties() overriding
