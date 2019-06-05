@@ -1,11 +1,10 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import no.nils.wsdl2java.Wsdl2JavaTask
-import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "no.nav"
-version = "0.8.0-SNAPSHOT"
+version = "0.8.1-SNAPSHOT"
 
 val ktorVersion = "1.1.2"
 val jacksonVersion = "2.9.8"
@@ -42,7 +41,7 @@ plugins {
     java
     kotlin("jvm") version "1.3.20"
     id("no.nils.wsdl2java") version "0.10"
-    // id("org.jmailen.kotlinter") version "1.20.1"
+    id("org.jmailen.kotlinter") version "1.20.1"
     id("com.github.ben-manes.versions") version "0.20.0"
     id("org.flywaydb.flyway") version "5.2.4"
     id("com.github.johnrengelman.shadow") version "4.0.4"
