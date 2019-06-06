@@ -6,10 +6,8 @@ import io.ktor.application.install
 import io.ktor.auth.Authentication
 import io.ktor.auth.UserIdPrincipal
 import io.ktor.auth.basic
-import io.ktor.client.utils.CacheControl
 import io.ktor.features.*
 import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.JacksonConverter
 import io.ktor.locations.Locations
@@ -20,7 +18,6 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import io.ktor.util.error
 import io.prometheus.client.hotspot.DefaultExports
 import mu.KotlinLogging
 import no.nav.altinn.admin.api.*
