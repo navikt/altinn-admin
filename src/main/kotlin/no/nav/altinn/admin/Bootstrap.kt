@@ -5,8 +5,8 @@ import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
-import io.ktor.auth.jwt.JWTPrincipal
-import io.ktor.auth.jwt.jwt
+import io.ktor.auth.UserIdPrincipal
+import io.ktor.auth.basic
 import io.ktor.client.utils.CacheControl
 import io.ktor.features.*
 import io.ktor.http.ContentType
@@ -28,6 +28,7 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Information
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Swagger
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.SwaggerUi
 import no.nav.altinn.admin.common.*
+import no.nav.altinn.admin.ldap.LDAPAuthenticate
 import no.nav.altinn.admin.service.srr.AltinnSRRService
 import no.nav.altinn.admin.ws.*
 import org.slf4j.event.Level
@@ -92,6 +93,22 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     install(ContentNegotiation) {
         register(ContentType.Application.Json, JacksonConverter(objectMapper))
     }
+
+    install(Authentication) {
+        basic(name = AUTHENTICATION_BASIC) {
+            realm = "kafka-adminrest"
+            validate { credentials ->
+                LDAPAuthenticate(Environment()).use { ldap ->
+                    if (ldap.canUserAuthenticate(credentials.name, credentials.password))
+                        UserIdPrincipal(credentials.name)
+                    else
+                        null
+                }
+            }
+        }
+    }
+
+    /*
     install(Authentication) {
         jwt {
             skipWhen { environment.application.devProfile }
@@ -118,6 +135,8 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
             }
         }
     }
+
+     */
 
     install(DefaultHeaders) {
         header(HttpHeaders.CacheControl, CacheControl.NO_CACHE)
