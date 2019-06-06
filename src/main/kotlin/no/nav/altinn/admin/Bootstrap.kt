@@ -96,7 +96,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
 
     install(Authentication) {
         basic(name = AUTHENTICATION_BASIC) {
-            realm = "kafka-adminrest"
+            realm = "altinn-admin"
             validate { credentials ->
                 LDAPAuthenticate(Environment()).use { ldap ->
                     if (ldap.canUserAuthenticate(credentials.name, credentials.password))
