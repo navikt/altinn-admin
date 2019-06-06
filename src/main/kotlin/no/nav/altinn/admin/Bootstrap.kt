@@ -12,6 +12,7 @@ import io.ktor.features.*
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.jackson.JacksonConverter
+import io.ktor.locations.Locations
 import io.ktor.request.path
 import io.ktor.response.respond
 import io.ktor.response.respondRedirect
@@ -130,6 +131,8 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         verify { callId: String -> callId.isNotEmpty() }
         header(HttpHeaders.XCorrelationId)
     }
+
+    install(Locations)
 
     val swaggerUI = SwaggerUi()
 
