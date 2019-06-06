@@ -18,6 +18,7 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.util.error
 import io.prometheus.client.hotspot.DefaultExports
 import mu.KotlinLogging
 import no.nav.altinn.admin.api.*
@@ -92,7 +93,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     // install(XForwardedHeadersSupport) - is this needed, and supported in reverse proxy in matter?
     install(StatusPages) {
         exception<Throwable> { cause ->
-            environment.log.error(cause)
+            logger.error(cause)
             call.respond(HttpStatusCode.InternalServerError)
         }
     }
