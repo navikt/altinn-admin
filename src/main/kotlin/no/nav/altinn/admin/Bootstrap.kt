@@ -32,7 +32,6 @@ import no.nav.altinn.admin.ldap.LDAPAuthenticate
 import no.nav.altinn.admin.service.srr.AltinnSRRService
 import no.nav.altinn.admin.ws.*
 import org.slf4j.event.Level
-import java.net.URL
 import java.util.concurrent.TimeUnit
 
 const val AUTHENTICATION_BASIC = "basicAuth"
@@ -51,8 +50,8 @@ val swagger = Swagger(
 
 private val logger = KotlinLogging.logger { }
 
-internal const val JAAS_PLAIN_LOGIN = "org.apache.kafka.common.security.plain.PlainLoginModule"
-internal const val JAAS_REQUIRED = "required"
+// internal const val JAAS_PLAIN_LOGIN = "org.apache.kafka.common.security.plain.PlainLoginModule"
+// internal const val JAAS_REQUIRED = "required"
 internal const val SWAGGER_URL_V1 = "$API_V1/apidocs/index.html?url=swagger.json"
 
 fun main() = bootstrap(ApplicationState(), Environment())
@@ -76,10 +75,12 @@ fun bootstrap(applicationState: ApplicationState, environment: Environment) {
 }
 
 fun Application.mainModule(environment: Environment, applicationState: ApplicationState) {
-    val jwkProvider = JwkProviderBuilder(URL(environment.jwt.jwksUri))
+    /*val jwkProvider = JwkProviderBuilder(URL(environment.jwt.jwksUri))
             .cached(10, 24, TimeUnit.HOURS)
             .rateLimited(10, 1, TimeUnit.MINUTES)
             .build()
+
+     */
 
     install(StatusPages) {
         notFoundHandler()
@@ -92,20 +93,6 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     }
     install(ContentNegotiation) {
         register(ContentType.Application.Json, JacksonConverter(objectMapper))
-    }
-
-    install(Authentication) {
-        basic(name = AUTHENTICATION_BASIC) {
-            realm = "altinn-admin"
-            validate { credentials ->
-                LDAPAuthenticate(Environment()).use { ldap ->
-                    if (ldap.canUserAuthenticate(credentials.name, credentials.password))
-                        UserIdPrincipal(credentials.name)
-                    else
-                        null
-                }
-            }
-        }
     }
 
     /*
@@ -149,6 +136,20 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         generate { randomUuid() }
         verify { callId: String -> callId.isNotEmpty() }
         header(HttpHeaders.XCorrelationId)
+    }
+
+    install(Authentication) {
+        basic(name = AUTHENTICATION_BASIC) {
+            realm = "altinn-admin"
+            validate { credentials ->
+                LDAPAuthenticate(environment).use { ldap ->
+                    if (ldap.canUserAuthenticate(credentials.name, credentials.password))
+                        UserIdPrincipal(credentials.name)
+                    else
+                        null
+                }
+            }
+        }
     }
 
     install(Locations)
