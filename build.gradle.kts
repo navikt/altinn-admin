@@ -26,6 +26,7 @@ val bouncycastleVersion = "1.60"
 val postgresVersion = "42.2.5"
 val exposedVersion = "0.12.1"
 val hikariVersion = "3.3.0"
+val swaggerVersion = "3.1.7"
 
 // test dependencies
 val kluentVersion = "1.47"
@@ -105,6 +106,7 @@ dependencies {
         exclude(group = "com.sun.xml.ws", module = "policy")
     }
     implementation("javax.activation:activation:$javaxActivationVersion")
+    implementation("org.webjars:swagger-ui:$swaggerVersion")
 
     runtimeOnly("ch.qos.logback:logback-classic:$logbackVersion")
     runtime("com.papertrailapp:logback-syslog4j:1.0.0")
