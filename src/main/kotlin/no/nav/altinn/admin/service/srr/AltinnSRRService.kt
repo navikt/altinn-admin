@@ -65,7 +65,7 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
     fun getRightsForAllBusinesses(): RightsResponse {
         try {
             val register = env.mock.srrGetResponse ?: iRegisterSRRAgencyExternalBasic.getRightsBasic(altinnUsername, altinnUserPassword,
-                "5252", 1, "")
+                "5252", 1, null)
             logger.info { "REGISTER size ${register.getRightResponse.size}" }
             val result = mutableListOf<RegistryResponse.Register>()
             register.getRightResponse.forEach { it ->
