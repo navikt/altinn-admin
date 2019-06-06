@@ -5,6 +5,8 @@ import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
+import io.ktor.auth.UserIdPrincipal
+import io.ktor.auth.basic
 import io.ktor.auth.jwt.JWTPrincipal
 import io.ktor.auth.jwt.jwt
 import io.ktor.client.utils.CacheControl
@@ -94,7 +96,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     install(Authentication) {
         jwt {
             skipWhen { environment.application.devProfile }
-            realm = "Altinn Admin"
+            realm = "altinn-admin"
             verifier(jwkProvider, environment.jwt.issuer)
             validate { credentials ->
                 logger.info { "Auth: User requested resource '${request.url()}'" }
