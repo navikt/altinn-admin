@@ -1,11 +1,12 @@
 package no.nav.altinn.admin
 
+import com.auth0.jwk.JwkProviderBuilder
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
-import io.ktor.auth.UserIdPrincipal
-import io.ktor.auth.basic
+import io.ktor.auth.jwt.JWTPrincipal
+import io.ktor.auth.jwt.jwt
 import io.ktor.features.*
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
@@ -27,10 +28,10 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Information
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Swagger
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.SwaggerUi
 import no.nav.altinn.admin.common.*
-import no.nav.altinn.admin.ldap.LDAPAuthenticate
 import no.nav.altinn.admin.service.srr.AltinnSRRService
 import no.nav.altinn.admin.ws.*
 import org.slf4j.event.Level
+import java.net.URL
 import java.util.concurrent.TimeUnit
 
 const val AUTHENTICATION_BASIC = "basicAuth"
@@ -74,12 +75,11 @@ fun bootstrap(applicationState: ApplicationState, environment: Environment) {
 }
 
 fun Application.mainModule(environment: Environment, applicationState: ApplicationState) {
-    /*val jwkProvider = JwkProviderBuilder(URL(environment.jwt.jwksUri))
+    val jwkProvider = JwkProviderBuilder(URL(environment.jwt.jwksUri))
             .cached(10, 24, TimeUnit.HOURS)
             .rateLimited(10, 1, TimeUnit.MINUTES)
             .build()
 
-     */
     logger.info { "Starting server" }
 
     install(DefaultHeaders)
@@ -97,25 +97,6 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
             call.respond(HttpStatusCode.InternalServerError)
         }
     }
-    install(Authentication) {
-        basic(name = AUTHENTICATION_BASIC) {
-            realm = "altinn-admin"
-            validate { credentials ->
-                LDAPAuthenticate(environment).use { ldap ->
-                    if (ldap.canUserAuthenticate(credentials.name, credentials.password))
-                        UserIdPrincipal(credentials.name)
-                    else
-                        null
-                }
-            }
-        }
-    }
-    install(ContentNegotiation) {
-        register(ContentType.Application.Json, JacksonConverter(objectMapper))
-    }
-    install(Locations)
-
-    /*
     install(Authentication) {
         jwt {
             skipWhen { environment.application.devProfile }
@@ -142,6 +123,12 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
             }
         }
     }
+    install(ContentNegotiation) {
+        register(ContentType.Application.Json, JacksonConverter(objectMapper))
+    }
+    install(Locations)
+
+    /*
     install(CallId) {
         generate { randomUuid() }
         verify { callId: String -> callId.isNotEmpty() }

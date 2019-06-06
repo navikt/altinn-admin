@@ -32,8 +32,6 @@ val kluentVersion = "1.47"
 val spekVersion = "2.0.0"
 val wiremockVersion = "2.20.0"
 
-val unboundid_version = "4.0.8"
-
 val mainClass = "no.nav.altinn.admin.BootstrapKt"
 
 plugins {
@@ -98,7 +96,6 @@ dependencies {
     compile("org.jetbrains.exposed:exposed:$exposedVersion")
     compile("com.zaxxer:HikariCP:$hikariVersion")
 
-    implementation("com.unboundid:unboundid-ldapsdk:$unboundid_version")
     implementation("org.apache.cxf:cxf-rt-frontend-jaxws:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-transports-http:$cxfVersion")
