@@ -24,8 +24,6 @@ val cxfVersion = "3.3.0"
 val bouncycastleVersion = "1.60"
 
 val postgresVersion = "42.2.5"
-val h2Version = "1.4.197"
-val flywayVersion = "5.2.4"
 val exposedVersion = "0.12.1"
 val hikariVersion = "3.3.0"
 
@@ -43,7 +41,6 @@ plugins {
     id("no.nils.wsdl2java") version "0.10"
     id("org.jmailen.kotlinter") version "1.26.0"
     id("com.github.ben-manes.versions") version "0.20.0"
-    id("org.flywaydb.flyway") version "5.2.4"
     id("com.github.johnrengelman.shadow") version "4.0.4"
     id("org.unbroken-dome.xjc") version "1.4.1"
 }
@@ -94,9 +91,7 @@ dependencies {
     compile("com.natpryce:konfig:$konfigVersion")
     compile("javax.xml.ws:jaxws-api:$jaxwsVersion")
     compile("com.nimbusds:nimbus-jose-jwt:$nimbusJoseVersion")
-    compile("org.flywaydb:flyway-core:$flywayVersion")
     compile("org.postgresql:postgresql:$postgresVersion")
-    compile("com.h2database:h2:$h2Version")
     compile("org.bouncycastle:bcprov-jdk15on:$bouncycastleVersion")
     compile("org.jetbrains.exposed:exposed:$exposedVersion")
     compile("com.zaxxer:HikariCP:$hikariVersion")

@@ -39,13 +39,13 @@ pipeline {
         stage('deploy to preprod') {
             steps {
                 githubDeploy action: 'create'
-                deployApp action: 'kubectlDeploy', cluster: 'dev-fss'
+                deployApp action: 'kubectlDeploy', cluster: 'dev-fss', placeholderFile: "config-preprod.env"
             }
         }
         stage('deploy to production') {
             when { environment name: 'DEPLOY_TO', value: 'production' }
             steps {
-                deployApp action: 'kubectlDeploy', cluster: 'prod-fss'
+                deployApp action: 'kubectlDeploy', cluster: 'prod-fss', placeholderFile: "config-prod.env"
                 githubStatus action: 'tagRelease'
             }
         }
