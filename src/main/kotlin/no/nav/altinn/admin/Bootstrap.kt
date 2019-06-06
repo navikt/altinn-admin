@@ -1,6 +1,5 @@
 package no.nav.altinn.admin
 
-import com.auth0.jwk.JwkProviderBuilder
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
