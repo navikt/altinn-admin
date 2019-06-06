@@ -23,7 +23,7 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
     private val env = env
 
     fun addRights(reportee: String, redirectDomain: String, type: RegisterSRRRightsType): RightsResponse {
-        logger.info { "Adding $type rights for business number $reportee with redirect url $redirectDomain."}
+        logger.info { "Adding $type rights for business number $reportee with redirect url $redirectDomain." }
         try {
             val response = env.mock.srrAddResponse ?: iRegisterSRRAgencyExternalBasic.addRightsBasic(altinnUsername, altinnUserPassword, "5252", 1,
                     createAddRightsList(reportee, redirectDomain, type))
@@ -43,16 +43,14 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
         return RightsResponse("Failed", "Unknown error occurred when adding $type rights, check log")
     }
 
-    fun deleteRights(reportee:String, redirectDomain:String, type: RegisterSRRRightsType) : RightsResponse {
-        logger.info { "Removing read rights for business number $reportee with redirect url $redirectDomain."}
+    fun deleteRights(reportee: String, redirectDomain: String, type: RegisterSRRRightsType): RightsResponse {
+        logger.info { "Removing read rights for business number $reportee with redirect url $redirectDomain." }
         try {
             val response = env.mock.srrDeleteResponse ?: iRegisterSRRAgencyExternalBasic.deleteRightsBasic(altinnUsername, altinnUserPassword, "5252", 1,
                     createDeleteRightsList(reportee, redirectDomain, type))
             return createDeleteResponseMessage(response, type, reportee)
-        } catch (e : IRegisterSRRAgencyExternalBasicDeleteRightsBasicAltinnFaultFaultFaultMessage)
-        {
-            logger.error {
-                "IRegisterSRRAgencyExternalBasic.deleteRightsBasic feilet \n" +
+        } catch (e: IRegisterSRRAgencyExternalBasicDeleteRightsBasicAltinnFaultFaultFaultMessage) {
+            logger.error { "IRegisterSRRAgencyExternalBasic.deleteRightsBasic feilet \n" +
                         "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
                         "\n ExtendedErrorMessage  ${e.faultInfo.altinnExtendedErrorMessage}" +
                         "\n LocalizedErrorMessage  ${e.faultInfo.altinnLocalizedErrorMessage}" +
@@ -60,25 +58,21 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
                         "\n UserGuid  ${e.faultInfo.userGuid}" +
                         "\n UserId  ${e.faultInfo.userId}"
             }
-
         }
         return RightsResponse("Failed", "Unknown error occurred when removing $type rights, check log")
     }
 
-    fun getRightsForAllBusinesses() : RightsResponse {
+    fun getRightsForAllBusinesses(): RightsResponse {
         try {
             val register = env.mock.srrGetResponse ?: iRegisterSRRAgencyExternalBasic.getRightsBasic(altinnUsername, altinnUserPassword,
-                           "5252", 1, "")
+                "5252", 1, "")
             val result = mutableListOf<RegistryResponse.Register>()
             register.getRightResponse.forEach { it ->
                 result.add(RegistryResponse.Register(it.reportee, it.condition, it.right.toString(), it.validTo.toString()))
             }
-
             return RightsResponse("Ok", RegistryResponse(result).toString())
-
         } catch (e: IRegisterSRRAgencyExternalBasicGetRightsBasicAltinnFaultFaultFaultMessage) {
-            logger.error {
-                "IRegisterSRRAgencyExternalBasic.getRightsBasic feilet \n" +
+            logger.error { "IRegisterSRRAgencyExternalBasic.getRightsBasic feilet \n" +
                         "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
                         "\n ExtendedErrorMessage  ${e.faultInfo.altinnExtendedErrorMessage}" +
                         "\n LocalizedErrorMessage  ${e.faultInfo.altinnLocalizedErrorMessage}" +
@@ -87,11 +81,10 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
                         "\n UserId  ${e.faultInfo.userId}"
             }
         }
-
         return RightsResponse("Failed", "Unknown error occurred when getting rights registry, check log")
     }
 
-    fun getRightsForABusiness(reportee: String) : RightsResponse {
+    fun getRightsForABusiness(reportee: String): RightsResponse {
         try {
             val register = env.mock.srrGetResponse ?: iRegisterSRRAgencyExternalBasic.getRightsBasic(altinnUsername, altinnUserPassword,
                     "5252", 1, reportee)
@@ -101,7 +94,6 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
             }
 
             return RightsResponse("Ok", RegistryResponse(result).toString())
-
         } catch (e: IRegisterSRRAgencyExternalBasicGetRightsBasicAltinnFaultFaultFaultMessage) {
             logger.error {
                 "IRegisterSRRAgencyExternalBasic.getRightsBasic feilet \n" +
@@ -117,10 +109,9 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
         return RightsResponse("Failed", "Unknown error occurred when getting rights registry, check log")
     }
 
+    fun createAddRightsList(orgNr: String, domain: String, type: RegisterSRRRightsType): AddRightRequestList {
 
-    fun createAddRightsList(orgNr : String, domain : String, type :RegisterSRRRightsType) : AddRightRequestList {
-
-         return AddRightRequestList( ).apply {
+        return AddRightRequestList().apply {
             addRightRequest.add(
                     AddRightRequest().apply {
                         condition = "ALLOWEDREDIRECTDOMAIN:$domain"
@@ -132,7 +123,7 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
         }
     }
 
-    fun createDeleteRightsList(orgNr : String, domain : String, type : RegisterSRRRightsType) : DeleteRightRequestList {
+    fun createDeleteRightsList(orgNr: String, domain: String, type: RegisterSRRRightsType): DeleteRightRequestList {
 
         return DeleteRightRequestList().apply {
             deleteRightRequest.add(
@@ -145,38 +136,35 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
         }
     }
 
-    fun createAddResponseMessage(response : AddRightResponseList, type : RegisterSRRRightsType, reportee : String) : RightsResponse {
+    fun createAddResponseMessage(response: AddRightResponseList, type: RegisterSRRRightsType, reportee: String): RightsResponse {
         if (response.addRightResponse.size != 1) {
-            logger.error {"Adding $type rights failed for business number $reportee."}
+            logger.error { "Adding $type rights failed for business number $reportee." }
             return RightsResponse("Failed", "Expected only one AddRightsResponse in list, size is " +
                     response.addRightResponse.size)
         }
         val rRespond = response.addRightResponse[0]
         return if (rRespond.operationResult == OperationResult.OK) {
-            logger.info {"Add $type rights for business number $reportee went ok."}
+            logger.info { "Add $type rights for business number $reportee went ok." }
             RightsResponse("Ok", "Ok")
-        }
-        else {
+        } else {
             logger.error { "Failed to add $type rights for business number $reportee, error is ${rRespond.operationResult}." }
             RightsResponse("Failed", "Add operation failed with " + rRespond.operationResult)
         }
     }
 
-    fun createDeleteResponseMessage(response: DeleteRightResponseList, type : RegisterSRRRightsType, reportee : String) : RightsResponse {
+    fun createDeleteResponseMessage(response: DeleteRightResponseList, type: RegisterSRRRightsType, reportee: String): RightsResponse {
         if (response.deleteRightResponse.size != 1) {
-            logger.error {"Removing read rights failed for business number $reportee."}
+            logger.error { "Removing read rights failed for business number $reportee." }
             return RightsResponse("Failed", "Expected only one DeleteRightsResponse in list, size is " +
                     response.deleteRightResponse.size)
         }
         val rRespond = response.deleteRightResponse[0]
         return if (rRespond.operationResult == OperationResult.OK) {
-            logger.info {"Removing rights for business number $reportee went ok."}
+            logger.info { "Removing rights for business number $reportee went ok." }
             RightsResponse("Ok", "Ok")
-        }
-        else {
+        } else {
             logger.error { "Failed to remove read rights for business number $reportee, error is ${rRespond.operationResult}." }
             RightsResponse("Failed", "Remove operation failed with " + rRespond.operationResult)
         }
     }
-
 }

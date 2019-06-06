@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
-import com.fasterxml.jackson.module.kotlin.readValue
 import io.ktor.application.ApplicationCall
 import io.ktor.auth.jwt.JWTPrincipal
 import io.ktor.auth.principal
@@ -16,7 +15,6 @@ import io.ktor.request.ApplicationRequest
 import io.ktor.request.receive
 import io.ktor.request.receiveStream
 import io.ktor.response.respondText
-//import no.nav.dsop.kontroll.service.bank.models.Transactions
 import java.text.SimpleDateFormat
 
 internal fun ApplicationCall.getAuthenticatedUser(): AuthenticatedUser =
@@ -41,7 +39,7 @@ internal suspend fun ApplicationCall.receiveTextUtf8() =
 
 internal fun Long.getDateTimeFormatted(): String = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz").format(this)
 
-//internal inline fun <reified T> String.deserializeJson(): T {
+// internal inline fun <reified T> String.deserializeJson(): T {
 //    try {
 //        return objectMapper.readValue(this)
 //    } catch (e: Exception) {
@@ -55,7 +53,7 @@ internal fun Long.getDateTimeFormatted(): String = SimpleDateFormat("yyyy-MM-dd'
 //            }
 //        }
 //    }
-//}
+// }
 
 internal suspend inline fun <reified T : Any> ApplicationCall.receiveTry() = try {
     receive<T>()

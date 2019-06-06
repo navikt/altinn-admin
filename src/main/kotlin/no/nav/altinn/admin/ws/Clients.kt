@@ -12,7 +12,6 @@ object Clients {
             serviceClazz = IRegisterSRRAgencyExternalBasic::class.java
         )
 
-
     private fun <PORT_TYPE> createServicePort(
         serviceUrl: String,
         serviceClazz: Class<PORT_TYPE>

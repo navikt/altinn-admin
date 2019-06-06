@@ -10,7 +10,6 @@ import org.amshove.kluent.shouldEqual
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
-
 object SelfTestSpek : Spek({
 
     val selfTests = listOf(

@@ -41,7 +41,7 @@ plugins {
     java
     kotlin("jvm") version "1.3.20"
     id("no.nils.wsdl2java") version "0.10"
-    //id("org.jmailen.kotlinter") version "1.26.0"
+    id("org.jmailen.kotlinter") version "1.26.0"
     id("com.github.ben-manes.versions") version "0.20.0"
     id("org.flywaydb.flyway") version "5.2.4"
     id("com.github.johnrengelman.shadow") version "4.0.4"

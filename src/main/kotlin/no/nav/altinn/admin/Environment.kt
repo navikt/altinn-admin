@@ -13,7 +13,7 @@ import java.io.File
 
 private const val vaultApplicationPropertiesPath = "/var/run/secrets/nais.io/vault/test.key"
 
-private val config = if (System.getenv("APPLICATION_PROFILE") == "remote") {
+private val config = if (System.getenv("APPLICATION_PROFILE") != "local") {
     systemProperties() overriding
         EnvironmentVariables() overriding
         ConfigurationProperties.fromFile(File(vaultApplicationPropertiesPath)) overriding
@@ -40,22 +40,18 @@ data class Environment(
         val password: String = config[Key("altinn.password", stringType)]
     )
 
-    data class Mock (
-            private val srrAddXmlResponse : String? = config[Key("mock.ssr.add.response", stringType)],
-            private val srrDeleteXmlResponse : String? = config[Key("mock.ssr.delete.response", stringType)],
-            private val srrGetXmlResponse : String? = config[Key("mock.ssr.get.response", stringType)],
-            val srrAddResponse: AddRightResponseList? = if (srrAddXmlResponse.isNullOrEmpty()) { null }
-                                                        else { AddRightResponseList().apply { addRightResponse.add(
-                                                            xmlMapper.readValue(srrAddXmlResponse, AddRightResponse::class.java))}},
-            val srrDeleteResponse: DeleteRightResponseList? = if (srrDeleteXmlResponse.isNullOrEmpty()) { null }
-            else { DeleteRightResponseList().apply { deleteRightResponse.add(
-                    xmlMapper.readValue(srrDeleteXmlResponse, DeleteRightResponse::class.java))}},
-            val srrGetResponse : GetRightResponseList? = if (srrGetXmlResponse.isNullOrEmpty()) { null }
-            else { GetRightResponseList().apply {  getRightResponse.add(
-                    xmlMapper.readValue(srrGetXmlResponse, GetRightResponse::class.java))}}
-
-            //AddRightResponseList().apply { addRightResponse.add(
-            //        xmlMapper.readValue(config[Key("mock.ssr.add.response", stringType)], AddRightResponse::class.java))}
+    data class Mock(
+        private val srrAddXmlResponse: String? = config[Key("mock.ssr.add.response", stringType)],
+        private val srrDeleteXmlResponse: String? = config[Key("mock.ssr.delete.response", stringType)],
+        private val srrGetXmlResponse: String? = config[Key("mock.ssr.get.response", stringType)],
+        val srrAddResponse: AddRightResponseList? = if (srrAddXmlResponse.isNullOrEmpty()) { null } else { AddRightResponseList().apply { addRightResponse.add(
+                                                        xmlMapper.readValue(srrAddXmlResponse, AddRightResponse::class.java)) } },
+        val srrDeleteResponse: DeleteRightResponseList? = if (srrDeleteXmlResponse.isNullOrEmpty()) { null } else { DeleteRightResponseList().apply { deleteRightResponse.add(
+                xmlMapper.readValue(srrDeleteXmlResponse, DeleteRightResponse::class.java)) } },
+        val srrGetResponse: GetRightResponseList? = if (srrGetXmlResponse.isNullOrEmpty()) { null } else { GetRightResponseList().apply { getRightResponse.add(
+                xmlMapper.readValue(srrGetXmlResponse, GetRightResponse::class.java)) } }
+        // AddRightResponseList().apply { addRightResponse.add(
+        //        xmlMapper.readValue(config[Key("mock.ssr.add.response", stringType)], AddRightResponse::class.java))}
     )
 
     data class Application(
@@ -65,12 +61,9 @@ data class Environment(
         val password: String = config[Key("serviceuser.password", stringType)]
     )
 
-
     data class Jwt(
         val audience: String = config[Key("jwt.audience", stringType)],
         val issuer: String = config[Key("jwt.issuer", stringType)],
         val jwksUri: String = config[Key("jwt.jwks.uri", stringType)]
     )
-
 }
-

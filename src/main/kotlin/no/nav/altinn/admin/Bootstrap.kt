@@ -53,7 +53,6 @@ internal const val JAAS_PLAIN_LOGIN = "org.apache.kafka.common.security.plain.Pl
 internal const val JAAS_REQUIRED = "required"
 internal const val SWAGGER_URL_V1 = "$API_V1/apidocs/index.html?url=swagger.json"
 
-
 fun main() = bootstrap(ApplicationState(), Environment())
 
 fun bootstrap(applicationState: ApplicationState, environment: Environment) {
@@ -79,7 +78,6 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
             .cached(10, 24, TimeUnit.HOURS)
             .rateLimited(10, 1, TimeUnit.MINUTES)
             .build()
-
 
     install(StatusPages) {
         notFoundHandler()
@@ -142,7 +140,6 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         )
     }
 
-
     logger.info { "Installing routes" }
     install(Routing) {
 
@@ -155,14 +152,14 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
             if (fileName == "swagger.json") call.respond(swagger) else swaggerUI.serve(fileName, call)
         }
 
-        api( altinnSrrService = AltinnSRRService(environment) {
+        api(altinnSrrService = AltinnSRRService(environment) {
             Clients.iRegisterSRRAgencyExternalBasic(environment.altinn.altinnAdminUrl).apply {
                 when (environment.application.devProfile) {
                     true -> stsClient.configureFor(this, STS_SAML_POLICY_NO_TRANSPORT_BINDING)
                     false -> stsClient.configureFor(this)
                 }
             }
-        } )
+        })
         nais(readinessCheck = { applicationState.initialized }, livenessCheck = { applicationState.running })
     }
 }

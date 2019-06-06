@@ -14,25 +14,23 @@ import no.altinn.services.register.srr._2015._06.IRegisterSRRAgencyExternalBasic
 
 private val logger = KotlinLogging.logger { }
 
-fun Route.altinnsrrservice (
+fun Route.altinnsrrservice(
     altinnSrrService: AltinnSRRService
 ) {
     route("/altinn/rettighetsregister/hent") {
         get {
-            val orgnr : String? = call.request.queryParameters["orgnr"]
+            val orgnr: String? = call.request.queryParameters["orgnr"]
             try {
                 if (!orgnr.isNullOrBlank() && orgnr.length == 9) {
                     val rightResponse = altinnSrrService.getRightsForABusiness(orgnr)
                     call.respond(HttpStatusCode.OK, rightResponse)
-                }
-                else if (orgnr.isNullOrBlank()) {
+                } else if (orgnr.isNullOrBlank()) {
                     val rightsResponse = altinnSrrService.getRightsForAllBusinesses()
                     call.respond(HttpStatusCode.OK, rightsResponse)
                 } else {
                     call.respond(HttpStatusCode.BadRequest, "Feil virksomhetsnummer $orgnr.")
                 }
-            } catch (e : IRegisterSRRAgencyExternalBasicGetRightsBasicAltinnFaultFaultFaultMessage)
-            {
+            } catch (e: IRegisterSRRAgencyExternalBasicGetRightsBasicAltinnFaultFaultFaultMessage) {
                 logger.error {
                     "IRegisterSRRAgencyExternalBasic.GetRightsBasic feilet \n" +
                             "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
@@ -43,8 +41,7 @@ fun Route.altinnsrrservice (
                             "\n UserId  ${e.faultInfo.userId}"
                 }
                 call.respond(HttpStatusCode.InternalServerError, "IRegisterSRRAgencyExternalBasic.GetRightsBasic feilet")
-
-            } catch (ee : Exception) {
+            } catch (ee: Exception) {
                 logger.error {
                     "IRegisterSRRAgencyExternalBasic.GetRightsBasic feilet  \n" +
                             "\n ErrorMessage  ${ee.message}" +
@@ -66,8 +63,7 @@ fun Route.altinnsrrservice (
                 if (!rightResponse.status.equals("OK", true)) ok = HttpStatusCode.BadRequest
 
                 call.respond(ok, rightResponse)
-            }
-            else {
+            } else {
                 call.respond(HttpStatusCode.BadRequest, "Ikke gyldig virksomhetsnummer")
             }
         }
@@ -84,8 +80,7 @@ fun Route.altinnsrrservice (
                 var ok = HttpStatusCode.OK
                 if (!rightResponse.status.equals("OK", true)) ok = HttpStatusCode.BadRequest
                 call.respond(ok, rightResponse)
-            }
-            else {
+            } else {
                 call.respond(HttpStatusCode.BadRequest, "Ikke gyldig virksomhetsnummer")
             }
         }
