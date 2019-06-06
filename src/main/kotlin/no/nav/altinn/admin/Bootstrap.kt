@@ -10,6 +10,7 @@ import io.ktor.client.utils.CacheControl
 import io.ktor.features.*
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.JacksonConverter
 import io.ktor.locations.Locations
 import io.ktor.request.path
@@ -19,6 +20,7 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.util.error
 import io.prometheus.client.hotspot.DefaultExports
 import mu.KotlinLogging
 import no.nav.altinn.admin.api.*
@@ -80,19 +82,40 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
             .build()
 
      */
+    logger.info { "Starting server" }
 
-    install(StatusPages) {
-        notFoundHandler()
-        exceptionHandler()
-    }
+    install(DefaultHeaders)
+    install(ConditionalHeaders)
+    install(Compression)
+    install(AutoHeadResponse)
     install(CallLogging) {
-        level = Level.DEBUG
+        level = Level.INFO
         filter { call -> call.request.path().startsWith(API_V1) }
-        callIdMdc(MDC_CALL_ID)
+    }
+    // install(XForwardedHeadersSupport) - is this needed, and supported in reverse proxy in matter?
+    install(StatusPages) {
+        exception<Throwable> { cause ->
+            environment.log.error(cause)
+            call.respond(HttpStatusCode.InternalServerError)
+        }
+    }
+    install(Authentication) {
+        basic(name = AUTHENTICATION_BASIC) {
+            realm = "altinn-admin"
+            validate { credentials ->
+                LDAPAuthenticate(environment).use { ldap ->
+                    if (ldap.canUserAuthenticate(credentials.name, credentials.password))
+                        UserIdPrincipal(credentials.name)
+                    else
+                        null
+                }
+            }
+        }
     }
     install(ContentNegotiation) {
         register(ContentType.Application.Json, JacksonConverter(objectMapper))
     }
+    install(Locations)
 
     /*
     install(Authentication) {
@@ -121,38 +144,14 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
             }
         }
     }
-
-     */
-
-    install(DefaultHeaders) {
-        header(HttpHeaders.CacheControl, CacheControl.NO_CACHE)
-    }
-    install(AutoHeadResponse)
-    install(ConditionalHeaders)
-    install(Compression)
-
     install(CallId) {
         generate { randomUuid() }
         verify { callId: String -> callId.isNotEmpty() }
         header(HttpHeaders.XCorrelationId)
     }
 
-    install(Authentication) {
-        basic(name = AUTHENTICATION_BASIC) {
-            realm = "altinn-admin"
-            validate { credentials ->
-                LDAPAuthenticate(environment).use { ldap ->
-                    if (ldap.canUserAuthenticate(credentials.name, credentials.password))
-                        UserIdPrincipal(credentials.name)
-                    else
-                        null
-                }
-            }
-        }
-    }
 
-    install(Locations)
-
+     */
     val swaggerUI = SwaggerUi()
 
     val stsClient by lazy {
