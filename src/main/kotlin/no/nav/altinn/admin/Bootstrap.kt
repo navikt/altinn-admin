@@ -155,6 +155,8 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         get("$API_V1/apidocs") { call.respondRedirect(SWAGGER_URL_V1) }
         get("$API_V1/apidocs/{fileName}") {
             val fileName = call.parameters["fileName"]
+            logger.info { "Filename: $fileName" }
+            logger.info { "call : $call" }
             if (fileName == "swagger.json") call.respond(swagger) else swaggerUI.serve(fileName, call)
         }
 
