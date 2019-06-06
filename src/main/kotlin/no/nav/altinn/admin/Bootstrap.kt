@@ -29,6 +29,7 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Swagger
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.SwaggerUi
 import no.nav.altinn.admin.common.*
 import no.nav.altinn.admin.service.srr.AltinnSRRService
+import no.nav.altinn.admin.service.srr.api
 import no.nav.altinn.admin.ws.*
 import org.slf4j.event.Level
 import java.net.URL

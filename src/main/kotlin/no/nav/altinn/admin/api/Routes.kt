@@ -1,7 +1,6 @@
 package no.nav.altinn.admin.api
 
 import io.ktor.application.call
-import io.ktor.auth.authenticate
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respondText
@@ -11,20 +10,6 @@ import io.ktor.routing.get
 import io.ktor.routing.route
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.exporter.common.TextFormat
-import no.nav.altinn.admin.service.srr.AltinnSRRService
-import no.nav.altinn.admin.service.srr.altinnsrrservice
-
-fun Routing.api(
-    altinnSrrService: AltinnSRRService
-) {
-    route("api") {
-        route("v1") {
-            authenticate {
-                altinnsrrservice(altinnSrrService)
-            }
-        }
-    }
-}
 
 fun Routing.nais(
     readinessCheck: () -> Boolean,
