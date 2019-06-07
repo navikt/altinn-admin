@@ -14,6 +14,7 @@ import no.altinn.services.register.srr._2015._06.IRegisterSRRAgencyExternalBasic
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.BasicAuthSecurity
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.badRequest
+import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.delete
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.get
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ok
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.post
@@ -27,6 +28,7 @@ fun Routing.ssrAPI(altinnSrrService: AltinnSRRService) {
     getRightsList(altinnSrrService)
     getRightsForReportee(altinnSrrService)
     addRightsForReportee(altinnSrrService)
+    deleteRightsForReportee(altinnSrrService)
 }
 
 internal data class AnError(val error: String)
@@ -109,7 +111,7 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService) =
                 .securityAndReponds(BasicAuthSecurity(), ok<AltinnSRRService>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
         ) { _, body ->
             val currentUser = call.principal<UserIdPrincipal>()!!.name
-            val logEntry = "Topic creation request by $currentUser - $body"
+            val logEntry = "Legger til rettighet til virksomhet $currentUser - $body"
             application.environment.log.info(logEntry)
 
             val userExist = true
@@ -145,37 +147,47 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService) =
             call.respond(HttpStatusCode.OK, rightResponse)
         }
 
-//  route("/altinn/rettighetsregister/leggtil") {
-//      post {
-//          val rr = call.receive<RequestRegister>()
-//          if (!rr.organisasjonsnummer.isBlank() && rr.organisasjonsnummer.length == 9) {
-//              val rightResponse = if (rr.rettighet == "write")
-//                      altinnSrrService.addRights(rr.organisasjonsnummer, rr.domene, RegisterSRRRightsType.WRITE)
-//                  else
-//                      altinnSrrService.addRights(rr.organisasjonsnummer, rr.domene, RegisterSRRRightsType.READ)
-//              var ok = HttpStatusCode.OK
-//              if (!rightResponse.status.equals("OK", true)) ok = HttpStatusCode.BadRequest
-//
-//              call.respond(ok, rightResponse)
-//          } else {
-//              call.respond(HttpStatusCode.BadRequest, "Ikke gyldig virksomhetsnummer")
-//          }
-//      }
-//  }
-//  route("/altinn/rettighetsregister/fjern") {
-//      post {
-//          val rr = call.receive<RequestRegister>()
-//          if (!rr.organisasjonsnummer.isBlank() && rr.organisasjonsnummer.length == 9) {
-//              val rightResponse = if (rr.rettighet == "write")
-//                  altinnSrrService.deleteRights(rr.organisasjonsnummer, rr.domene, RegisterSRRRightsType.WRITE)
-//              else
-//                  altinnSrrService.deleteRights(rr.organisasjonsnummer, rr.domene, RegisterSRRRightsType.READ)
-//
-//              var ok = HttpStatusCode.OK
-//              if (!rightResponse.status.equals("OK", true)) ok = HttpStatusCode.BadRequest
-//              call.respond(ok, rightResponse)
-//          } else {
-//              call.respond(HttpStatusCode.BadRequest, "Ikke gyldig virksomhetsnummer")
-//          }
-//      }
-//  }
+@Group("Register")
+@Location("$API_V1/altinn/rettighetsregister/slett")
+data class DeleteRettighet(val orgnr: String, val lesEllerSkriv: String, val domene: String)
+
+fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService) =
+        delete<DeleteRettighet> ("Slett rettighet for en virksomhet"
+                .securityAndReponds(BasicAuthSecurity(), ok<AltinnSRRService>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
+        ) { param ->
+            val currentUser = call.principal<UserIdPrincipal>()!!.name
+            val logEntry = "Sletter rettighet for en virksomhet $currentUser - $param"
+            application.environment.log.info(logEntry)
+
+            val userExist = true
+//            try {
+//                LDAPGroup(fasitConfig).use { ldap -> ldap.userExists(currentUser) }
+//            } catch (e: Exception) { false }
+
+            if (!userExist) {
+                val msg = "authenticated user $currentUser doesn't exist as NAV ident or " +
+                        "service user in current LDAP domain, or ldap unreachable, cannot be manager of topic"
+                application.environment.log.warn(msg)
+                call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
+                return@delete
+            }
+
+            val virksomhetsnummer = param.orgnr
+            if (!virksomhetsnummer.isBlank() && virksomhetsnummer.length != 9) {
+                call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig virksomhetsnummer"))
+                return@delete
+            }
+
+            var srrType = RegisterSRRRightsType.READ
+            if (param.lesEllerSkriv.equals("skriv", true)) {
+                srrType = RegisterSRRRightsType.WRITE
+            }
+
+            if (param.domene.isNullOrEmpty()) {
+                call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig domene"))
+                return@delete
+            }
+
+            val rightResponse = altinnSrrService.deleteRights(virksomhetsnummer, param.domene, srrType)
+            call.respond(HttpStatusCode.OK, rightResponse)
+        }
