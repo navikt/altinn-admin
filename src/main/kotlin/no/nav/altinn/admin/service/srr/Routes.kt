@@ -68,15 +68,13 @@ data class FirmaRettigheter(val orgnr: String)
 
 fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService) =
     get<FirmaRettigheter>("hent for en avgiver".responds(ok<AltinnSRRService>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
-        val orgnr: String? = call.request.queryParameters["orgnr"]
+        param ->
+        val orgnr: String? = param.orgnr
         logger.info { "Fikk org.nr $orgnr" }
         try {
             if (!orgnr.isNullOrBlank() && orgnr.length == 9) {
                 val rightResponse = altinnSrrService.getRightsForABusiness(orgnr)
                 call.respond(HttpStatusCode.OK, rightResponse)
-            } else if (orgnr.isNullOrBlank()) {
-                val rightsResponse = altinnSrrService.getRightsForAllBusinesses()
-                call.respond(HttpStatusCode.OK, rightsResponse)
             } else {
                 call.respond(HttpStatusCode.BadRequest, AnError("Feil virksomhetsnummer $orgnr."))
             }
