@@ -5,6 +5,7 @@ import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
+import io.ktor.auth.basic
 import io.ktor.auth.jwt.JWTPrincipal
 import io.ktor.auth.jwt.jwt
 import io.ktor.features.*
@@ -99,6 +100,9 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         }
     }
     install(Authentication) {
+        basic(name = AUTHENTICATION_BASIC) {
+            
+        }
         jwt {
             skipWhen { environment.application.devProfile }
             realm = "altinn-admin"
