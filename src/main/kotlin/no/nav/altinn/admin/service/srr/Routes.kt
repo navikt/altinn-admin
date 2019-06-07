@@ -106,7 +106,7 @@ data class PostLeggTilRettighetBody(val orgnr: String, val lesEllerSkriv: String
 
 fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService) =
         post<PostLeggTilRettighet, PostLeggTilRettighetBody> ("Legg til rettighet for en virksomhet"
-                .securityAndReponds(BasicAuthSecurity(), ok<PostT>, serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
+                .securityAndReponds(BasicAuthSecurity(), ok<AltinnSRRService>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
         ) { _, body ->
             val currentUser = call.principal<UserIdPrincipal>()!!.name
             val logEntry = "Topic creation request by $currentUser - $body"
