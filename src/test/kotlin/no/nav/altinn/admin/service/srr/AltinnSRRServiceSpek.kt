@@ -1,3 +1,4 @@
+/*
 package no.nav.altinn.admin.service.srr
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -232,3 +233,5 @@ object AltinnSRRServiceSpek : Spek({
         }
     }
 })
+
+ */
