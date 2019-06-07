@@ -68,7 +68,7 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
                 "5252", 1, null)
             logger.info { "REGISTER size ${register.getRightResponse.size}" }
             val result = mutableListOf<RegistryResponse.Register>()
-            register.getRightResponse.forEach { it ->
+            register.getRightResponse.forEach {
                 logger.info { "reportee: ${it.reportee} og condition: ${it.condition}" }
                 result.add(RegistryResponse.Register(it.reportee, it.condition, it.right.toString(), it.validTo.toString()))
             }
