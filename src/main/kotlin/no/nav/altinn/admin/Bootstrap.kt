@@ -29,7 +29,7 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Swagger
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.SwaggerUi
 import no.nav.altinn.admin.common.*
 import no.nav.altinn.admin.service.srr.AltinnSRRService
-import no.nav.altinn.admin.service.srr.api
+import no.nav.altinn.admin.service.srr.ssrAPI
 import no.nav.altinn.admin.ws.*
 import org.slf4j.event.Level
 import java.net.URL
@@ -160,7 +160,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         }
 
         logger.info { "Installing altinn srr api" }
-        api(altinnSrrService = AltinnSRRService(environment) {
+        ssrAPI(altinnSrrService = AltinnSRRService(environment) {
             Clients.iRegisterSRRAgencyExternalBasic(environment.altinn.altinnAdminUrl).apply {
                 when (environment.application.devProfile) {
                     true -> stsClient.configureFor(this, STS_SAML_POLICY_NO_TRANSPORT_BINDING)
