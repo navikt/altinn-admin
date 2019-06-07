@@ -101,7 +101,6 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     }
     install(Authentication) {
         basic(name = AUTHENTICATION_BASIC) {
-            
         }
         jwt {
             skipWhen { environment.application.devProfile }
