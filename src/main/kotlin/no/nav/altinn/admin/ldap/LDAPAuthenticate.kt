@@ -20,7 +20,7 @@ class LDAPAuthenticate(private val config: Environment.Application) :
 
     fun canUserAuthenticate(user: String, pwd: String): Boolean =
             if (!ldapConnection.isConnected) {
-                log.error { "Cannot authenticate, connection to ldap is down" }
+                logger.error { "Cannot authenticate, connection to ldap is down" }
                 false
             } else {
                 // fold over resolved DNs, NAV ident or service accounts (normal + Basta)
@@ -29,8 +29,8 @@ class LDAPAuthenticate(private val config: Environment.Application) :
                     val connInfo = config.getConnectionInfo(LdapConnectionType.AUTHENTICATION)
 
                     when (it) {
-                        true -> log.info { "Successful bind of $user to $connInfo" }
-                        false -> log.error { "Cannot bind $user to $connInfo" }
+                        true -> logger.info { "Successful bind of $user to $connInfo" }
+                        false -> logger.error { "Cannot bind $user to $connInfo" }
                     }
                 }
             }
@@ -54,6 +54,6 @@ class LDAPAuthenticate(private val config: Environment.Application) :
 
     companion object {
 
-        val log = KotlinLogging.logger { }
+        val logger = KotlinLogging.logger { }
     }
 }
