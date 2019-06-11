@@ -40,7 +40,7 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
                         "\n UserId  ${e.faultInfo.userId}"
             }
         }
-        return RightsResponse("Failed", "Unknown error occurred when adding $type rights, check log")
+        return RightsResponse("Failed", "Unknown error occurred when adding $type rights, check logger")
     }
 
     fun deleteRights(reportee: String, redirectDomain: String, type: RegisterSRRRightsType): RightsResponse {
@@ -59,7 +59,7 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
                         "\n UserId  ${e.faultInfo.userId}"
             }
         }
-        return RightsResponse("Failed", "Unknown error occurred when removing $type rights, check log")
+        return RightsResponse("Failed", "Unknown error occurred when removing $type rights, check logger")
     }
 
     fun getRightsForAllBusinesses(): RightsResponse {
@@ -83,7 +83,7 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
                         "\n UserId  ${e.faultInfo.userId}"
             }
         }
-        return RightsResponse("Failed", "Unknown error occurred when getting rights registry, check log")
+        return RightsResponse("Failed", "Unknown error occurred when getting rights registry, check logger")
     }
 
     fun getRightsForABusiness(reportee: String): RightsResponse {
@@ -108,7 +108,7 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
             }
         }
 
-        return RightsResponse("Failed", "Unknown error occurred when getting rights registry, check log")
+        return RightsResponse("Failed", "Unknown error occurred when getting rights registry, check logger")
     }
 
     fun createAddRightsList(orgNr: String, domain: String, type: RegisterSRRRightsType): AddRightRequestList {

@@ -22,6 +22,7 @@ val jaxwsToolsVersion = "2.3.1"
 val javaxActivationVersion = "1.1.1"
 val cxfVersion = "3.3.0"
 val bouncycastleVersion = "1.60"
+val unboundidVersion = "4.0.8"
 
 val postgresVersion = "42.2.5"
 val exposedVersion = "0.12.1"
@@ -107,6 +108,7 @@ dependencies {
     }
     implementation("javax.activation:activation:$javaxActivationVersion")
     implementation("org.webjars:swagger-ui:$swaggerVersion")
+    implementation("com.unboundid:unboundid-ldapsdk:$unboundidVersion")
 
     runtimeOnly("ch.qos.logback:logback-classic:$logbackVersion")
     runtime("com.papertrailapp:logback-syslog4j:1.0.0")

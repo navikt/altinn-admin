@@ -9,6 +9,7 @@ import com.natpryce.konfig.overriding
 import com.natpryce.konfig.stringType
 import no.altinn.schemas.services.register.srr._2015._06.*
 import no.nav.altinn.admin.common.xmlMapper
+import no.nav.altinn.admin.ldap.LDAPBase
 import java.io.File
 
 private const val vaultApplicationPropertiesPath = "/var/run/secrets/nais.io/vault/application.properties"
@@ -28,7 +29,6 @@ data class Environment(
     val stsUrl: String = config[Key("sts.url", stringType)],
     val altinn: Altinn = Altinn(),
     val application: Application = Application(),
-    val jwt: Jwt = Jwt(),
     val mock: Mock = Mock()
 ) {
 
@@ -56,12 +56,59 @@ data class Environment(
         val devProfile: Boolean = config[Key("application.profile", stringType)] == "local",
         val port: Int = config[Key("application.port", intType)],
         val username: String = config[Key("serviceuser.username", stringType)],
-        val password: String = config[Key("serviceuser.password", stringType)]
-    )
+        val password: String = config[Key("serviceuser.password", stringType)],
 
-    data class Jwt(
-        val audience: String = config[Key("jwt.audience", stringType)],
-        val issuer: String = config[Key("jwt.issuer", stringType)],
-        val jwksUri: String = config[Key("jwt.jwks.uri", stringType)]
+        // common ldap details for both authentication and group management
+        val ldapConnTimeout: Int = System.getenv("LDAP_CONNTIMEOUT")?.toInt() ?: 2_000,
+        val ldapUserAttrName: String = System.getenv("LDAP_USERATTRNAME")?.toString() ?: "",
+
+        // ldap authentication details - production LDAP
+        val ldapAuthHost: String = System.getenv("LDAP_AUTH_HOST")?.toString() ?: "",
+        val ldapAuthPort: Int = System.getenv("LDAP_AUTH_PORT")?.toInt() ?: 0,
+        val ldapAuthUserBase: String = System.getenv("LDAP_AUTH_USERBASE")?.toString() ?: "",
+
+        // ldap details for managing ldap groups - different LDAP servers (test, preprod, production)
+        val ldapHost: String = System.getenv("LDAP_HOST")?.toString() ?: "",
+        val ldapPort: Int = System.getenv("LDAP_PORT")?.toInt() ?: 0,
+
+        val ldapSrvUserBase: String = System.getenv("LDAP_SRVUSERBASE")?.toString() ?: "",
+        val ldapGroupBase: String = System.getenv("LDAP_GROUPBASE")?.toString() ?: "",
+        val ldapGroupAttrName: String = System.getenv("LDAP_GROUPATTRNAME")?.toString() ?: "",
+        val ldapGrpMemberAttrName: String = System.getenv("LDAP_GRPMEMBERATTRNAME")?.toString() ?: "",
+
+        // ldap user and pwd with enough authorization for managing ldap groups
+        val ldapUser: String = System.getenv("LDAP_USER")?.toString() ?: "",
+        val ldapPassword: String = System.getenv("LDAP_PASSWORD")?.toString() ?: ""
+
     )
 }
+
+fun Environment.Application.ldapAuthenticationInfoComplete(): Boolean =
+        ldapUserAttrName.isNotEmpty() && ldapAuthHost.isNotEmpty() && ldapAuthPort != 0 && ldapAuthUserBase.isNotEmpty()
+
+fun Environment.Application.ldapGroupInfoComplete(): Boolean =
+        ldapHost.isNotEmpty() && ldapPort != 0 && ldapSrvUserBase.isNotEmpty() && ldapGroupBase.isNotEmpty() &&
+                ldapGroupAttrName.isNotEmpty() && ldapGrpMemberAttrName.isNotEmpty() && ldapUser.isNotEmpty() &&
+                ldapPassword.isNotEmpty()
+
+// Connection factory for which ldap in matter
+
+enum class LdapConnectionType { AUTHENTICATION, GROUP }
+
+fun Environment.Application.getConnectionInfo(connType: LdapConnectionType) =
+        when (connType) {
+            LdapConnectionType.AUTHENTICATION -> LDAPBase.Companion.ConnectionInfo(
+                    ldapAuthHost, ldapAuthPort, ldapConnTimeout
+            )
+            LdapConnectionType.GROUP -> LDAPBase.Companion.ConnectionInfo(
+                    ldapHost, ldapPort, ldapConnTimeout
+            )
+        }
+
+// Return diverse distinguished name types
+
+fun Environment.Application.userDN(user: String) = "$ldapUserAttrName=$user,$ldapAuthUserBase"
+
+fun Environment.Application.srvUserDN() = "$ldapUserAttrName=$ldapUser,$ldapSrvUserBase"
+
+fun Environment.Application.groupDN(groupName: String) = "$ldapGroupAttrName=$groupName,$ldapGroupBase"
