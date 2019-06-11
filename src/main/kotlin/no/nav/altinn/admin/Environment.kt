@@ -63,13 +63,13 @@ data class Environment(
         val ldapUserAttrName: String = System.getenv("LDAP_USERATTRNAME")?.toString() ?: "",
 
         // ldap authentication details - production LDAP
-        val ldapAuthHost: String = System.getenv("LDAP_AUTH_HOST")?.toString() ?: "",
-        val ldapAuthPort: Int = System.getenv("LDAP_AUTH_PORT")?.toInt() ?: 0,
+        val ldapAuthHost: String = config[Key("LDAP_AUTH_HOST", stringType)],
+        val ldapAuthPort: Int = config[Key("LDAP_AUTH_PORT", intType)],
         val ldapAuthUserBase: String = System.getenv("LDAP_AUTH_USERBASE")?.toString() ?: "",
 
         // ldap details for managing ldap groups - different LDAP servers (test, preprod, production)
-        val ldapHost: String = System.getenv("LDAP_HOST")?.toString() ?: "",
-        val ldapPort: Int = System.getenv("LDAP_PORT")?.toInt() ?: 0,
+        val ldapHost: String = config[Key("LDAP_HOST", stringType)],
+        val ldapPort: Int = config[Key("LDAP_PORT", intType)],
 
         val ldapSrvUserBase: String = System.getenv("LDAP_SRVUSERBASE")?.toString() ?: "",
         val ldapGroupBase: String = System.getenv("LDAP_GROUPBASE")?.toString() ?: "",
