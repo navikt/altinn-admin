@@ -99,7 +99,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         }
     }
     install(Authentication) {
-        jwt(name = AUTHENTICATION_BASIC) {
+        jwt {
             skipWhen { environment.application.devProfile }
             realm = "altinn-admin"
             verifier(jwkProvider, environment.jwt.issuer)

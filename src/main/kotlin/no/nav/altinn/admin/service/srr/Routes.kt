@@ -3,6 +3,7 @@ package no.nav.altinn.admin.service.srr
 import io.ktor.application.application
 import io.ktor.application.call
 import io.ktor.auth.UserIdPrincipal
+import io.ktor.auth.authenticate
 import io.ktor.auth.principal
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
@@ -27,8 +28,10 @@ import no.nav.altinn.admin.common.API_V1
 fun Routing.ssrAPI(altinnSrrService: AltinnSRRService) {
     getRightsList(altinnSrrService)
     getRightsForReportee(altinnSrrService)
-    addRightsForReportee(altinnSrrService)
-    deleteRightsForReportee(altinnSrrService)
+    authenticate {
+        this@ssrAPI.addRightsForReportee(altinnSrrService)
+        this@ssrAPI.deleteRightsForReportee(altinnSrrService)
+    }
 }
 
 internal data class AnError(val error: String)
@@ -108,7 +111,7 @@ data class PostLeggTilRettighetBody(val orgnr: String, val lesEllerSkriv: String
 
 fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService) =
         post<PostLeggTilRettighet, PostLeggTilRettighetBody> ("Legg til rettighet for en virksomhet"
-                .securityAndReponds(BasicAuthSecurity(), ok<AltinnSRRService>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
+                .responds(ok<AltinnSRRService>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
         ) { _, body ->
             val currentUser = call.principal<UserIdPrincipal>()!!.name
             val logEntry = "Legger til rettighet til virksomhet $currentUser - $body"
@@ -153,7 +156,7 @@ data class DeleteRettighet(val orgnr: String, val lesEllerSkriv: String, val dom
 
 fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService) =
         delete<DeleteRettighet> ("Slett rettighet for en virksomhet"
-                .securityAndReponds(BasicAuthSecurity(), ok<AltinnSRRService>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
+                .responds(ok<AltinnSRRService>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
         ) { param ->
             val currentUser = call.principal<UserIdPrincipal>()!!.name
             val logEntry = "Sletter rettighet for en virksomhet $currentUser - $param"
