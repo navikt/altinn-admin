@@ -32,10 +32,11 @@ fun Routing.ssrAPI(altinnSrrService: AltinnSRRService) {
 }
 
 internal data class AnError(val error: String)
+internal const val GROUP_NAME = "Rettighetsregister"
 
 private val logger = KotlinLogging.logger { }
 
-@Group("Register")
+@Group(GROUP_NAME)
 @Location("$API_V1/altinn/rettighetsregister/hent")
 class Rettighetsregister
 
@@ -65,7 +66,7 @@ fun Routing.getRightsList(altinnSrrService: AltinnSRRService) =
         }
     }
 
-@Group("Register")
+@Group(GROUP_NAME)
 @Location("$API_V1/altinn/rettighetsregister/hent/{orgnr}")
 data class FirmaRettigheter(val orgnr: String)
 
@@ -101,7 +102,7 @@ fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService) =
         }
     }
 
-@Group("Register")
+@Group(GROUP_NAME)
 @Location("$API_V1/altinn/rettighetsregister/leggtil")
 class PostLeggTilRettighet
 data class PostLeggTilRettighetBody(val orgnr: String, val lesEllerSkriv: String, val domene: String)
@@ -147,7 +148,7 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService) =
             call.respond(HttpStatusCode.OK, rightResponse)
         }
 
-@Group("Register")
+@Group(GROUP_NAME)
 @Location("$API_V1/altinn/rettighetsregister/slett")
 data class DeleteRettighet(val orgnr: String, val lesEllerSkriv: String, val domene: String)
 
