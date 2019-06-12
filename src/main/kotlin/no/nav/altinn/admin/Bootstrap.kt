@@ -40,11 +40,11 @@ val swagger = Swagger(
         info = Information(
                 version = System.getenv("APP_VERSION")?.toString() ?: "",
                 title = "Altinn Admin API",
-                description = "[altinn-admin](https://github.com/navikt/TODO)",
+                description = "[altinn-admin](https://github.com/navikt/altinn-admin)",
                 contact = Contact(
-                        name = "Mona, Ole-Petter, Hans Arild, Richard",
-                        url = "https://github.com/navikt/TODO",
-                        email = "")
+                        name = "Mona Terning, Ole-Petter Pettersen, Hans Arild Runde, Richard Oseng",
+                        url = "https://github.com/navikt/altinn-admin",
+                        email = "nav.altinn.lokalforvaltning@nav.no")
         )
 )
 
@@ -150,6 +150,6 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
                 }
             }
         })
-        nais(readinessCheck = { applicationState.initialized }, livenessCheck = { applicationState.running })
+        nais(environment, readinessCheck = { applicationState.initialized }, livenessCheck = { applicationState.running })
     }
 }

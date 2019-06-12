@@ -6,6 +6,7 @@ import io.ktor.routing.routing
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.on
+import no.nav.altinn.admin.Environment
 import org.amshove.kluent.shouldEqual
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
@@ -18,18 +19,18 @@ object SelfTestSpek : Spek({
     )
 
     val testCases = listOf(
-            TestCase(description = "both selftests OK", readiness = true, liveness = true),
-            TestCase(description = "both selftests ERROR", readiness = false, liveness = false),
-            TestCase(description = "only readiness OK", readiness = true, liveness = false),
-            TestCase(description = "only liveness OK", readiness = false, liveness = true)
+            TestCase(description = "both selftests OK", environment = Environment(), readiness = true, liveness = true),
+            TestCase(description = "both selftests ERROR", environment = Environment(), readiness = false, liveness = false),
+            TestCase(description = "only readiness OK", environment = Environment(), readiness = true, liveness = false),
+            TestCase(description = "only liveness OK", environment = Environment(), readiness = false, liveness = true)
     )
 
-    testCases.forEach { (description, readiness, liveness) ->
+    testCases.forEach { (description, environment, readiness, liveness) ->
         describe("SelfTest routing with $description") {
             with(TestApplicationEngine()) {
                 start()
                 application.routing {
-                    nais(readinessCheck = { readiness }, livenessCheck = { liveness })
+                    nais(environment, readinessCheck = { readiness }, livenessCheck = { liveness })
                 }
                 selfTests.forEach { (selfTest, url) ->
                     on("$selfTest test") {
@@ -54,5 +55,5 @@ object SelfTestSpek : Spek({
     }
 })
 
-private data class TestCase(val description: String, val readiness: Boolean, val liveness: Boolean)
+private data class TestCase(val description: String, val environment: Environment, val readiness: Boolean, val liveness: Boolean)
 private enum class SelfTests { LIVENESS, READINESS }

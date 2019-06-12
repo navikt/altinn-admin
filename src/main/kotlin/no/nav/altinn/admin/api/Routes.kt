@@ -10,8 +10,11 @@ import io.ktor.routing.get
 import io.ktor.routing.route
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.exporter.common.TextFormat
+import no.nav.altinn.admin.Environment
+import no.nav.altinn.admin.ldap.LDAPAuthenticate
 
 fun Routing.nais(
+    environment: Environment,
     readinessCheck: () -> Boolean,
     livenessCheck: () -> Boolean = { true },
     collectorRegistry: CollectorRegistry = CollectorRegistry.defaultRegistry
@@ -25,6 +28,10 @@ fun Routing.nais(
             }
         }
         get("/is_ready") {
+            val ldapOk = LDAPAuthenticate(environment.application).use { ldapAuthenticate -> ldapAuthenticate.connectionOk }
+            if (!ldapOk) {
+                call.respondText("LDAP authenticate is not ready", status = HttpStatusCode.InternalServerError)
+            }
             if (readinessCheck()) {
                 call.respondText("Ready")
             } else {
