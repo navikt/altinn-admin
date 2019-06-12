@@ -30,7 +30,6 @@ abstract class LDAPBase(private val connInfo: LDAPBase.Companion.ConnectionInfo)
     init {
         // initialize LDAP connection
         try {
-            logger.info { "LDAP connection to host/port ${connInfo.host} / ${connInfo.port}" }
             ldapConnection.connect(connInfo.host, connInfo.port)
             logger.debug { "Successfully connected to $connInfo" }
         } catch (e: LDAPException) {

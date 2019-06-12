@@ -69,7 +69,7 @@ data class Environment(
 
         // ldap details for managing ldap groups - different LDAP servers (test, preprod, production)
         val ldapHost: String = config[Key("LDAP_HOST", stringType)],
-        val ldapPort: Int = config[Key("ldap.port", intType)],
+        val ldapPort: Int = config[Key("LDAP_PORT", intType)],
 
         val ldapSrvUserBase: String = System.getenv("LDAP_SRVUSERBASE")?.toString() ?: "",
         val ldapGroupBase: String = System.getenv("LDAP_GROUPBASE")?.toString() ?: "",
