@@ -40,7 +40,7 @@ private val logger = KotlinLogging.logger { }
 class Rettighetsregister
 
 fun Routing.getRightsList(altinnSrrService: AltinnSRRService) =
-    get<Rettighetsregister>("hent rettigheter for alle virksomheter".responds(ok<AltinnSRRService>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+    get<Rettighetsregister>("hent rettigheter for alle virksomheter".responds(ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         try {
             val rightsResponse = altinnSrrService.getRightsForAllBusinesses()
             call.respond(HttpStatusCode.OK, rightsResponse)
@@ -70,7 +70,7 @@ fun Routing.getRightsList(altinnSrrService: AltinnSRRService) =
 data class FirmaRettigheter(val orgnr: String)
 
 fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService) =
-    get<FirmaRettigheter>("hent rettigheter for en virksomhet".responds(ok<AltinnSRRService>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+    get<FirmaRettigheter>("hent rettigheter for en virksomhet".responds(ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
         val virksomhetsnummer: String? = param.orgnr
         try {
@@ -108,7 +108,7 @@ data class PostLeggTilRettighetBody(val orgnr: String, val lesEllerSkriv: String
 
 fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService) =
         post<PostLeggTilRettighet, PostLeggTilRettighetBody> ("Legg til rettighet for en virksomhet"
-                .securityAndReponds(BasicAuthSecurity(), ok<AltinnSRRService>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
+                .securityAndReponds(BasicAuthSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
         ) { _, body ->
             val currentUser = call.principal<UserIdPrincipal>()!!.name
             val logEntry = "Legger til rettighet til virksomhet $currentUser - $body"
@@ -153,7 +153,7 @@ data class DeleteRettighet(val orgnr: String, val lesEllerSkriv: String, val dom
 
 fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService) =
         delete<DeleteRettighet> ("Slett rettighet for en virksomhet"
-                .securityAndReponds(BasicAuthSecurity(), ok<AltinnSRRService>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
+                .securityAndReponds(BasicAuthSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
         ) { param ->
             val currentUser = call.principal<UserIdPrincipal>()!!.name
             val logEntry = "Sletter rettighet for en virksomhet $currentUser - $param"
