@@ -21,7 +21,7 @@ import io.ktor.server.netty.Netty
 import io.ktor.util.error
 import io.prometheus.client.hotspot.DefaultExports
 import mu.KotlinLogging
-import no.nav.altinn.admin.api.*
+import no.nav.altinn.admin.api.nais
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Contact
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Information
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Swagger
@@ -132,7 +132,6 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
 
     logger.info { "Installing routes" }
     install(Routing) {
-
         get("/") { call.respondRedirect(SWAGGER_URL_V1) }
         get("/api") { call.respondRedirect(SWAGGER_URL_V1) }
         get("$API_V1") { call.respondRedirect(SWAGGER_URL_V1) }
