@@ -4,7 +4,7 @@ import no.nils.wsdl2java.Wsdl2JavaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "no.nav"
-version = "0.8.1-SNAPSHOT"
+version = "0.8.2-SNAPSHOT"
 
 val ktorVersion = "1.1.2"
 val jacksonVersion = "2.9.8"
