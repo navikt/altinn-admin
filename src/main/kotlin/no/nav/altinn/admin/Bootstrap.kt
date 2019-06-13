@@ -92,6 +92,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
             call.respond(HttpStatusCode.InternalServerError)
         }
     }
+    logger.debug { "service username : ${environment.application.username}" }
     install(Authentication) {
         basic(name = AUTHENTICATION_BASIC) {
             realm = "altinn-admin"
@@ -99,7 +100,6 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
                 LDAPAuthenticate(environment.application).use {
 //                    if (ldap.canUserAuthenticate(credentials.name, credentials.password))
 //                        UserIdPrincipal(credentials.name)
-                    logger.debug { "service username : ${environment.application.username}" }
                     if (credentials.name == environment.application.username && credentials.password == environment.application.password)
                         UserIdPrincipal(credentials.name)
                     else

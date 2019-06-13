@@ -29,6 +29,7 @@ data class Environment(
     val stsUrl: String = config[Key("sts.url", stringType)],
     val altinn: Altinn = Altinn(),
     val application: Application = Application(),
+    val sts: Sts = Sts(),
     val mock: Mock = Mock()
 ) {
 
@@ -36,20 +37,6 @@ data class Environment(
         val altinnAdminUrl: String = config[Key("altinn.admin.url", stringType)],
         val username: String = config[Key("altinn.username", stringType)],
         val password: String = config[Key("altinn.password", stringType)]
-    )
-
-    data class Mock(
-        private val srrAddXmlResponse: String? = config[Key("mock.ssr.add.response", stringType)],
-        private val srrDeleteXmlResponse: String? = config[Key("mock.ssr.delete.response", stringType)],
-        private val srrGetXmlResponse: String? = config[Key("mock.ssr.get.response", stringType)],
-        val srrAddResponse: AddRightResponseList? = if (srrAddXmlResponse.isNullOrEmpty()) { null } else { AddRightResponseList().apply { addRightResponse.add(
-                                                        xmlMapper.readValue(srrAddXmlResponse, AddRightResponse::class.java)) } },
-        val srrDeleteResponse: DeleteRightResponseList? = if (srrDeleteXmlResponse.isNullOrEmpty()) { null } else { DeleteRightResponseList().apply { deleteRightResponse.add(
-                xmlMapper.readValue(srrDeleteXmlResponse, DeleteRightResponse::class.java)) } },
-        val srrGetResponse: GetRightResponseList? = if (srrGetXmlResponse.isNullOrEmpty()) { null } else { GetRightResponseList().apply { getRightResponse.add(
-                xmlMapper.readValue(srrGetXmlResponse, GetRightResponse::class.java)) } }
-        // AddRightResponseList().apply { addRightResponse.add(
-        //        xmlMapper.readValue(config[Key("mock.ssr.add.response", stringType)], AddRightResponse::class.java))}
     )
 
     data class Application(
@@ -79,7 +66,24 @@ data class Environment(
         // ldap user and pwd with enough authorization for managing ldap groups
         val ldapUser: String = System.getenv("LDAP_USER")?.toString() ?: "",
         val ldapPassword: String = System.getenv("LDAP_PASSWORD")?.toString() ?: ""
+    )
 
+    data class Sts(
+        val tokenUrl: String = config[Key("sts.rest.url", stringType)]
+    )
+
+    data class Mock(
+        private val srrAddXmlResponse: String? = config[Key("mock.ssr.add.response", stringType)],
+        private val srrDeleteXmlResponse: String? = config[Key("mock.ssr.delete.response", stringType)],
+        private val srrGetXmlResponse: String? = config[Key("mock.ssr.get.response", stringType)],
+        val srrAddResponse: AddRightResponseList? = if (srrAddXmlResponse.isNullOrEmpty()) { null } else { AddRightResponseList().apply { addRightResponse.add(
+                xmlMapper.readValue(srrAddXmlResponse, AddRightResponse::class.java)) } },
+        val srrDeleteResponse: DeleteRightResponseList? = if (srrDeleteXmlResponse.isNullOrEmpty()) { null } else { DeleteRightResponseList().apply { deleteRightResponse.add(
+                xmlMapper.readValue(srrDeleteXmlResponse, DeleteRightResponse::class.java)) } },
+        val srrGetResponse: GetRightResponseList? = if (srrGetXmlResponse.isNullOrEmpty()) { null } else { GetRightResponseList().apply { getRightResponse.add(
+                xmlMapper.readValue(srrGetXmlResponse, GetRightResponse::class.java)) } }
+        // AddRightResponseList().apply { addRightResponse.add(
+        //        xmlMapper.readValue(config[Key("mock.ssr.add.response", stringType)], AddRightResponse::class.java))}
     )
 }
 
