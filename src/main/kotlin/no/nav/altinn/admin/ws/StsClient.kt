@@ -14,9 +14,9 @@ import org.apache.cxf.ws.security.SecurityConstants
 import org.apache.cxf.ws.security.trust.STSClient
 import org.apache.neethi.Policy
 
-val STS_CLIENT_AUTHENTICATION_POLICY = "classpath:sts/policies/untPolicy.xml"
-val STS_SAML_POLICY = "classpath:sts/policies/requestSamlPolicy.xml"
-val STS_SAML_POLICY_NO_TRANSPORT_BINDING = "classpath:sts/policies/requestSamlPolicyNoTransportBinding.xml"
+val STS_CLIENT_AUTHENTICATION_POLICY = "classpath:sts.policies/untPolicy.xml"
+val STS_SAML_POLICY = "classpath:sts.policies/requestSamlPolicy.xml"
+val STS_SAML_POLICY_NO_TRANSPORT_BINDING = "classpath:sts.policies/requestSamlPolicyNoTransportBinding.xml"
 
 fun stsClient(stsUrl: String, credentials: Pair<String, String>): STSClient {
     val bus = BusFactory.getDefaultBus()
