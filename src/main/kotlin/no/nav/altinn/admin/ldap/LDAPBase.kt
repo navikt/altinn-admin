@@ -31,7 +31,7 @@ abstract class LDAPBase(private val connInfo: LDAPBase.Companion.ConnectionInfo)
         // initialize LDAP connection
         try {
             ldapConnection.connect(connInfo.host, connInfo.port)
-            logger.debug { "Successfully connected to $connInfo" }
+//            logger.debug { "Successfully connected to $connInfo" }
         } catch (e: LDAPException) {
             logger.error { "Exception occurred LDAP operations against $connInfo will fail - $e" }
             ldapConnection.setDisconnectInfo(
@@ -43,7 +43,7 @@ abstract class LDAPBase(private val connInfo: LDAPBase.Companion.ConnectionInfo)
     val connectionOk = ldapConnection.isConnected
 
     override fun close() {
-        logger.debug { "Closing ldap connection $connInfo" }
+//        logger.debug { "Closing ldap connection $connInfo" }
         ldapConnection.close()
     }
 
