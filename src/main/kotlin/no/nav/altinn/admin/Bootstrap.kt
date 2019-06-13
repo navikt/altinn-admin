@@ -96,11 +96,11 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         basic(name = AUTHENTICATION_BASIC) {
             realm = "altinn-admin"
             validate { credentials ->
-                LDAPAuthenticate(environment.application).use {
-//                    if (ldap.canUserAuthenticate(credentials.name, credentials.password))
-//                        UserIdPrincipal(credentials.name)
-                    if (credentials.name == environment.application.username && credentials.password == environment.application.password)
+                LDAPAuthenticate(environment.application).use { ldap ->
+                    if (ldap.canUserAuthenticate(credentials.name, credentials.password))
                         UserIdPrincipal(credentials.name)
+//                    if (credentials.name == environment.application.username && credentials.password == environment.application.password)
+//                        UserIdPrincipal(credentials.name)
                     else
                         null
                 }
