@@ -92,7 +92,6 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
             call.respond(HttpStatusCode.InternalServerError)
         }
     }
-    logger.debug { "service username : ${environment.application.username}" }
     install(Authentication) {
         basic(name = AUTHENTICATION_BASIC) {
             realm = "altinn-admin"
@@ -125,6 +124,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     val swaggerUI = SwaggerUi()
 
     val stsClient by lazy {
+        logger.debug { "STS ${environment.stsUrl} service username : ${environment.application.username}" }
         stsClient(
                 stsUrl = environment.stsUrl,
                 credentials = environment.application.username to environment.application.password

@@ -29,7 +29,6 @@ data class Environment(
     val stsUrl: String = config[Key("sts.url", stringType)],
     val altinn: Altinn = Altinn(),
     val application: Application = Application(),
-    val sts: Sts = Sts(),
     val mock: Mock = Mock()
 ) {
 
@@ -66,10 +65,6 @@ data class Environment(
         // ldap user and pwd with enough authorization for managing ldap groups
         val ldapUser: String = System.getenv("LDAP_USER")?.toString() ?: "",
         val ldapPassword: String = System.getenv("LDAP_PASSWORD")?.toString() ?: ""
-    )
-
-    data class Sts(
-        val tokenUrl: String = config[Key("sts.rest.url", stringType)]
     )
 
     data class Mock(
