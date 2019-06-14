@@ -8,8 +8,6 @@ import io.ktor.auth.UserIdPrincipal
 import io.ktor.auth.basic
 import io.ktor.features.*
 import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.JacksonConverter
 import io.ktor.locations.Locations
