@@ -57,7 +57,6 @@ internal const val SWAGGER_URL_V1 = "$API_V1/apidocs/index.html?url=swagger.json
 fun main() = bootstrap(ApplicationState(), Environment())
 
 fun bootstrap(applicationState: ApplicationState, environment: Environment) {
-    logger.debug { "devTest: ${environment.application.devTest} and devProfile: ${environment.application.devProfile}" }
     val applicationServer = embeddedServer(
         Netty, environment.application.port, module = { mainModule(environment, applicationState) }
     )
