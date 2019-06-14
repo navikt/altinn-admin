@@ -29,8 +29,8 @@
     <logger name="no.nav" level="DEBUG"/>
     <logger name="ktor.application" level="DEBUG"/>
     <logger name="io.ktor" level="TRACE"/>
-    <logger name="org.apache.cxf.service.invoker.AbstractInvoker" level="OFF" />
-    <logger name="org.apache.cxf.services" level="WARN" additivity="false"/>
+    <logger name="org.apache.cxf.service.invoker.AbstractInvoker" level="INFO" />
+    <logger name="org.apache.cxf.services" level="INFO" additivity="false"/>
 
     <root level="INFO">
         <appender-ref ref="stdout_json"/>
