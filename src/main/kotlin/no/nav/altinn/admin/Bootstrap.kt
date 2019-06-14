@@ -8,6 +8,8 @@ import io.ktor.auth.UserIdPrincipal
 import io.ktor.auth.basic
 import io.ktor.features.*
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.JacksonConverter
 import io.ktor.locations.Locations
@@ -110,16 +112,25 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         register(ContentType.Application.Json, JacksonConverter(objectMapper))
     }
     install(Locations)
-
-    /*
+    install(CORS) {
+        method(HttpMethod.Put)
+        header(HttpHeaders.Authorization)
+        header(HttpHeaders.IfModifiedSince)
+        header(HttpHeaders.Range)
+        header(HttpHeaders.UserAgent)
+        header(HttpHeaders.XCorrelationId)
+        exposeHeader(HttpHeaders.ContentLength)
+        exposeHeader(HttpHeaders.ContentRange)
+        exposeHeader(HttpHeaders.XCorrelationId)
+        anyHost()
+        allowSameOrigin = true
+    }
     install(CallId) {
         generate { randomUuid() }
         verify { callId: String -> callId.isNotEmpty() }
         header(HttpHeaders.XCorrelationId)
     }
 
-
-     */
     val swaggerUI = SwaggerUi()
 
     val stsClient by lazy {
