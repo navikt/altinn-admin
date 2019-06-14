@@ -78,6 +78,7 @@ fun bootstrap(applicationState: ApplicationState, environment: Environment) {
 fun Application.mainModule(environment: Environment, applicationState: ApplicationState) {
     logger.info { "Starting server" }
 
+    logger.debug { "altinn: ${environment.altinn.username} ${environment.altinn.password}" }
     install(DefaultHeaders)
     install(ConditionalHeaders)
     install(Compression)
