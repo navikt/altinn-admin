@@ -39,9 +39,7 @@ data class Environment(
     )
 
     data class Application(
-        val devTest: String = config[Key("application.profile", stringType)],
-        val devProfile: Boolean = devTest == "local",
-//        val devProfile: Boolean = true,
+        val devProfile: Boolean = config[Key("application.profile", stringType)] == "local",
         val port: Int = config[Key("application.port", intType)],
         val username: String = config[Key("serviceuser.username", stringType)],
         val password: String = config[Key("serviceuser.password", stringType)],
