@@ -108,6 +108,7 @@ dependencies {
         exclude(group = "com.sun.xml.ws", module = "policy")
     }
     implementation("javax.activation:activation:$javaxActivationVersion")
+    implementation("io.ktor:ktor-html-builder:$ktorVersion")
     implementation("org.webjars:swagger-ui:$swaggerVersion")
     implementation("com.unboundid:unboundid-ldapsdk:$unboundidVersion")
 
