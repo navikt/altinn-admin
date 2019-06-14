@@ -78,7 +78,6 @@ fun bootstrap(applicationState: ApplicationState, environment: Environment) {
 fun Application.mainModule(environment: Environment, applicationState: ApplicationState) {
     logger.info { "Starting server" }
 
-    logger.debug { "altinn: ${environment.altinn.username} ${environment.altinn.password}" }
     install(DefaultHeaders)
     install(ConditionalHeaders)
     install(Compression)
@@ -113,24 +112,24 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         register(ContentType.Application.Json, JacksonConverter(objectMapper))
     }
     install(Locations)
-    install(CORS) {
-        method(HttpMethod.Put)
-        header(HttpHeaders.Authorization)
-        header(HttpHeaders.IfModifiedSince)
-        header(HttpHeaders.Range)
-        header(HttpHeaders.UserAgent)
-        header(HttpHeaders.XCorrelationId)
-        exposeHeader(HttpHeaders.ContentLength)
-        exposeHeader(HttpHeaders.ContentRange)
-        exposeHeader(HttpHeaders.XCorrelationId)
-        anyHost()
-        allowSameOrigin = true
-    }
-    install(CallId) {
-        generate { randomUuid() }
-        verify { callId: String -> callId.isNotEmpty() }
-        header(HttpHeaders.XCorrelationId)
-    }
+//    install(CORS) {
+//        method(HttpMethod.Put)
+//        header(HttpHeaders.Authorization)
+//        header(HttpHeaders.IfModifiedSince)
+//        header(HttpHeaders.Range)
+//        header(HttpHeaders.UserAgent)
+//        header(HttpHeaders.XCorrelationId)
+//        exposeHeader(HttpHeaders.ContentLength)
+//        exposeHeader(HttpHeaders.ContentRange)
+//        exposeHeader(HttpHeaders.XCorrelationId)
+//        anyHost()
+//        allowSameOrigin = true
+//    }
+//    install(CallId) {
+//        generate { randomUuid() }
+//        verify { callId: String -> callId.isNotEmpty() }
+//        header(HttpHeaders.XCorrelationId)
+//    }
 
     val swaggerUI = SwaggerUi()
 
