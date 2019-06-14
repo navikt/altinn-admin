@@ -7,6 +7,7 @@ import com.natpryce.konfig.Key
 import com.natpryce.konfig.intType
 import com.natpryce.konfig.overriding
 import com.natpryce.konfig.stringType
+import mu.KotlinLogging
 import no.altinn.schemas.services.register.srr._2015._06.*
 import no.nav.altinn.admin.common.xmlMapper
 import no.nav.altinn.admin.ldap.LDAPBase
@@ -39,8 +40,9 @@ data class Environment(
     )
 
     data class Application(
-        // val devProfile: Boolean = config[Key("application.profile", stringType)] == "local",
-        val devProfile: Boolean = true,
+        val devTest: String = config[Key("application.profile", stringType)],
+        val devProfile: Boolean = devTest == "local",
+//        val devProfile: Boolean = true,
         val port: Int = config[Key("application.port", intType)],
         val username: String = config[Key("serviceuser.username", stringType)],
         val password: String = config[Key("serviceuser.password", stringType)],
