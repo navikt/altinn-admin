@@ -30,7 +30,4 @@ internal val defaultHttpClient: HttpClient = HttpClient(Apache) {
     install(JsonFeature) {
         serializer = JacksonSerializer()
     }
-    engine {
-        response.defaultCharset = Charsets.UTF_8
-    }
 }

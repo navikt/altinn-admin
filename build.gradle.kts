@@ -6,6 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "no.nav"
 version = "0.8.2-SNAPSHOT"
 
+val kotlinVersion = "1.3.31"
 val ktorVersion = "1.2.1"
 val jacksonVersion = "2.9.8"
 val nimbusJoseVersion = "6.7"
@@ -125,6 +126,7 @@ dependencies {
     testImplementation("org.amshove.kluent:kluent:$kluentVersion")
     testImplementation("org.junit.platform:junit-platform-runner:1.3.2")
     testCompile("com.github.tomakehurst:wiremock:$wiremockVersion")
+    testRuntimeOnly("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
 }
 
 val generatedSourcesDir = "$buildDir/generated-sources"
