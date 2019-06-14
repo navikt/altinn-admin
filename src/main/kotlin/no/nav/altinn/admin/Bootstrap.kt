@@ -145,6 +145,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         logger.info { "Installing altinn srr api" }
         ssrAPI(altinnSrrService = AltinnSRRService(environment) {
             Clients.iRegisterSRRAgencyExternalBasic(environment.altinn.altinnAdminUrl).apply {
+                logger.debug { "Using devProfile : ${environment.application.devProfile}" }
                 when (environment.application.devProfile) {
                     true -> stsClient.configureFor(this, STS_SAML_POLICY_NO_TRANSPORT_BINDING)
                     false -> stsClient.configureFor(this)
