@@ -7,7 +7,6 @@ import com.natpryce.konfig.Key
 import com.natpryce.konfig.intType
 import com.natpryce.konfig.overriding
 import com.natpryce.konfig.stringType
-import mu.KotlinLogging
 import no.altinn.schemas.services.register.srr._2015._06.*
 import no.nav.altinn.admin.common.xmlMapper
 import no.nav.altinn.admin.ldap.LDAPBase
