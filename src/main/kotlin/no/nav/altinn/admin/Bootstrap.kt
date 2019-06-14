@@ -8,6 +8,7 @@ import io.ktor.auth.UserIdPrincipal
 import io.ktor.auth.basic
 import io.ktor.features.*
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.JacksonConverter
 import io.ktor.locations.Locations
@@ -123,11 +124,11 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
 //        anyHost()
 //        allowSameOrigin = true
 //    }
-//    install(CallId) {
-//        generate { randomUuid() }
-//        verify { callId: String -> callId.isNotEmpty() }
-//        header(HttpHeaders.XCorrelationId)
-//    }
+    install(CallId) {
+        generate { randomUuid() }
+        verify { callId: String -> callId.isNotEmpty() }
+        header(HttpHeaders.XCorrelationId)
+    }
 
     val swaggerUI = SwaggerUi()
 
