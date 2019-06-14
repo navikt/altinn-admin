@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "no.nav"
 version = "0.8.2-SNAPSHOT"
 
-val ktorVersion = "1.1.2"
+val ktorVersion = "1.2.1"
 val jacksonVersion = "2.9.8"
 val nimbusJoseVersion = "6.7"
 
@@ -20,7 +20,7 @@ val konfigVersion = "1.6.10.0"
 val jaxwsVersion = "2.3.1"
 val jaxwsToolsVersion = "2.3.1"
 val javaxActivationVersion = "1.1.1"
-val cxfVersion = "3.3.0"
+val cxfVersion = "3.3.1"
 val bouncycastleVersion = "1.60"
 val unboundidVersion = "4.0.8"
 
