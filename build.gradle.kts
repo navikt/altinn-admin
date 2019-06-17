@@ -15,6 +15,7 @@ val prometheusVersion = "0.6.0"
 val kotlinloggingVersion = "1.6.22"
 val logstashEncoderVersion = "5.3"
 val logbackVersion = "1.2.3"
+val log4j2Version = "2.11.1"
 
 val konfigVersion = "1.6.10.0"
 
@@ -107,6 +108,12 @@ dependencies {
     implementation("com.sun.xml.ws:jaxws-tools:$jaxwsToolsVersion") {
         exclude(group = "com.sun.xml.ws", module = "policy")
     }
+    
+    implementation("org.apache.logging.log4j:log4j-api:$log4j2Version")
+    implementation("org.apache.logging.log4j:log4j-core:$log4j2Version")
+    implementation("org.apache.logging.log4j:log4j-slf4j-impl:$log4j2Version")
+    implementation("com.vlkan.log4j2:log4j2-logstash-layout-fatjar:0.15")
+
     implementation("javax.activation:activation:$javaxActivationVersion")
     implementation("io.ktor:ktor-html-builder:$ktorVersion")
     implementation("org.webjars:swagger-ui:$swaggerVersion")

@@ -76,6 +76,7 @@ fun bootstrap(applicationState: ApplicationState, environment: Environment) {
 
 fun Application.mainModule(environment: Environment, applicationState: ApplicationState) {
     logger.info { "Starting server" }
+    System.setProperty("javax.xml.soap.SAAJMetaFactory", "com.sun.xml.messaging.saaj.soap.SAAJMetaFactoryImpl")
 
     install(DefaultHeaders)
     install(ConditionalHeaders)
