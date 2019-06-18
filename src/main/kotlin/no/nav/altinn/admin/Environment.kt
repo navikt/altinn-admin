@@ -46,12 +46,12 @@ data class Environment(
 
         // common ldap details for both authentication and group management
         val ldapConnTimeout: Int = System.getenv("LDAP_CONNTIMEOUT")?.toInt() ?: 2_000,
-        val ldapUserAttrName: String = System.getenv("LDAP_USERATTRNAME")?.toString() ?: "",
+        val ldapUserAttrName: String = config[Key("LDAP_USERATTRNAME", stringType)],
 
         // ldap authentication details - production LDAP
         val ldapAuthHost: String = config[Key("LDAP_AUTH_HOST", stringType)],
         val ldapAuthPort: Int = config[Key("LDAP_AUTH_PORT", intType)],
-        val ldapAuthUserBase: String = System.getenv("LDAP_AUTH_USERBASE")?.toString() ?: "",
+        val ldapAuthUserBase: String = config[Key("LDAP_AUTH_USERBASE", stringType)],
 
         // ldap details for managing ldap groups - different LDAP servers (test, preprod, production)
         val ldapHost: String = config[Key("LDAP_HOST", stringType)],
