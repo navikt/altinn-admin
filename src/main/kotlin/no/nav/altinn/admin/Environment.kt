@@ -45,22 +45,22 @@ data class Environment(
         val password: String = config[Key("serviceuser.password", stringType)],
 
         // common ldap details for both authentication and group management
-        val ldapConnTimeout: Int = System.getenv("LDAP_CONNTIMEOUT")?.toInt() ?: 2_000,
-        val ldapUserAttrName: String = config[Key("LDAP_USERATTRNAME", stringType)],
+        val ldapConnTimeout: Int = config[Key("ldap.conntimeout", intType)],
+        val ldapUserAttrName: String = config[Key("ldap.userattrname", stringType)],
 
         // ldap authentication details - production LDAP
-        val ldapAuthHost: String = config[Key("LDAP_AUTH_HOST", stringType)],
-        val ldapAuthPort: Int = config[Key("LDAP_AUTH_PORT", intType)],
-        val ldapAuthUserBase: String = config[Key("LDAP_AUTH_USERBASE", stringType)],
+        val ldapAuthHost: String = config[Key("ldap.auth.host", stringType)],
+        val ldapAuthPort: Int = config[Key("ldap.auth.port", intType)],
+        val ldapAuthUserBase: String = config[Key("ldap.auth.userbase", stringType)],
 
         // ldap details for managing ldap groups - different LDAP servers (test, preprod, production)
-        val ldapHost: String = config[Key("LDAP_HOST", stringType)],
-        val ldapPort: Int = config[Key("LDAP_PORT", intType)],
+        val ldapHost: String = config[Key("ldap.host", stringType)],
+        val ldapPort: Int = config[Key("ldap.port", intType)],
 
-        val ldapSrvUserBase: String = System.getenv("LDAP_SRVUSERBASE")?.toString() ?: "",
-        val ldapGroupBase: String = System.getenv("LDAP_GROUPBASE")?.toString() ?: "",
-        val ldapGroupAttrName: String = System.getenv("LDAP_GROUPATTRNAME")?.toString() ?: "",
-        val ldapGrpMemberAttrName: String = System.getenv("LDAP_GRPMEMBERATTRNAME")?.toString() ?: "",
+        val ldapSrvUserBase: String = config[Key("ldap.srvuserbase", stringType)],
+        val ldapGroupBase: String = config[Key("ldap.groupbase", stringType)],
+        val ldapGroupAttrName: String = config[Key("ldap.groupattrname", stringType)],
+        val ldapGrpMemberAttrName: String = config[Key("ldap.grpmemberattrname", stringType)],
 
         // ldap user and pwd with enough authorization for managing ldap groups
         val ldapUser: String = System.getenv("LDAP_USER")?.toString() ?: "",
