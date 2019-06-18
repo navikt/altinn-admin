@@ -1,8 +1,11 @@
 package no.nav.altinn.admin.ldap
 
 import com.unboundid.ldap.sdk.DN
+import com.unboundid.ldap.sdk.Filter
 import com.unboundid.ldap.sdk.LDAPException
 import com.unboundid.ldap.sdk.ResultCode
+import com.unboundid.ldap.sdk.SearchRequest
+import com.unboundid.ldap.sdk.SearchScope
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.LdapConnectionType
@@ -27,13 +30,20 @@ class LDAPAuthenticate(private val config: Environment.Application) :
                 resolveDNs(user).fold(false) { acc, dn -> acc || authenticated(dn, pwd, acc) }.also {
 
                     val connInfo = config.getConnectionInfo(LdapConnectionType.AUTHENTICATION)
-
                     when (it) {
-                        true -> logger.info { "Successful bind of $user to $connInfo" }
+                        true -> {
+                            logger.info { "Successful bind of $user to $connInfo" }
+                        }
                         false -> logger.error { "Cannot bind $user to $connInfo" }
                     }
                 }
             }
+
+    fun getUsersGroupNames(user: String) {
+        val searchResult = ldapConnection.search(
+                SearchRequest(config.userDN(user), SearchScope.ONE, Filter.createEqualityFilter("objectClass", "group")))
+        logger.info { "Result is ${searchResult.entryCount} " }
+    }
 
     // resolve DNs for both service accounts, including those created in Basta. The order of DNs according to user name
     private fun resolveDNs(user: String): List<String> = config.userDN(user).let {

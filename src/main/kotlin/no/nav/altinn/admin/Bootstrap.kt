@@ -161,7 +161,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
                     false -> stsClient.configureFor(this)
                 }
             }
-        })
+        }, environment = environment)
         nais(environment, readinessCheck = { applicationState.initialized }, livenessCheck = { applicationState.running })
     }
 }

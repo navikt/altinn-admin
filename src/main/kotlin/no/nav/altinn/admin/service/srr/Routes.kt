@@ -11,6 +11,7 @@ import io.ktor.routing.*
 import mu.KotlinLogging
 import no.altinn.schemas.services.register._2015._06.RegisterSRRRightsType
 import no.altinn.services.register.srr._2015._06.IRegisterSRRAgencyExternalBasicGetRightsBasicAltinnFaultFaultFaultMessage
+import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.BasicAuthSecurity
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.badRequest
@@ -23,12 +24,13 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndReponds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.common.API_V1
+import no.nav.altinn.admin.ldap.LDAPAuthenticate
 
-fun Routing.ssrAPI(altinnSrrService: AltinnSRRService) {
+fun Routing.ssrAPI(altinnSrrService: AltinnSRRService, environment: Environment) {
     getRightsList(altinnSrrService)
     getRightsForReportee(altinnSrrService)
-    addRightsForReportee(altinnSrrService)
-    deleteRightsForReportee(altinnSrrService)
+    addRightsForReportee(altinnSrrService, environment)
+    deleteRightsForReportee(altinnSrrService, environment)
 }
 
 internal data class AnError(val error: String)
@@ -107,26 +109,26 @@ fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService) =
 class PostLeggTilRettighet
 data class PostLeggTilRettighetBody(val orgnr: String, val lesEllerSkriv: String, val domene: String)
 
-fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService) =
+fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
         post<PostLeggTilRettighet, PostLeggTilRettighetBody> ("Legg til rettighet for en virksomhet"
                 .securityAndReponds(BasicAuthSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
         ) { _, body ->
             val currentUser = call.principal<UserIdPrincipal>()!!.name
-            val logEntry = "Legger til rettighet til virksomhet $currentUser - $body"
+            val logEntry = "Bruker $currentUser legger til rettighet til virksomhet  - $body"
             application.environment.log.info(logEntry)
 
-            val userExist = true
-//            try {
-//                LDAPGroup(fasitConfig).use { ldap -> ldap.userExists(currentUser) }
+            LDAPAuthenticate(environment.application).getUsersGroupNames(currentUser)
+//            val userExist = try {
+//                LdapA(application.environment).use { ldap -> ldap.userExists(currentUser) }
 //            } catch (e: Exception) { false }
-
-            if (!userExist) {
-                val msg = "authenticated user $currentUser doesn't exist as NAV ident or " +
-                        "service user in current LDAP domain, or ldap unreachable, cannot be manager of topic"
-                application.environment.log.warn(msg)
-                call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
-                return@post
-            }
+//
+//            if (!userExist) {
+//                val msg = "authenticated user $currentUser doesn't exist as NAV ident or " +
+//                        "service user in current LDAP domain, or ldap unreachable, cannot be manager of topic"
+//                application.environment.log.warn(msg)
+//                call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
+//                return@post
+//            }
 
             val virksomhetsnummer = body.orgnr
             if (!virksomhetsnummer.isBlank() && virksomhetsnummer.length != 9) {
@@ -152,7 +154,7 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService) =
 @Location("$API_V1/altinn/rettighetsregister/slett")
 data class DeleteRettighet(val orgnr: String, val lesEllerSkriv: String, val domene: String)
 
-fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService) =
+fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
         delete<DeleteRettighet> ("Slett rettighet for en virksomhet"
                 .securityAndReponds(BasicAuthSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
         ) { param ->
