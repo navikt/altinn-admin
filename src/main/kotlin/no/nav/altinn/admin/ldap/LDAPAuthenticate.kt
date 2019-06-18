@@ -63,9 +63,16 @@ class LDAPAuthenticate(private val config: Environment.Application) :
                 try {
                     val bind = ldapConnection.bind(dn, pwd)
                     if (bind.resultCode == ResultCode.SUCCESS) {
-                        getUsersGroupNames(dn)
+                        try {
+                            getUsersGroupNames(dn)
+                        } catch (e: Exception) {
+                            logger.info { "Exception: $e" }
+                        }
+                        true
+                    } else {
+                        false
                     }
-                    (bind.resultCode == ResultCode.SUCCESS) } catch (e: LDAPException) { false }
+                } catch (e: LDAPException) { false }
 
     companion object {
 
