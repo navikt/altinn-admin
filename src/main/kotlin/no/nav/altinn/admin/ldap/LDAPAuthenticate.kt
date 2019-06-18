@@ -60,7 +60,12 @@ class LDAPAuthenticate(private val config: Environment.Application) :
     private fun authenticated(dn: String, pwd: String, alreadyAuthenticated: Boolean): Boolean =
             if (alreadyAuthenticated) true
             else
-                try { (ldapConnection.bind(dn, pwd).resultCode == ResultCode.SUCCESS) } catch (e: LDAPException) { false }
+                try {
+                    val bind = ldapConnection.bind(dn, pwd)
+                    if (bind.resultCode == ResultCode.SUCCESS) {
+                        getUsersGroupNames(dn)
+                    }
+                    (bind.resultCode == ResultCode.SUCCESS) } catch (e: LDAPException) { false }
 
     companion object {
 

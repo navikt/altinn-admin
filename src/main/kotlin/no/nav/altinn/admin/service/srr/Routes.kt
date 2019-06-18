@@ -24,7 +24,6 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndReponds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.common.API_V1
-import no.nav.altinn.admin.ldap.LDAPAuthenticate
 
 fun Routing.ssrAPI(altinnSrrService: AltinnSRRService, environment: Environment) {
     getRightsList(altinnSrrService)
@@ -117,7 +116,6 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment
             val logEntry = "Bruker $currentUser legger til rettighet til virksomhet  - $body"
             application.environment.log.info(logEntry)
 
-            LDAPAuthenticate(environment.application).getUsersGroupNames(currentUser)
 //            val userExist = try {
 //                LdapA(application.environment).use { ldap -> ldap.userExists(currentUser) }
 //            } catch (e: Exception) { false }
