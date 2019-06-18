@@ -41,7 +41,7 @@ class LDAPAuthenticate(private val config: Environment.Application) :
 
     fun getUsersGroupNames(user: String) {
         val searchResult = ldapConnection.search(
-                SearchRequest(config.userDN(user), SearchScope.ONE, Filter.createEqualityFilter("objectClass", "group")))
+                SearchRequest(user, SearchScope.ONE, Filter.createEqualityFilter("objectClass", "group")))
         logger.info { "Result is ${searchResult.entryCount} " }
     }
 
