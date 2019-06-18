@@ -42,7 +42,7 @@ class LDAPAuthenticate(private val config: Environment.Application) :
         val dnPrefix = rdns[rdns.indices.first]
         val dnPostfix = "${rdns[rdns.indices.last - 1]},${rdns[rdns.indices.last]}"
         val srvAccounts = listOf("OU=ApplAccounts,OU=ServiceAccounts", "OU=ServiceAccounts")
-
+        logger.info { "DNs : $it" }
         if (isNAVIdent(user)) listOf(it)
         else srvAccounts.map { "$dnPrefix,$it,$dnPostfix" }
     }
