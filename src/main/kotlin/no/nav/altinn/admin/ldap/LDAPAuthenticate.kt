@@ -46,7 +46,6 @@ class LDAPAuthenticate(private val config: Environment.Application) :
         val s2 = ldapConnection.search(
                 SearchRequest(user, SearchScope.ONE, Filter.createEqualityFilter("objectClass", "members")))
         logger.info { "Result is ${s2.entryCount} " }
-
     }
 
     // resolve DNs for both service accounts, including those created in Basta. The order of DNs according to user name
