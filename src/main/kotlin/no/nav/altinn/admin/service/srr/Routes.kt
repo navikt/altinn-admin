@@ -133,6 +133,10 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment
             }
 
             var srrType = RegisterSRRRightsType.READ
+            if ("skriv" != body.lesEllerSkriv && "les" != body.lesEllerSkriv) {
+                call.respond(HttpStatusCode.BadRequest, AnError("lesEllerSkriv verdien må være enten 'les' eller 'skriv'"))
+                return@post
+            }
             if (body.lesEllerSkriv.equals("skriv", true)) {
                 srrType = RegisterSRRRightsType.WRITE
             }
@@ -155,21 +159,17 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
                 .securityAndReponds(BasicAuthSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
         ) { param ->
             val currentUser = call.principal<UserIdPrincipal>()!!.name
-            val logEntry = "Sletter rettighet for en virksomhet $currentUser - $param"
-            application.environment.log.info(logEntry)
-
-            val userExist = true
-//            try {
-//                LDAPGroup(fasitConfig).use { ldap -> ldap.userExists(currentUser) }
-//            } catch (e: Exception) { false }
-
+            val approvedUsers = environment.application.users.split(",")
+            val userExist = approvedUsers.contains(currentUser)
             if (!userExist) {
-                val msg = "authenticated user $currentUser doesn't exist as NAV ident or " +
-                        "service user in current LDAP domain, or ldap unreachable, cannot be manager of topic"
+                val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
                 application.environment.log.warn(msg)
                 call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
                 return@delete
             }
+
+            val logEntry = "Sletter rettighet for en virksomhet $currentUser - $param"
+            application.environment.log.info(logEntry)
 
             val virksomhetsnummer = param.orgnr
             if (!virksomhetsnummer.isBlank() && virksomhetsnummer.length != 9) {
@@ -178,6 +178,11 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
             }
 
             var srrType = RegisterSRRRightsType.READ
+            if ("skriv" != param.lesEllerSkriv && "les" != param.lesEllerSkriv) {
+                call.respond(HttpStatusCode.BadRequest, AnError("lesEllerSkriv verdien må være enten 'les' eller 'skriv'"))
+                return@delete
+            }
+
             if (param.lesEllerSkriv.equals("skriv", true)) {
                 srrType = RegisterSRRRightsType.WRITE
             }
