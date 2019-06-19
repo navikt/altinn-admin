@@ -1,11 +1,8 @@
 package no.nav.altinn.admin.ldap
 
 import com.unboundid.ldap.sdk.DN
-import com.unboundid.ldap.sdk.Filter
 import com.unboundid.ldap.sdk.LDAPException
 import com.unboundid.ldap.sdk.ResultCode
-import com.unboundid.ldap.sdk.SearchRequest
-import com.unboundid.ldap.sdk.SearchScope
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.LdapConnectionType
@@ -40,12 +37,10 @@ class LDAPAuthenticate(private val config: Environment.Application) :
             }
 
     fun getUsersGroupNames(user: String) {
-        val searchResult = ldapConnection.search(
-                SearchRequest(user, SearchScope.ONE, Filter.createEqualityFilter("objectClass", "group")))
-        logger.info { "Result is ${searchResult.entryCount} " }
-        val s2 = ldapConnection.search(
-                SearchRequest(user, SearchScope.ONE, Filter.createEqualityFilter("objectClass", "members")))
-        logger.info { "Result is ${s2.entryCount} " }
+        var s1 = ldapConnection.getEntry("dc=alf")
+        logger.info { "${ldapConnection.connectionPoolName} Result is ${s1.toLDIFString()} " }
+        val s2 = ldapConnection.getEntry("OU=NAV")
+        logger.info { "${ldapConnection.connectionPoolName} Result is ${s2.toLDIFString()} " }
     }
 
     // resolve DNs for both service accounts, including those created in Basta. The order of DNs according to user name
