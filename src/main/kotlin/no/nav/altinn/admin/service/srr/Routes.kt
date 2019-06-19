@@ -26,8 +26,8 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.common.API_V1
 
 fun Routing.ssrAPI(altinnSrrService: AltinnSRRService, environment: Environment) {
-    getRightsList(altinnSrrService)
-    getRightsForReportee(altinnSrrService)
+    getRightsList(altinnSrrService, environment)
+    getRightsForReportee(altinnSrrService, environment)
     addRightsForReportee(altinnSrrService, environment)
     deleteRightsForReportee(altinnSrrService, environment)
 }
@@ -39,12 +39,19 @@ private val logger = KotlinLogging.logger { }
 
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/rettighetsregister/hent")
-class Rettighetsregister
+data class Rettighetsregister(val tjenesteKode: String)
 
-fun Routing.getRightsList(altinnSrrService: AltinnSRRService) =
+fun Routing.getRightsList(altinnSrrService: AltinnSRRService, environment: Environment) =
     get<Rettighetsregister>("hent rettigheter for alle virksomheter".responds(ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+        param ->
+        val scList = environment.application.serviceCodes.split(",")
+        if (!scList.contains(param.tjenesteKode)) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
+            return@get
+        }
+
         try {
-            val rightsResponse = altinnSrrService.getRightsForAllBusinesses()
+            val rightsResponse = altinnSrrService.getRightsForAllBusinesses(param.tjenesteKode)
             call.respond(HttpStatusCode.OK, rightsResponse)
         } catch (e: IRegisterSRRAgencyExternalBasicGetRightsBasicAltinnFaultFaultFaultMessage) {
             logger.error {
@@ -69,15 +76,22 @@ fun Routing.getRightsList(altinnSrrService: AltinnSRRService) =
 
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/rettighetsregister/hent/{orgnr}")
-data class FirmaRettigheter(val orgnr: String)
+data class FirmaRettigheter(val tjenesteKode: String, val orgnr: String)
 
-fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService) =
+fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
     get<FirmaRettigheter>("hent rettigheter for en virksomhet".responds(ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
         val virksomhetsnummer: String? = param.orgnr
+
+        val scList = environment.application.serviceCodes.split(",")
+        if (!scList.contains(param.tjenesteKode)) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
+            return@get
+        }
+
         try {
             if (!virksomhetsnummer.isNullOrBlank() && virksomhetsnummer.length == 9) {
-                val rightResponse = altinnSrrService.getRightsForABusiness(virksomhetsnummer)
+                val rightResponse = altinnSrrService.getRightsForABusiness(param.tjenesteKode, virksomhetsnummer)
                 call.respond(HttpStatusCode.OK, rightResponse)
             } else {
                 call.respond(HttpStatusCode.BadRequest, AnError("Feil virksomhetsnummer $virksomhetsnummer."))

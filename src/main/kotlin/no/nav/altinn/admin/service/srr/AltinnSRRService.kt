@@ -62,11 +62,11 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
         return RightsResponse("Failed", "Unknown error occurred when removing $type rights, check logger")
     }
 
-    fun getRightsForAllBusinesses(): RightsResponse {
+    fun getRightsForAllBusinesses(tjenesteKode: String): RightsResponse {
         try {
             logger.info { "Tries to get all righsts..." }
             val register = env.mock.srrGetResponse ?: iRegisterSRRAgencyExternalBasic.getRightsBasic(altinnUsername, altinnUserPassword,
-                "5252", 1, null)
+                tjenesteKode, 1, null)
             logger.info { "REGISTER size ${register.getRightResponse.size}" }
             val result = mutableListOf<RegistryResponse.Register>()
             register.getRightResponse.forEach {
@@ -87,10 +87,10 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
         return RightsResponse("Failed", "Unknown error occurred when getting rights registry, check logger")
     }
 
-    fun getRightsForABusiness(reportee: String): RightsResponse {
+    fun getRightsForABusiness(tjenesteKode: String, reportee: String): RightsResponse {
         try {
             val register = env.mock.srrGetResponse ?: iRegisterSRRAgencyExternalBasic.getRightsBasic(altinnUsername, altinnUserPassword,
-                    "5252", 1, reportee)
+                    tjenesteKode, 1, reportee)
             val result = mutableListOf<RegistryResponse.Register>()
             register.getRightResponse.forEach { it ->
                 result.add(RegistryResponse.Register(it.reportee, it.condition, it.right.toString(), it.validTo.toString()))
