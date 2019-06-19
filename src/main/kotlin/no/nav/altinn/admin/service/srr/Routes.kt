@@ -113,20 +113,18 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment
                 .securityAndReponds(BasicAuthSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
         ) { _, body ->
             val currentUser = call.principal<UserIdPrincipal>()!!.name
+
+            val approvedUsers = environment.application.users.split(",")
+            val userExist = approvedUsers.contains(currentUser)
+            if (!userExist) {
+                val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
+                application.environment.log.warn(msg)
+                call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
+                return@post
+            }
+
             val logEntry = "Bruker $currentUser legger til rettighet til virksomhet  - $body"
             application.environment.log.info(logEntry)
-
-//            val userExist = try {
-//                LdapA(application.environment).use { ldap -> ldap.userExists(currentUser) }
-//            } catch (e: Exception) { false }
-//
-//            if (!userExist) {
-//                val msg = "authenticated user $currentUser doesn't exist as NAV ident or " +
-//                        "service user in current LDAP domain, or ldap unreachable, cannot be manager of topic"
-//                application.environment.log.warn(msg)
-//                call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
-//                return@post
-//            }
 
             val virksomhetsnummer = body.orgnr
             if (!virksomhetsnummer.isBlank() && virksomhetsnummer.length != 9) {

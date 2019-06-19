@@ -43,6 +43,7 @@ data class Environment(
         val port: Int = config[Key("application.port", intType)],
         val username: String = config[Key("serviceuser.username", stringType)],
         val password: String = config[Key("serviceuser.password", stringType)],
+        val users: String = config[Key("approved.users.list", stringType)],
 
         // common ldap details for both authentication and group management
         val ldapConnTimeout: Int = config[Key("ldap.conntimeout", intType)],
@@ -60,11 +61,7 @@ data class Environment(
         val ldapSrvUserBase: String = config[Key("ldap.srvuserbase", stringType)],
         val ldapGroupBase: String = config[Key("ldap.groupbase", stringType)],
         val ldapGroupAttrName: String = config[Key("ldap.groupattrname", stringType)],
-        val ldapGrpMemberAttrName: String = config[Key("ldap.grpmemberattrname", stringType)],
-
-        // ldap user and pwd with enough authorization for managing ldap groups
-        val ldapUser: String = System.getenv("LDAP_USER")?.toString() ?: "",
-        val ldapPassword: String = System.getenv("LDAP_PASSWORD")?.toString() ?: ""
+        val ldapGrpMemberAttrName: String = config[Key("ldap.grpmemberattrname", stringType)]
     )
 
     data class Mock(
@@ -81,14 +78,6 @@ data class Environment(
         //        xmlMapper.readValue(config[Key("mock.ssr.add.response", stringType)], AddRightResponse::class.java))}
     )
 }
-
-fun Environment.Application.ldapAuthenticationInfoComplete(): Boolean =
-        ldapUserAttrName.isNotEmpty() && ldapAuthHost.isNotEmpty() && ldapAuthPort != 0 && ldapAuthUserBase.isNotEmpty()
-
-fun Environment.Application.ldapGroupInfoComplete(): Boolean =
-        ldapHost.isNotEmpty() && ldapPort != 0 && ldapSrvUserBase.isNotEmpty() && ldapGroupBase.isNotEmpty() &&
-                ldapGroupAttrName.isNotEmpty() && ldapGrpMemberAttrName.isNotEmpty() && ldapUser.isNotEmpty() &&
-                ldapPassword.isNotEmpty()
 
 // Connection factory for which ldap in matter
 
@@ -107,7 +96,3 @@ fun Environment.Application.getConnectionInfo(connType: LdapConnectionType) =
 // Return diverse distinguished name types
 
 fun Environment.Application.userDN(user: String) = "$ldapUserAttrName=$user,$ldapAuthUserBase"
-
-fun Environment.Application.srvUserDN() = "$ldapUserAttrName=$ldapUser,$ldapSrvUserBase"
-
-fun Environment.Application.groupDN(groupName: String) = "$ldapGroupAttrName=$groupName,$ldapGroupBase"
