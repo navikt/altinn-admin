@@ -3,8 +3,6 @@ package no.nav.altinn.admin.ldap
 import com.unboundid.ldap.sdk.DN
 import com.unboundid.ldap.sdk.LDAPException
 import com.unboundid.ldap.sdk.ResultCode
-import com.unboundid.ldap.sdk.SearchRequest
-import com.unboundid.ldap.sdk.SearchScope
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.LdapConnectionType
@@ -38,17 +36,6 @@ class LDAPAuthenticate(private val config: Environment.Application) :
                 }
             }
 
-    fun getUsersGroupNames(user: String) {
-        logger.info { "getRoles($user)" }
-        val filter = "(cn=$user)"
-        val sRequest = SearchRequest("OU=NAV", SearchScope.SUB, filter)
-        val sResult = ldapConnection.search(sRequest)
-        val entries = sResult.searchEntries
-        logger.info { "Found ${sResult.entryCount} roles!" }
-        if (entries.isEmpty())
-            logger.info { "No roles found for user" }
-    }
-
     // resolve DNs for both service accounts, including those created in Basta. The order of DNs according to user name
     private fun resolveDNs(user: String): List<String> = config.userDN(user).let {
 
@@ -64,19 +51,7 @@ class LDAPAuthenticate(private val config: Environment.Application) :
     private fun authenticated(dn: String, pwd: String, alreadyAuthenticated: Boolean): Boolean =
             if (alreadyAuthenticated) true
             else
-                try {
-                    val bind = ldapConnection.bind(dn, pwd)
-                    if (bind.resultCode == ResultCode.SUCCESS) {
-                        try {
-                            getUsersGroupNames(dn)
-                        } catch (e: Exception) {
-                            logger.info { "Exception: $e" }
-                        }
-                        true
-                    } else {
-                        false
-                    }
-                } catch (e: LDAPException) { false }
+                try { ldapConnection.bind(dn, pwd).resultCode == ResultCode.SUCCESS } catch (e: LDAPException) { false }
 
     companion object {
 
