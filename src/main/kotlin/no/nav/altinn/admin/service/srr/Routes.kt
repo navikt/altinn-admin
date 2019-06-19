@@ -38,7 +38,7 @@ internal const val GROUP_NAME = "Rettighetsregister"
 private val logger = KotlinLogging.logger { }
 
 @Group(GROUP_NAME)
-@Location("$API_V1/altinn/rettighetsregister/hent")
+@Location("$API_V1/altinn/rettighetsregister/hent/{tjenesteKode}")
 data class Rettighetsregister(val tjenesteKode: String)
 
 fun Routing.getRightsList(altinnSrrService: AltinnSRRService, environment: Environment) =
@@ -75,7 +75,7 @@ fun Routing.getRightsList(altinnSrrService: AltinnSRRService, environment: Envir
     }
 
 @Group(GROUP_NAME)
-@Location("$API_V1/altinn/rettighetsregister/hent/{orgnr}")
+@Location("$API_V1/altinn/rettighetsregister/hent/{tjenesteKode}{orgnr}")
 data class FirmaRettigheter(val tjenesteKode: String, val orgnr: String)
 
 fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
@@ -171,7 +171,7 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment
         }
 
 @Group(GROUP_NAME)
-@Location("$API_V1/altinn/rettighetsregister/slett")
+@Location("$API_V1/altinn/rettighetsregister/slett/{tjenesteKode}{orgnr}{lesEllerSkriv}{domene}")
 data class DeleteRettighet(val tjenesteKode: String, val orgnr: String, val lesEllerSkriv: String, val domene: String)
 
 fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
