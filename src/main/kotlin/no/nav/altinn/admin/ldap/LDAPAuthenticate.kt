@@ -3,6 +3,8 @@ package no.nav.altinn.admin.ldap
 import com.unboundid.ldap.sdk.DN
 import com.unboundid.ldap.sdk.LDAPException
 import com.unboundid.ldap.sdk.ResultCode
+import com.unboundid.ldap.sdk.SearchRequest
+import com.unboundid.ldap.sdk.SearchScope
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.LdapConnectionType
@@ -37,10 +39,14 @@ class LDAPAuthenticate(private val config: Environment.Application) :
             }
 
     fun getUsersGroupNames(user: String) {
-        var s1 = ldapConnection.getEntry("dc=alf")
-        logger.info { "${ldapConnection.connectionPoolName} Result is ${s1.toLDIFString()} " }
-        val s2 = ldapConnection.getEntry("OU=NAV")
-        logger.info { "${ldapConnection.connectionPoolName} Result is ${s2.toLDIFString()} " }
+        logger.info { "getRoles($user)" }
+        val filter = "(cn=$user)"
+        val sRequest = SearchRequest("OU=NAV", SearchScope.SUB, filter)
+        val sResult = ldapConnection.search(sRequest)
+        val entries = sResult.searchEntries
+        logger.info { "Found ${sResult.entryCount} roles!" }
+        if (entries.isEmpty())
+            logger.info { "No roles found for user" }
     }
 
     // resolve DNs for both service accounts, including those created in Basta. The order of DNs according to user name
