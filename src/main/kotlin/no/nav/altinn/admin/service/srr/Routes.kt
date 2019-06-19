@@ -106,7 +106,7 @@ fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService) =
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/rettighetsregister/leggtil")
 class PostLeggTilRettighet
-data class PostLeggTilRettighetBody(val orgnr: String, val lesEllerSkriv: String, val domene: String)
+data class PostLeggTilRettighetBody(val tjenesteKode: String, val orgnr: String, val lesEllerSkriv: String, val domene: String)
 
 fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
         post<PostLeggTilRettighet, PostLeggTilRettighetBody> ("Legg til rettighet for en virksomhet"
@@ -123,8 +123,14 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment
                 return@post
             }
 
-            val logEntry = "Bruker $currentUser legger til rettighet til virksomhet  - $body"
+            val logEntry = "Bruker $currentUser forsøker å legge til rettighet til virksomhet  - $body"
             application.environment.log.info(logEntry)
+
+            val scList = environment.application.serviceCodes.split(",")
+            if (!scList.contains(body.tjenesteKode)) {
+                call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
+                return@post
+            }
 
             val virksomhetsnummer = body.orgnr
             if (!virksomhetsnummer.isBlank() && virksomhetsnummer.length != 9) {
@@ -146,13 +152,13 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment
                 return@post
             }
 
-            val rightResponse = altinnSrrService.addRights(virksomhetsnummer, body.domene, srrType)
+            val rightResponse = altinnSrrService.addRights(body.tjenesteKode, virksomhetsnummer, body.domene, srrType)
             call.respond(HttpStatusCode.OK, rightResponse)
         }
 
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/rettighetsregister/slett")
-data class DeleteRettighet(val orgnr: String, val lesEllerSkriv: String, val domene: String)
+data class DeleteRettighet(val tjenesteKode: String, val orgnr: String, val lesEllerSkriv: String, val domene: String)
 
 fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
         delete<DeleteRettighet> ("Slett rettighet for en virksomhet"
@@ -168,8 +174,14 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
                 return@delete
             }
 
-            val logEntry = "Sletter rettighet for en virksomhet $currentUser - $param"
+            val logEntry = "Forsøker å slette en rettighet for en virksomhet $currentUser - $param"
             application.environment.log.info(logEntry)
+
+            val scList = environment.application.serviceCodes.split(",")
+            if (!scList.contains(param.tjenesteKode)) {
+                call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
+                return@delete
+            }
 
             val virksomhetsnummer = param.orgnr
             if (!virksomhetsnummer.isBlank() && virksomhetsnummer.length != 9) {
@@ -192,6 +204,6 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
                 return@delete
             }
 
-            val rightResponse = altinnSrrService.deleteRights(virksomhetsnummer, param.domene, srrType)
+            val rightResponse = altinnSrrService.deleteRights(param.tjenesteKode, virksomhetsnummer, param.domene, srrType)
             call.respond(HttpStatusCode.OK, rightResponse)
         }

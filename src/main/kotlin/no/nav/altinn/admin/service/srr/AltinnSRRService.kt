@@ -22,10 +22,10 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
     private val iRegisterSRRAgencyExternalBasic: IRegisterSRRAgencyExternalBasic by lazy(iRegisterSRRAgencyExternalBasicFactory)
     private val env = env
 
-    fun addRights(reportee: String, redirectDomain: String, type: RegisterSRRRightsType): RightsResponse {
+    fun addRights(serviceCode: String, reportee: String, redirectDomain: String, type: RegisterSRRRightsType): RightsResponse {
         logger.info { "Adding $type rights for business number $reportee with redirect url $redirectDomain." }
         try {
-            val response = env.mock.srrAddResponse ?: iRegisterSRRAgencyExternalBasic.addRightsBasic(altinnUsername, altinnUserPassword, "5252", 1,
+            val response = env.mock.srrAddResponse ?: iRegisterSRRAgencyExternalBasic.addRightsBasic(altinnUsername, altinnUserPassword, serviceCode, 1,
                     createAddRightsList(reportee, redirectDomain, type))
 
             return createAddResponseMessage(response, type, reportee)
@@ -43,10 +43,10 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
         return RightsResponse("Failed", "Unknown error occurred when adding $type rights, check logger")
     }
 
-    fun deleteRights(reportee: String, redirectDomain: String, type: RegisterSRRRightsType): RightsResponse {
+    fun deleteRights(serviceCode: String, reportee: String, redirectDomain: String, type: RegisterSRRRightsType): RightsResponse {
         logger.info { "Removing read rights for business number $reportee with redirect url $redirectDomain." }
         try {
-            val response = env.mock.srrDeleteResponse ?: iRegisterSRRAgencyExternalBasic.deleteRightsBasic(altinnUsername, altinnUserPassword, "5252", 1,
+            val response = env.mock.srrDeleteResponse ?: iRegisterSRRAgencyExternalBasic.deleteRightsBasic(altinnUsername, altinnUserPassword, serviceCode, 1,
                     createDeleteRightsList(reportee, redirectDomain, type))
             return createDeleteResponseMessage(response, type, reportee)
         } catch (e: IRegisterSRRAgencyExternalBasicDeleteRightsBasicAltinnFaultFaultFaultMessage) {

@@ -100,8 +100,6 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
                 LDAPAuthenticate(environment.application).use { ldap ->
                     if (ldap.canUserAuthenticate(credentials.name, credentials.password))
                         UserIdPrincipal(credentials.name)
-//                    if (credentials.name == environment.application.username && credentials.password == environment.application.password)
-//                        UserIdPrincipal(credentials.name)
                     else
                         null
                 }

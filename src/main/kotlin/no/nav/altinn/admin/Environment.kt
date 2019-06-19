@@ -44,6 +44,7 @@ data class Environment(
         val username: String = config[Key("serviceuser.username", stringType)],
         val password: String = config[Key("serviceuser.password", stringType)],
         val users: String = config[Key("approved.users.list", stringType)],
+        val serviceCodes: String = config[Key("servicecode.list", stringType)],
 
         // common ldap details for both authentication and group management
         val ldapConnTimeout: Int = config[Key("ldap.conntimeout", intType)],
