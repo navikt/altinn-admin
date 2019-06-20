@@ -51,8 +51,6 @@ val swagger = Swagger(
 
 private val logger = KotlinLogging.logger { }
 
-// internal const val JAAS_PLAIN_LOGIN = "org.apache.kafka.common.security.plain.PlainLoginModule"
-// internal const val JAAS_REQUIRED = "required"
 internal const val SWAGGER_URL_V1 = "$API_V1/apidocs/index.html?url=swagger.json"
 
 fun main() = bootstrap(ApplicationState(), Environment())
@@ -86,7 +84,6 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         level = Level.INFO
         filter { call -> call.request.path().startsWith(API_V1) }
     }
-    // install(XForwardedHeadersSupport) - is this needed, and supported in reverse proxy in matter?
     install(StatusPages) {
         exception<Throwable> { cause ->
             logger.error(cause)
@@ -119,7 +116,6 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     val swaggerUI = SwaggerUi()
 
     val stsClient by lazy {
-        logger.debug { "STS ${environment.stsUrl} service username : ${environment.application.username}" }
         stsClient(
                 stsUrl = environment.stsUrl,
                 credentials = environment.application.username to environment.application.password
@@ -140,7 +136,6 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         logger.info { "Installing altinn srr api" }
         ssrAPI(altinnSrrService = AltinnSRRService(environment) {
             Clients.iRegisterSRRAgencyExternalBasic(environment.altinn.altinnAdminUrl).apply {
-                logger.debug { "Using devProfile : ${environment.application.devProfile}" }
                 when (environment.application.devProfile) {
                     true -> stsClient.configureFor(this, STS_SAML_POLICY_NO_TRANSPORT_BINDING)
                     false -> stsClient.configureFor(this)

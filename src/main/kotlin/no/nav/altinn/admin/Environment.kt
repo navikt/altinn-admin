@@ -76,7 +76,6 @@ data class Environment(
 }
 
 // Connection factory for which ldap in matter
-
 enum class LdapConnectionType { AUTHENTICATION, GROUP }
 
 fun Environment.Application.getConnectionInfo(connType: LdapConnectionType) =
@@ -90,5 +89,4 @@ fun Environment.Application.getConnectionInfo(connType: LdapConnectionType) =
         }
 
 // Return diverse distinguished name types
-
 fun Environment.Application.userDN(user: String) = "$ldapUserAttrName=$user,$ldapAuthUserBase"
