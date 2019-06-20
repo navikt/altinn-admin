@@ -95,7 +95,7 @@ class AltinnSRRService(private val env: Environment, iRegisterSRRAgencyExternalB
                 result.add(RegistryResponse.Register(it.reportee, it.condition, it.right.toString(), it.validTo.toString()))
             }
 
-            return RightsResponse("Ok", "{\n" + RegistryResponse(result).toString() + "\n}")
+            return RightsResponse("Ok", "{\n" + RegistryResponse(result).toString() + "<br>}")
         } catch (e: IRegisterSRRAgencyExternalBasicGetRightsBasicAltinnFaultFaultFaultMessage) {
             logger.error {
                 "IRegisterSRRAgencyExternalBasic.getRightsBasic feilet \n" +
