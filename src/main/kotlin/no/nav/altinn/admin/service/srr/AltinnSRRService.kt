@@ -120,7 +120,7 @@ class AltinnSRRService(env: Environment, iRegisterSRRAgencyExternalBasicFactory:
                         condition = "ALLOWEDREDIRECTDOMAIN:$domain"
                         reportee = orgNr
                         right = type
-                        validTo = DatatypeFactory.newInstance().newXMLGregorianCalendar(GregorianCalendar.from(ZonedDateTime.now().plusYears(10)))
+                        validTo = DatatypeFactory.newInstance().newXMLGregorianCalendar(GregorianCalendar.from(ZonedDateTime.now().plusYears(2)))
                     }
             )
         }
