@@ -57,12 +57,7 @@ data class Environment(
 
         // ldap details for managing ldap groups - different LDAP servers (test, preprod, production)
         val ldapHost: String = config[Key("ldap.host", stringType)],
-        val ldapPort: Int = config[Key("ldap.port", intType)],
-
-        val ldapSrvUserBase: String = config[Key("ldap.srvuserbase", stringType)],
-        val ldapGroupBase: String = config[Key("ldap.groupbase", stringType)],
-        val ldapGroupAttrName: String = config[Key("ldap.groupattrname", stringType)],
-        val ldapGrpMemberAttrName: String = config[Key("ldap.grpmemberattrname", stringType)]
+        val ldapPort: Int = config[Key("ldap.port", intType)]
     )
 
     data class Mock(

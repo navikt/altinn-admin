@@ -9,7 +9,6 @@ version = "0.8.2-SNAPSHOT"
 val kotlinVersion = "1.3.31"
 val ktorVersion = "1.2.1"
 val jacksonVersion = "2.9.8"
-val nimbusJoseVersion = "6.7"
 
 val prometheusVersion = "0.6.0"
 val kotlinloggingVersion = "1.6.22"
@@ -25,9 +24,6 @@ val cxfVersion = "3.3.1"
 val bouncycastleVersion = "1.60"
 val unboundidVersion = "4.0.8"
 
-val postgresVersion = "42.2.5"
-val exposedVersion = "0.12.1"
-val hikariVersion = "3.3.0"
 val swaggerVersion = "3.1.7"
 
 // test dependencies
@@ -80,12 +76,9 @@ dependencies {
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
     compile("io.ktor:ktor-server-netty:$ktorVersion")
     compile("io.ktor:ktor-auth:$ktorVersion")
-    compile("io.ktor:ktor-auth-jwt:$ktorVersion")
     compile("io.ktor:ktor-jackson:$ktorVersion")
     compile("io.ktor:ktor-client-core:$ktorVersion")
     compile("io.ktor:ktor-client-apache:$ktorVersion")
-    compile("io.ktor:ktor-client-json:$ktorVersion")
-    compile("io.ktor:ktor-client-jackson:$ktorVersion")
     compile( "io.ktor:ktor-locations:$ktorVersion")
     compile("io.prometheus:simpleclient_common:$prometheusVersion")
     compile("io.prometheus:simpleclient_hotspot:$prometheusVersion")
@@ -93,11 +86,7 @@ dependencies {
     compile("net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion")
     compile("com.natpryce:konfig:$konfigVersion")
     compile("javax.xml.ws:jaxws-api:$jaxwsVersion")
-    compile("com.nimbusds:nimbus-jose-jwt:$nimbusJoseVersion")
-    compile("org.postgresql:postgresql:$postgresVersion")
     compile("org.bouncycastle:bcprov-jdk15on:$bouncycastleVersion")
-    compile("org.jetbrains.exposed:exposed:$exposedVersion")
-    compile("com.zaxxer:HikariCP:$hikariVersion")
 
     implementation("org.apache.cxf:cxf-rt-frontend-jaxws:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")
@@ -109,7 +98,6 @@ dependencies {
     }
     
     implementation("javax.activation:activation:$javaxActivationVersion")
-    implementation("io.ktor:ktor-html-builder:$ktorVersion")
     implementation("org.webjars:swagger-ui:$swaggerVersion")
     implementation("com.unboundid:unboundid-ldapsdk:$unboundidVersion")
 
