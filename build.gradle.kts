@@ -21,7 +21,6 @@ val jaxwsVersion = "2.3.1"
 val jaxwsToolsVersion = "2.3.1"
 val javaxActivationVersion = "1.1.1"
 val cxfVersion = "3.3.1"
-val bouncycastleVersion = "1.60"
 val unboundidVersion = "4.0.8"
 
 val swaggerVersion = "3.1.7"
@@ -86,7 +85,6 @@ dependencies {
     compile("net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion")
     compile("com.natpryce:konfig:$konfigVersion")
     compile("javax.xml.ws:jaxws-api:$jaxwsVersion")
-    compile("org.bouncycastle:bcprov-jdk15on:$bouncycastleVersion")
 
     implementation("org.apache.cxf:cxf-rt-frontend-jaxws:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")
