@@ -2,15 +2,6 @@ package no.nav.altinn.admin.service.srr
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class RequestRegister(
-    @JsonProperty("organisasjonsnummer")
-    val organisasjonsnummer: String,
-    @JsonProperty("domene")
-    val domene: String,
-    @JsonProperty("rettighet")
-    val rettighet: String
-)
-
 data class RightsResponse(
     @JsonProperty("status")
     val status: String,

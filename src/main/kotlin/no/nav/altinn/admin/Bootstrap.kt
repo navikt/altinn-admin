@@ -110,19 +110,6 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         register(ContentType.Application.Json, JacksonConverter(objectMapper))
     }
     install(Locations)
-//    install(CORS) {
-//        method(HttpMethod.Put)
-//        header(HttpHeaders.Authorization)
-//        header(HttpHeaders.IfModifiedSince)
-//        header(HttpHeaders.Range)
-//        header(HttpHeaders.UserAgent)
-//        header(HttpHeaders.XCorrelationId)
-//        exposeHeader(HttpHeaders.ContentLength)
-//        exposeHeader(HttpHeaders.ContentRange)
-//        exposeHeader(HttpHeaders.XCorrelationId)
-//        anyHost()
-//        allowSameOrigin = true
-//    }
     install(CallId) {
         generate { randomUuid() }
         verify { callId: String -> callId.isNotEmpty() }
@@ -143,7 +130,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     install(Routing) {
         get("/") { call.respondRedirect(SWAGGER_URL_V1) }
         get("/api") { call.respondRedirect(SWAGGER_URL_V1) }
-        get("$API_V1") { call.respondRedirect(SWAGGER_URL_V1) }
+        get(API_V1) { call.respondRedirect(SWAGGER_URL_V1) }
         get("$API_V1/apidocs") { call.respondRedirect(SWAGGER_URL_V1) }
         get("$API_V1/apidocs/{fileName}") {
             val fileName = call.parameters["fileName"]
