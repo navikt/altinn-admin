@@ -1,15 +1,15 @@
 
 package no.nav.altinn.admin.service.srr
 
-//import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+// import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
-//import io.ktor.server.testing.setBody
+// import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.ApplicationState
-//import no.nav.altinn.admin.common.objectMapper
+// import no.nav.altinn.admin.common.objectMapper
 import no.nav.altinn.admin.mainModule
 import org.amshove.kluent.shouldEqual
 import org.spekframework.spek2.Spek
