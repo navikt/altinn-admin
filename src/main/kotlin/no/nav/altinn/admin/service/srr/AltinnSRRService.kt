@@ -61,18 +61,18 @@ class AltinnSRRService(private val env: Environment, iRegisterSRRAgencyExternalB
         return RightsResponse("Failed", "Unknown error occurred when removing $type rights, check logger")
     }
 
-    fun getRightsForAllBusinesses(tjenesteKode: String): RightsResponse {
+    fun getRightsForAllBusinesses(tjenesteKode: String): RightsResponseWithList {
         try {
-            logger.info { "Tries to get all righsts..." }
+            logger.debug { "Tries to get all righsts..." }
             val register = env.mock.srrGetResponse ?: iRegisterSRRAgencyExternalBasic.getRightsBasic(altinnUsername, altinnUserPassword,
                 tjenesteKode, 1, null)
-            logger.info { "REGISTER size ${register.getRightResponse.size}" }
+            logger.debug { "REGISTER size ${register.getRightResponse.size}" }
             val result = mutableListOf<RegistryResponse.Register>()
             register.getRightResponse.forEach {
-                logger.info { "reportee: ${it.reportee} og condition: ${it.condition}" }
+                logger.debug { "reportee: ${it.reportee} og condition: ${it.condition}" }
                 result.add(RegistryResponse.Register(it.reportee, it.condition, it.right.toString(), it.validTo.toString()))
             }
-            return RightsResponse("Ok", RegistryResponse(result).toString())
+            return RightsResponseWithList("Ok", "Ok", RegistryResponse(result))
         } catch (e: IRegisterSRRAgencyExternalBasicGetRightsBasicAltinnFaultFaultFaultMessage) {
             logger.error { "IRegisterSRRAgencyExternalBasic.getRightsBasic feilet \n" +
                         "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
@@ -83,10 +83,10 @@ class AltinnSRRService(private val env: Environment, iRegisterSRRAgencyExternalB
                         "\n UserId  ${e.faultInfo.userId}"
             }
         }
-        return RightsResponse("Failed", "Unknown error occurred when getting rights registry, check logger")
+        return RightsResponseWithList("Failed", "Unknown error occurred when getting rights registry, check logger", RegistryResponse(emptyList()))
     }
 
-    fun getRightsForABusiness(tjenesteKode: String, reportee: String): RightsResponse {
+    fun getRightsForABusiness(tjenesteKode: String, reportee: String): RightsResponseWithList {
         try {
             val register = env.mock.srrGetResponse ?: iRegisterSRRAgencyExternalBasic.getRightsBasic(altinnUsername, altinnUserPassword,
                     tjenesteKode, 1, reportee)
@@ -95,7 +95,7 @@ class AltinnSRRService(private val env: Environment, iRegisterSRRAgencyExternalB
                 result.add(RegistryResponse.Register(it.reportee, it.condition, it.right.toString(), it.validTo.toString()))
             }
 
-            return RightsResponse("Ok", RegistryResponse(result).toString())
+            return RightsResponseWithList("Ok", "Ok", RegistryResponse(result))
         } catch (e: IRegisterSRRAgencyExternalBasicGetRightsBasicAltinnFaultFaultFaultMessage) {
             logger.error {
                 "IRegisterSRRAgencyExternalBasic.getRightsBasic feilet \n" +
@@ -108,7 +108,7 @@ class AltinnSRRService(private val env: Environment, iRegisterSRRAgencyExternalB
             }
         }
 
-        return RightsResponse("Failed", "Unknown error occurred when getting rights registry, check logger")
+        return RightsResponseWithList("Failed", "Unknown error occurred when getting rights registry, check logger", RegistryResponse(emptyList()))
     }
 
     private fun createAddRightsList(orgNr: String, domain: String, type: RegisterSRRRightsType): AddRightRequestList {

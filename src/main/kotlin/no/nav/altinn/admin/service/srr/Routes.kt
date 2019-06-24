@@ -43,7 +43,7 @@ private val logger = KotlinLogging.logger { }
 data class Rettighetsregister(val tjenesteKode: String)
 
 fun Routing.getRightsList(altinnSrrService: AltinnSRRService, environment: Environment) =
-    get<Rettighetsregister>("hent rettigheter for alle virksomheter".responds(ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+    get<Rettighetsregister>("hent rettigheter for alle virksomheter".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
         val scList = environment.application.serviceCodes.split(",")
         if (!scList.contains(param.tjenesteKode)) {
@@ -53,7 +53,10 @@ fun Routing.getRightsList(altinnSrrService: AltinnSRRService, environment: Envir
 
         try {
             val rightsResponse = altinnSrrService.getRightsForAllBusinesses(param.tjenesteKode)
-            call.respond(HttpStatusCode.OK, rightsResponse)
+            if (rightsResponse.status == "Ok")
+                call.respond(rightsResponse.register)
+            else
+                call.respond(HttpStatusCode.NotFound, rightsResponse.message)
         } catch (e: IRegisterSRRAgencyExternalBasicGetRightsBasicAltinnFaultFaultFaultMessage) {
             logger.error {
                 "IRegisterSRRAgencyExternalBasic.GetRightsBasic feilet \n" +
@@ -80,7 +83,7 @@ fun Routing.getRightsList(altinnSrrService: AltinnSRRService, environment: Envir
 data class FirmaRettigheter(val tjenesteKode: String, val orgnr: String)
 
 fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
-    get<FirmaRettigheter>("hent rettigheter for en virksomhet".responds(ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+    get<FirmaRettigheter>("hent rettigheter for en virksomhet".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
         val virksomhetsnummer: String? = param.orgnr
 
@@ -92,8 +95,11 @@ fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService, environment
 
         try {
             if (!virksomhetsnummer.isNullOrBlank() && virksomhetsnummer.length == 9) {
-                val rightResponse = altinnSrrService.getRightsForABusiness(param.tjenesteKode, virksomhetsnummer)
-                call.respond(HttpStatusCode.OK, rightResponse)
+                val rightsResponse = altinnSrrService.getRightsForABusiness(param.tjenesteKode, virksomhetsnummer)
+                if (rightsResponse.status == "Ok")
+                    call.respond(rightsResponse.register)
+                else
+                    call.respond(HttpStatusCode.NotFound, rightsResponse.message)
             } else {
                 call.respond(HttpStatusCode.BadRequest, AnError("Feil virksomhetsnummer $virksomhetsnummer."))
             }
@@ -121,7 +127,6 @@ fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService, environment
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/rettighetsregister/leggtil")
 class PostLeggTilRettighet
-data class PostLeggTilRettighetBody(val tjenesteKode: String, val orgnr: String, val lesEllerSkriv: String, val domene: String)
 
 fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
             post<PostLeggTilRettighet, PostLeggTilRettighetBody> ("Legg til rettighet for en virksomhet"
