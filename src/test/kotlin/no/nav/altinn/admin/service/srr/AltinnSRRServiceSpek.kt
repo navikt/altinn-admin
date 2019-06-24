@@ -1,15 +1,15 @@
-/*
+
 package no.nav.altinn.admin.service.srr
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+//import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.handleRequest
-import io.ktor.server.testing.setBody
+//import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.ApplicationState
-import no.nav.altinn.admin.common.objectMapper
+//import no.nav.altinn.admin.common.objectMapper
 import no.nav.altinn.admin.mainModule
 import org.amshove.kluent.shouldEqual
 import org.spekframework.spek2.Spek
@@ -18,7 +18,7 @@ import org.spekframework.spek2.style.specification.describe
 object AltinnSRRServiceSpek : Spek({
     val applicationState = ApplicationState(running = true, initialized = true)
 
-    withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
+/*    withTestApplication(moduleFunction = { mainModule(Environment(test = true), applicationState) }) {
         describe("POST Legg til et ugyldig virksomhetsnummer.") {
             val test = objectMapper.writeValueAsString(RequestRegister("", "*.nav.no", "read"))
             val req = handleRequest {
@@ -202,11 +202,12 @@ object AltinnSRRServiceSpek : Spek({
             }
         }
     }
+ */
 
     withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
         describe("GET Hent rettigheter for et virksomhetsnummer.") {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent?orgnr=123")) {
-                it("should fail with bad request") {
+            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/5252/123")) {
+                it("Hent rettigheter for et virksomhetsnummer 123, skal feile med 'bad request'") {
                     response.status() shouldEqual HttpStatusCode.BadRequest
                 }
             }
@@ -215,8 +216,8 @@ object AltinnSRRServiceSpek : Spek({
 
     withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
         describe("GET Hent rettigheter for alle virksomheter.") {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent")) {
-                it("should be ok") {
+            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/1234")) {
+                it("Hent rettigheter for alle virksomheter, skal være ok") {
                     response.status() shouldEqual HttpStatusCode.OK
                 }
             }
@@ -225,13 +226,11 @@ object AltinnSRRServiceSpek : Spek({
 
     withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
         describe("GET Hent rettigheter for en virksomhet.") {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent?orgnr=123123123")) {
-                it("should be ok") {
+            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/5678/123123123")) {
+                it("Hent rettigheter for en virksomhet, skal være ok") {
                     response.status() shouldEqual HttpStatusCode.OK
                 }
             }
         }
     }
 })
-
- */

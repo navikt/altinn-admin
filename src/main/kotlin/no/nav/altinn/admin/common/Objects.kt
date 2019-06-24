@@ -16,7 +16,7 @@ internal val xmlMapper: XmlMapper = XmlMapper(JacksonXmlModule().apply {
         .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) as XmlMapper
 
-internal val objectMapper: ObjectMapper = ObjectMapper()
+val objectMapper: ObjectMapper = ObjectMapper()
     .registerKotlinModule()
     .registerModule(JavaTimeModule())
     .configure(SerializationFeature.INDENT_OUTPUT, true)

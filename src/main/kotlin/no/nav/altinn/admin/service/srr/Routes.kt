@@ -14,6 +14,7 @@ import no.altinn.services.register.srr._2015._06.IRegisterSRRAgencyExternalBasic
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.BasicAuthSecurity
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
+import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ParameterInputType
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.badRequest
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.delete
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.get
@@ -123,52 +124,101 @@ class PostLeggTilRettighet
 data class PostLeggTilRettighetBody(val tjenesteKode: String, val orgnr: String, val lesEllerSkriv: String, val domene: String)
 
 fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
-        post<PostLeggTilRettighet, PostLeggTilRettighetBody> ("Legg til rettighet for en virksomhet"
-                .securityAndReponds(BasicAuthSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
-        ) { _, body ->
-            val currentUser = call.principal<UserIdPrincipal>()!!.name
+        (when(environment.test) {
+            true -> post<PostLeggTilRettighet, PostLeggTilRettighetBody> ("Legg til rettighet for en virksomhet"
+                    .responds(ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())
+            ){ _, body ->
+                val currentUser = call.principal<UserIdPrincipal>()!!.name
 
-            val approvedUsers = environment.application.users.split(",")
-            val userExist = approvedUsers.contains(currentUser)
-            if (!userExist) {
-                val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
-                application.environment.log.warn(msg)
-                call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
-                return@post
+                val approvedUsers = environment.application.users.split(",")
+                val userExist = approvedUsers.contains(currentUser)
+                if (!userExist) {
+                    val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
+                    application.environment.log.warn(msg)
+                    call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
+                    return@post
+                }
+
+                val logEntry = "Bruker $currentUser forsøker å legge til rettighet til virksomhet  - ${ParameterInputType.body}"
+                application.environment.log.info(logEntry)
+
+                val scList = environment.application.serviceCodes.split(",")
+                if (!scList.contains(body.tjenesteKode)) {
+                    call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
+                    return@post
+                }
+
+                val virksomhetsnummer = body.orgnr
+                if (!virksomhetsnummer.isBlank() && virksomhetsnummer.length != 9) {
+                    call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig virksomhetsnummer"))
+                    return@post
+                }
+
+                var srrType = RegisterSRRRightsType.READ
+                if ("skriv" != body.lesEllerSkriv && "les" != body.lesEllerSkriv) {
+                    call.respond(HttpStatusCode.BadRequest, AnError("lesEllerSkriv verdien må være enten 'les' eller 'skriv'"))
+                    return@post
+                }
+                if (body.lesEllerSkriv.equals("skriv", true)) {
+                    srrType = RegisterSRRRightsType.WRITE
+                }
+
+                if (body.domene.isNullOrEmpty()) {
+                    call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig domene"))
+                    return@post
+                }
+
+                val rightResponse = altinnSrrService.addRights(body.tjenesteKode, virksomhetsnummer, body.domene, srrType)
+                call.respond(HttpStatusCode.OK, rightResponse)
             }
+            false ->
+                post<PostLeggTilRettighet, PostLeggTilRettighetBody> ("Legg til rettighet for en virksomhet"
+                    .securityAndReponds(BasicAuthSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
+            ){ _, body ->
+                val currentUser = call.principal<UserIdPrincipal>()!!.name
 
-            val logEntry = "Bruker $currentUser forsøker å legge til rettighet til virksomhet  - $body"
-            application.environment.log.info(logEntry)
+                val approvedUsers = environment.application.users.split(",")
+                val userExist = approvedUsers.contains(currentUser)
+                if (!userExist) {
+                    val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
+                    application.environment.log.warn(msg)
+                    call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
+                    return@post
+                }
 
-            val scList = environment.application.serviceCodes.split(",")
-            if (!scList.contains(body.tjenesteKode)) {
-                call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
-                return@post
+                val logEntry = "Bruker $currentUser forsøker å legge til rettighet til virksomhet  - ${ParameterInputType.body}"
+                application.environment.log.info(logEntry)
+
+                val scList = environment.application.serviceCodes.split(",")
+                if (!scList.contains(body.tjenesteKode)) {
+                    call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
+                    return@post
+                }
+
+                val virksomhetsnummer = body.orgnr
+                if (!virksomhetsnummer.isBlank() && virksomhetsnummer.length != 9) {
+                    call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig virksomhetsnummer"))
+                    return@post
+                }
+
+                var srrType = RegisterSRRRightsType.READ
+                if ("skriv" != body.lesEllerSkriv && "les" != body.lesEllerSkriv) {
+                    call.respond(HttpStatusCode.BadRequest, AnError("lesEllerSkriv verdien må være enten 'les' eller 'skriv'"))
+                    return@post
+                }
+                if (body.lesEllerSkriv.equals("skriv", true)) {
+                    srrType = RegisterSRRRightsType.WRITE
+                }
+
+                if (body.domene.isNullOrEmpty()) {
+                    call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig domene"))
+                    return@post
+                }
+
+                val rightResponse = altinnSrrService.addRights(body.tjenesteKode, virksomhetsnummer, body.domene, srrType)
+                call.respond(HttpStatusCode.OK, rightResponse)
             }
-
-            val virksomhetsnummer = body.orgnr
-            if (!virksomhetsnummer.isBlank() && virksomhetsnummer.length != 9) {
-                call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig virksomhetsnummer"))
-                return@post
-            }
-
-            var srrType = RegisterSRRRightsType.READ
-            if ("skriv" != body.lesEllerSkriv && "les" != body.lesEllerSkriv) {
-                call.respond(HttpStatusCode.BadRequest, AnError("lesEllerSkriv verdien må være enten 'les' eller 'skriv'"))
-                return@post
-            }
-            if (body.lesEllerSkriv.equals("skriv", true)) {
-                srrType = RegisterSRRRightsType.WRITE
-            }
-
-            if (body.domene.isNullOrEmpty()) {
-                call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig domene"))
-                return@post
-            }
-
-            val rightResponse = altinnSrrService.addRights(body.tjenesteKode, virksomhetsnummer, body.domene, srrType)
-            call.respond(HttpStatusCode.OK, rightResponse)
-        }
+        })
 
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/rettighetsregister/slett/{tjenesteKode}/{orgnr}/{lesEllerSkriv}/{domene}")

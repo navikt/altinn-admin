@@ -14,7 +14,7 @@ import java.io.File
 
 private const val vaultApplicationPropertiesPath = "/var/run/secrets/nais.io/vault/application.properties"
 
-private val config = if (System.getenv("APPLICATION_PROFILE") != "local") {
+private val config = if (System.getenv("APPLICATION_PROFILE") == "remote") {
     systemProperties() overriding
         EnvironmentVariables() overriding
         ConfigurationProperties.fromFile(File(vaultApplicationPropertiesPath)) overriding
@@ -29,7 +29,8 @@ data class Environment(
     val stsUrl: String = config[Key("sts.url", stringType)],
     val altinn: Altinn = Altinn(),
     val application: Application = Application(),
-    val mock: Mock = Mock()
+    val mock: Mock = Mock(),
+    val test: Boolean = false
 ) {
 
     data class Altinn(
