@@ -11,6 +11,8 @@ import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
 import no.altinn.schemas.services.register.srr._2015._06.AddRightResponse
 import no.altinn.schemas.services.register.srr._2015._06.AddRightResponseList
+import no.altinn.schemas.services.register.srr._2015._06.DeleteRightResponse
+import no.altinn.schemas.services.register.srr._2015._06.DeleteRightResponseList
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.ApplicationState
 import no.nav.altinn.admin.common.InMemoryLDAPServer
@@ -26,7 +28,7 @@ object AltinnSRRServiceSpek : Spek({
     val applicationState = ApplicationState(running = true, initialized = true)
 
     describe("Test all authorized calls") {
-        context("POST Legg til regel med ugyldig virksomhetsnummer") {
+        context("POST Route /api/v1/altinn/rettighetsregister/leggtil") {
             val engine = TestApplicationEngine(createTestEnvironment())
             val testEnvironment = Environment()
 
@@ -97,14 +99,16 @@ object AltinnSRRServiceSpek : Spek({
                         req.response.status() shouldEqual HttpStatusCode.OK
                     }
                     it("Legg til rettighet som allerede eksisterer, skal feile med 'bad request'") {
-                        testEnvironment.mock.srrAddResponse = AddRightResponseList().apply { addRightResponse.add(
-                                xmlMapper.readValue("<AddRightResponse>\n" +
-                                        "               <Condition>ALLOWEDREDIRECTDOMAIN:*.TULL.ALTINN.NO;*.TEST.ALTINN.NO</Condition>\n" +
-                                        "               <Reportee>958995369</Reportee>\n" +
-                                        "               <Right>Read</Right>\n" +
-                                        "               <ValidTo>2020-12-03T00:00:00</ValidTo>\n" +
-                                        "               <OperationResult>RULE_ALREADY_EXISTS</OperationResult>\n" +
-                                        "            </AddRightResponse>\n", AddRightResponse::class.java)) }
+                        testEnvironment.mock.srrAddResponse = AddRightResponseList().apply {
+                            addRightResponse.add(
+                                    xmlMapper.readValue("<AddRightResponse>\n" +
+                                            "               <Condition>ALLOWEDREDIRECTDOMAIN:*.TULL.ALTINN.NO;*.TEST.ALTINN.NO</Condition>\n" +
+                                            "               <Reportee>958995369</Reportee>\n" +
+                                            "               <Right>Read</Right>\n" +
+                                            "               <ValidTo>2020-12-03T00:00:00</ValidTo>\n" +
+                                            "               <OperationResult>RULE_ALREADY_EXISTS</OperationResult>\n" +
+                                            "            </AddRightResponse>\n", AddRightResponse::class.java))
+                        }
                         val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "123123123", "les", "*.nav.no"))
                         val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
                             addHeader(HttpHeaders.Accept, "application/json")
@@ -116,14 +120,16 @@ object AltinnSRRServiceSpek : Spek({
                         req.response.status() shouldEqual HttpStatusCode.BadRequest
                     }
                     it("Legg til rettighet for virksomhet som ikke finnes i ER, skal feile med 'bad request'") {
-                        testEnvironment.mock.srrAddResponse = AddRightResponseList().apply { addRightResponse.add(
-                                xmlMapper.readValue("<AddRightResponse>\n" +
-                                        "    <Condition>ALLOWEDREDIRECTDOMAIN:*.TULL.ALTINN.NO;*.TEST.ALTINN.NO</Condition>\n" +
-                                        "    <Reportee>958995367</Reportee>\n" +
-                                        "    <Right>Read</Right>\n" +
-                                        "    <ValidTo>2020-12-03T00:00:00</ValidTo>\n" +
-                                        "    <OperationResult>EMPTY_OR_NOT_A_VALID_SSN_OR_ORGANISATION</OperationResult>\n" +
-                                        "    </AddRightResponse>\n", AddRightResponse::class.java)) }
+                        testEnvironment.mock.srrAddResponse = AddRightResponseList().apply {
+                            addRightResponse.add(
+                                    xmlMapper.readValue("<AddRightResponse>\n" +
+                                            "    <Condition>ALLOWEDREDIRECTDOMAIN:*.TULL.ALTINN.NO;*.TEST.ALTINN.NO</Condition>\n" +
+                                            "    <Reportee>958995367</Reportee>\n" +
+                                            "    <Right>Read</Right>\n" +
+                                            "    <ValidTo>2020-12-03T00:00:00</ValidTo>\n" +
+                                            "    <OperationResult>EMPTY_OR_NOT_A_VALID_SSN_OR_ORGANISATION</OperationResult>\n" +
+                                            "    </AddRightResponse>\n", AddRightResponse::class.java))
+                        }
                         val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "123123123", "les", "*.nav.no"))
                         val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
                             addHeader(HttpHeaders.Accept, "application/json")
@@ -135,14 +141,16 @@ object AltinnSRRServiceSpek : Spek({
                         req.response.status() shouldEqual HttpStatusCode.BadRequest
                     }
                     it("** Ekstra, hvis og når vi åpner for dato ** Legg til rettighet for virksomhet med en dato tilbake i tid, skal feile med 'bad request'") {
-                        testEnvironment.mock.srrAddResponse = AddRightResponseList().apply { addRightResponse.add(
-                                xmlMapper.readValue("<AddRightResponse>\n" +
-                                        "    <Condition>ALLOWEDREDIRECTDOMAIN:*.TULL.ALTINN.NO;*.TEST.ALTINN.NO</Condition>\n" +
-                                        "    <Reportee>958995367</Reportee>\n" +
-                                        "    <Right>Read</Right>\n" +
-                                        "    <ValidTo>2018-12-03T00:00:00</ValidTo>\n" +
-                                        "    <OperationResult>Right_Already_Expired</OperationResult>\n" +
-                                        "    </AddRightResponse>\n", AddRightResponse::class.java)) }
+                        testEnvironment.mock.srrAddResponse = AddRightResponseList().apply {
+                            addRightResponse.add(
+                                    xmlMapper.readValue("<AddRightResponse>\n" +
+                                            "    <Condition>ALLOWEDREDIRECTDOMAIN:*.TULL.ALTINN.NO;*.TEST.ALTINN.NO</Condition>\n" +
+                                            "    <Reportee>958995367</Reportee>\n" +
+                                            "    <Right>Read</Right>\n" +
+                                            "    <ValidTo>2018-12-03T00:00:00</ValidTo>\n" +
+                                            "    <OperationResult>Right_Already_Expired</OperationResult>\n" +
+                                            "    </AddRightResponse>\n", AddRightResponse::class.java))
+                        }
                         val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "123123123", "les", "*.nav.no"))
                         val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
                             addHeader(HttpHeaders.Accept, "application/json")
@@ -154,14 +162,16 @@ object AltinnSRRServiceSpek : Spek({
                         req.response.status() shouldEqual HttpStatusCode.BadRequest
                     }
                     it("Legg til rettighet feiler pga ukjent årsak, skal feile med 'bad request'") {
-                        testEnvironment.mock.srrAddResponse = AddRightResponseList().apply { addRightResponse.add(
-                                xmlMapper.readValue("<AddRightResponse>\n" +
-                                        "    <Condition>ALLOWEDREDIRECTDOMAIN:*.TULL.ALTINN.NO;*.TEST.ALTINN.NO</Condition>\n" +
-                                        "    <Reportee>958995367</Reportee>\n" +
-                                        "    <Right>Read</Right>\n" +
-                                        "    <ValidTo>2018-12-03T00:00:00</ValidTo>\n" +
-                                        "    <OperationResult>Unknown</OperationResult>\n" +
-                                        "    </AddRightResponse>\n", AddRightResponse::class.java)) }
+                        testEnvironment.mock.srrAddResponse = AddRightResponseList().apply {
+                            addRightResponse.add(
+                                    xmlMapper.readValue("<AddRightResponse>\n" +
+                                            "    <Condition>ALLOWEDREDIRECTDOMAIN:*.TULL.ALTINN.NO;*.TEST.ALTINN.NO</Condition>\n" +
+                                            "    <Reportee>958995367</Reportee>\n" +
+                                            "    <Right>Read</Right>\n" +
+                                            "    <ValidTo>2018-12-03T00:00:00</ValidTo>\n" +
+                                            "    <OperationResult>Unknown</OperationResult>\n" +
+                                            "    </AddRightResponse>\n", AddRightResponse::class.java))
+                        }
                         val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "123123123", "les", "*.nav.no"))
                         val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
                             addHeader(HttpHeaders.Accept, "application/json")
@@ -179,68 +189,118 @@ object AltinnSRRServiceSpek : Spek({
                 InMemoryLDAPServer.stop()
             }
         }
-    }
+        context("DELETE Route /api/v1/altinn/rettighetsregister/fjern") {
+            val engine = TestApplicationEngine(createTestEnvironment())
+            val testEnvironment = Environment()
 
-/*
-    withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
-        describe("POST Fjern et ugyldig virksomhetsnummer.") {
-            val mapper = jacksonObjectMapper()
-            val test = mapper.writeValueAsString(RequestRegister("", "*.nav.no", "read"))
-            val req = handleRequest {
-                method = HttpMethod.Post
-                uri = "/api/v1/altinn/rettighetsregister/fjern"
-                addHeader("Content-Type", "application/json")
-                setBody(test)
+            beforeGroup {
+                InMemoryLDAPServer.start()
+                engine.start(wait = false)
+                engine.application.mainModule(testEnvironment, applicationState = applicationState)
+            }
+            with(engine) {
+                context("Route /api/v1/altinn/rettighetsregister/slett/{tjenesteKode}/{orgnr}/{lesEllerSkriv}/{domene}") {
+                    it("Slett rettighet med ugyldig tjenestekode skal feile med 'bad request'") {
+                        val tjenesteKode = "5252"
+                        val orgnr = "123123123"
+                        val lesEllerSkriv = "les"
+                        val domene = "*.nav.no"
+                        val params = "/$tjenesteKode/$orgnr/$lesEllerSkriv/$domene"
+                        val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
+                            addHeader(HttpHeaders.Accept, "application/json")
+                            addHeader("Content-Type", "application/json")
+                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+                        }
+                        req.requestHandled shouldEqual true
+                        req.response.status() shouldEqual HttpStatusCode.BadRequest
+                    }
+                    it("Slett rettighet med ugyldig virksomhetsnummer skal feile med 'bad request'") {
+                        val tjenesteKode = "1234"
+                        val orgnr = "123"
+                        val lesEllerSkriv = "les"
+                        val domene = "*.nav.no"
+                        val params = "/$tjenesteKode/$orgnr/$lesEllerSkriv/$domene"
+                        val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
+                            addHeader(HttpHeaders.Accept, "application/json")
+                            addHeader("Content-Type", "application/json")
+                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+                        }
+                        req.requestHandled shouldEqual true
+                        req.response.status() shouldEqual HttpStatusCode.BadRequest
+                    }
+                    it("Slett rettighet med ugyldig lesEllerSkriv skal feile med 'bad request'") {
+                        val tjenesteKode = "1234"
+                        val orgnr = "123123123"
+                        val lesEllerSkriv = "dust"
+                        val domene = "*.nav.no"
+                        val params = "/$tjenesteKode/$orgnr/$lesEllerSkriv/$domene"
+                        val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
+                            addHeader(HttpHeaders.Accept, "application/json")
+                            addHeader("Content-Type", "application/json")
+                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+                        }
+                        req.requestHandled shouldEqual true
+                        req.response.status() shouldEqual HttpStatusCode.BadRequest
+                    }
+                    it("Slett rettighet med tomt domene skal feile med 'bad request'") {
+                        val tjenesteKode = "1234"
+                        val orgnr = "123123123"
+                        val lesEllerSkriv = "les"
+                        val domene = " "
+                        val params = "/$tjenesteKode/$orgnr/$lesEllerSkriv/$domene"
+                        val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
+                            addHeader(HttpHeaders.Accept, "application/json")
+                            addHeader("Content-Type", "application/json")
+                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+                        }
+                        req.requestHandled shouldEqual true
+                        req.response.status() shouldEqual HttpStatusCode.BadRequest
+                    }
+                    it("Slett rettighet med alle param gyldig skal gi ok respons") {
+                        val tjenesteKode = "1234"
+                        val orgnr = "123123123"
+                        val lesEllerSkriv = "les"
+                        val domene = "*.nav.no"
+                        val params = "/$tjenesteKode/$orgnr/$lesEllerSkriv/$domene"
+                        val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
+                            addHeader(HttpHeaders.Accept, "application/json")
+                            addHeader("Content-Type", "application/json")
+                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+                        }
+                        req.requestHandled shouldEqual true
+                        req.response.status() shouldEqual HttpStatusCode.OK
+                    }
+                    it("Slett rettighet med ukjent regel skal feile med 'bad request'") {
+                        testEnvironment.mock.srrDeleteResponse = DeleteRightResponseList().apply {
+                            deleteRightResponse.add(
+                                    xmlMapper.readValue("<DeleteRightResponse>\n" +
+                                            "    <Condition>AllowedRedirectDomain:*.tull.altinn.no;*.test.altinn.no</Condition>\n" +
+                                            "    <Reportee>958995369</Reportee>\n" +
+                                            "    <Right>Read</Right>\n" +
+                                            "    <OperationResult>Rule_Not_Found</OperationResult>\n" +
+                                            "    </DeleteRightResponse>", DeleteRightResponse::class.java))
+                        }
+                        val tjenesteKode = "1234"
+                        val orgnr = "123123123"
+                        val lesEllerSkriv = "les"
+                        val domene = "*.nav.no"
+                        val params = "/$tjenesteKode/$orgnr/$lesEllerSkriv/$domene"
+                        val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
+                            addHeader(HttpHeaders.Accept, "application/json")
+                            addHeader("Content-Type", "application/json")
+                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+                        }
+                        req.requestHandled shouldEqual true
+                        req.response.status() shouldEqual HttpStatusCode.BadRequest
+                    }
+                }
             }
 
-            req.requestHandled shouldEqual true
-            it("should fail, due to empty virksomhetsnummer") {
-                req.response.status() shouldEqual HttpStatusCode.BadRequest
+            afterGroup {
+                InMemoryLDAPServer.stop()
             }
         }
     }
-
-    withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
-        describe("POST Fjern med gyldig virksomhetsnummer.") {
-            val mapper = jacksonObjectMapper()
-            val test = mapper.writeValueAsString(RequestRegister("123123123", "*.nav.no", "read"))
-            val req = handleRequest {
-                method = HttpMethod.Post
-                uri = "/api/v1/altinn/rettighetsregister/fjern"
-                addHeader("Content-Type", "application/json")
-                setBody(test)
-            }
-
-            req.requestHandled shouldEqual true
-            it("should be ok, due to valid virksomhetsnummer") {
-                req.response.status() shouldEqual HttpStatusCode.OK
-            }
-        }
-    }
-
-    withTestApplication(moduleFunction = { mainModule(Environment(mock = Environment.Mock(srrDeleteXmlResponse = "<DeleteRightResponse>\n" +
-            "    <Condition>AllowedRedirectDomain:*.tull.altinn.no;*.test.altinn.no</Condition>\n" +
-            "    <Reportee>958995369</Reportee>\n" +
-            "    <Right>Read</Right>\n" +
-            "    <OperationResult>Rule_Not_Found</OperationResult>\n" +
-            "    </DeleteRightResponse>")), applicationState) }) {
-        describe("POST Fjern en regel som ikke finnes i registeret.") {
-            val mapper = jacksonObjectMapper()
-            val test = mapper.writeValueAsString(RequestRegister("123123123", "*.nav.no", "read"))
-            val req = handleRequest {
-                method = HttpMethod.Post
-                uri = "/api/v1/altinn/rettighetsregister/fjern"
-                addHeader("Content-Type", "application/json")
-                setBody(test)
-            }
-
-            req.requestHandled shouldEqual true
-            it("should fail, due to invalid condition.") {
-                req.response.status() shouldEqual HttpStatusCode.BadRequest
-            }
-        }
-    }
- */
 
     withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
         describe("GET Hent rettigheter for et virksomhetsnummer.") {

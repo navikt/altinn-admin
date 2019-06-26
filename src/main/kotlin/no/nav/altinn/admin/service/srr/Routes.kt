@@ -153,7 +153,7 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment
                 }
 
                 val virksomhetsnummer = body.orgnr
-                if (virksomhetsnummer.isBlank() && virksomhetsnummer.length != 9) {
+                if (virksomhetsnummer.isBlank() || virksomhetsnummer.length != 9) {
                     call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig virksomhetsnummer"))
                     return@post
                 }
@@ -208,7 +208,7 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
             }
 
             val virksomhetsnummer = param.orgnr
-            if (!virksomhetsnummer.isBlank() && virksomhetsnummer.length != 9) {
+            if (virksomhetsnummer.isBlank() || virksomhetsnummer.length != 9) {
                 call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig virksomhetsnummer"))
                 return@delete
             }
@@ -223,11 +223,15 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
                 srrType = RegisterSRRRightsType.WRITE
             }
 
-            if (param.domene.isNullOrEmpty()) {
+            if (param.domene.trim().isNullOrEmpty()) {
                 call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig domene"))
                 return@delete
             }
 
             val rightResponse = altinnSrrService.deleteRights(param.tjenesteKode, virksomhetsnummer, param.domene, srrType)
+            if (rightResponse.status == "Failed") {
+                call.respond(HttpStatusCode.BadRequest, AnError(rightResponse.message))
+                return@delete
+            }
             call.respond(HttpStatusCode.OK, rightResponse)
         }
