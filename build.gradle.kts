@@ -4,7 +4,7 @@ import no.nils.wsdl2java.Wsdl2JavaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "no.nav"
-version = "0.8.2-SNAPSHOT"
+version = "0.8.3-SNAPSHOT"
 
 val kotlinVersion = "1.3.31"
 val ktorVersion = "1.2.1"
@@ -28,7 +28,6 @@ val swaggerVersion = "3.1.7"
 // test dependencies
 val kluentVersion = "1.47"
 val spekVersion = "2.0.0"
-val wiremockVersion = "2.20.0"
 
 val mainClass = "no.nav.altinn.admin.BootstrapKt"
 
@@ -113,7 +112,6 @@ dependencies {
     }
     testImplementation("org.amshove.kluent:kluent:$kluentVersion")
     testImplementation("org.junit.platform:junit-platform-runner:1.3.2")
-    testCompile("com.github.tomakehurst:wiremock:$wiremockVersion")
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
 }
 

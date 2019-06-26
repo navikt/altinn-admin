@@ -153,7 +153,7 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment
                 }
 
                 val virksomhetsnummer = body.orgnr
-                if (!virksomhetsnummer.isBlank() && virksomhetsnummer.length != 9) {
+                if (virksomhetsnummer.isBlank() && virksomhetsnummer.length != 9) {
                     call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig virksomhetsnummer"))
                     return@post
                 }
@@ -173,6 +173,10 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment
                 }
 
                 val rightResponse = altinnSrrService.addRights(body.tjenesteKode, virksomhetsnummer, body.domene, srrType)
+                if (rightResponse.status == "Failed") {
+                    call.respond(HttpStatusCode.BadRequest, AnError(rightResponse.message))
+                    return@post
+                }
                 call.respond(HttpStatusCode.OK, rightResponse)
             }
 

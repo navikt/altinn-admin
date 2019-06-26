@@ -9,7 +9,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 
-internal val xmlMapper: XmlMapper = XmlMapper(JacksonXmlModule().apply {
+val xmlMapper: XmlMapper = XmlMapper(JacksonXmlModule().apply {
     setDefaultUseWrapper(false)
 }).registerKotlinModule()
         .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)

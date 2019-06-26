@@ -33,7 +33,7 @@ data class RegistryResponse(
     val register: List<Register>
 ) {
     data class Register(
-        @JsonProperty("organisasjonsnummer")
+        @JsonProperty("virksomhetsnummer")
         val organisasjonsnummer: String,
         @JsonProperty("domene")
         val domene: String,

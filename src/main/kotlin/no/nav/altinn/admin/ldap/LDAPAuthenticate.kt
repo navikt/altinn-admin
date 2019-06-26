@@ -28,9 +28,7 @@ class LDAPAuthenticate(private val config: Environment.Application) :
 
                     val connInfo = config.getConnectionInfo(LdapConnectionType.AUTHENTICATION)
                     when (it) {
-                        true -> {
-                            logger.info { "Successful bind of $user to $connInfo" }
-                        }
+                        true -> logger.info { "Successful bind of $user to $connInfo" }
                         false -> logger.error { "Cannot bind $user to $connInfo" }
                     }
                 }

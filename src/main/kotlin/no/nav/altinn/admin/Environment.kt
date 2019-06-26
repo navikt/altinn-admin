@@ -29,12 +29,11 @@ data class Environment(
     val stsUrl: String = config[Key("sts.url", stringType)],
     val altinn: Altinn = Altinn(),
     val application: Application = Application(),
-    val mock: Mock = Mock(),
-    val test: Boolean = false
+    val mock: Mock = Mock()
 ) {
 
     data class Altinn(
-        val altinnAdminUrl: String = config[Key("altinn.admin.url", stringType)],
+        val altinnAdminUrl: String = config[Key("altinn.rettighetsregister.url", stringType)],
         val username: String = config[Key("altinn.username", stringType)],
         val password: String = config[Key("altinn.password", stringType)]
     )
@@ -65,11 +64,11 @@ data class Environment(
         private val srrAddXmlResponse: String? = config[Key("mock.ssr.add.response", stringType)],
         private val srrDeleteXmlResponse: String? = config[Key("mock.ssr.delete.response", stringType)],
         private val srrGetXmlResponse: String? = config[Key("mock.ssr.get.response", stringType)],
-        val srrAddResponse: AddRightResponseList? = if (srrAddXmlResponse.isNullOrEmpty()) { null } else { AddRightResponseList().apply { addRightResponse.add(
+        var srrAddResponse: AddRightResponseList? = if (srrAddXmlResponse.isNullOrEmpty()) { null } else { AddRightResponseList().apply { addRightResponse.add(
                 xmlMapper.readValue(srrAddXmlResponse, AddRightResponse::class.java)) } },
-        val srrDeleteResponse: DeleteRightResponseList? = if (srrDeleteXmlResponse.isNullOrEmpty()) { null } else { DeleteRightResponseList().apply { deleteRightResponse.add(
+        var srrDeleteResponse: DeleteRightResponseList? = if (srrDeleteXmlResponse.isNullOrEmpty()) { null } else { DeleteRightResponseList().apply { deleteRightResponse.add(
                 xmlMapper.readValue(srrDeleteXmlResponse, DeleteRightResponse::class.java)) } },
-        val srrGetResponse: GetRightResponseList? = if (srrGetXmlResponse.isNullOrEmpty()) { null } else { GetRightResponseList().apply { getRightResponse.add(
+        var srrGetResponse: GetRightResponseList? = if (srrGetXmlResponse.isNullOrEmpty()) { null } else { GetRightResponseList().apply { getRightResponse.add(
                 xmlMapper.readValue(srrGetXmlResponse, GetRightResponse::class.java)) } }
         // AddRightResponseList().apply { addRightResponse.add(
         //        xmlMapper.readValue(config[Key("mock.ssr.add.response", stringType)], AddRightResponse::class.java))}
