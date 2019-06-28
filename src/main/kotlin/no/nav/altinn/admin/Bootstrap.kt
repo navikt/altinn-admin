@@ -128,7 +128,15 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         )
     }
 
-    val expireAlerts = ExpireAlerts(environment, applicationState)
+    val altinnSRRService = AltinnSRRService(environment) {
+        Clients.iRegisterSRRAgencyExternalBasic(environment.altinn.altinnAdminUrl).apply {
+            when (environment.application.devProfile) {
+                true -> stsClient.configureFor(this, STS_SAML_POLICY_NO_TRANSPORT_BINDING)
+                false -> stsClient.configureFor(this)
+            }
+        }
+    }
+    val expireAlerts = ExpireAlerts(environment, applicationState, altinnSRRService)
     if (!environment.application.devProfile) {
         launch(backgroundTasksContext) {
             expireAlerts.checkDates()
@@ -147,14 +155,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         }
 
         logger.info { "Installing altinn srr api" }
-        ssrAPI(altinnSrrService = AltinnSRRService(environment) {
-            Clients.iRegisterSRRAgencyExternalBasic(environment.altinn.altinnAdminUrl).apply {
-                when (environment.application.devProfile) {
-                    true -> stsClient.configureFor(this, STS_SAML_POLICY_NO_TRANSPORT_BINDING)
-                    false -> stsClient.configureFor(this)
-                }
-            }
-        }, environment = environment)
+        ssrAPI(altinnSrrService = altinnSRRService, environment = environment)
         nais(environment, readinessCheck = { applicationState.initialized }, livenessCheck = { applicationState.running })
     }
 }
