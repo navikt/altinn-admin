@@ -32,7 +32,7 @@
     <logger name="org.apache.cxf.service.invoker.AbstractInvoker" level="OFF" />
     <logger name="org.apache.cxf.service" level="WARN" additivity="false"/>
 
-    <root level="INFO">
+    <root level="WARN">
         <appender-ref ref="stdout_json"/>
     </root>
 </configuration>
