@@ -22,8 +22,8 @@ class ExpireAlerts(
             expires.add(Calendar.YEAR, 0)
             expires.add(Calendar.MONTH, 9)
             expires.add(Calendar.DATE, 1)
-            logger.info { "Expires date add 9m and 1d : ${expires.time}" }
-            logger.info { "Running thread check dates...$today" }
+            logger.debug { "Expires date add 9m and 1d : ${expires.time}" }
+            logger.debug { "Running thread check dates...$today" }
 
             val serviceCodes = env.application.serviceCodes.split(",")
             logger.info { "...fetching " }
@@ -35,7 +35,7 @@ class ExpireAlerts(
                     if (expires > dd) {
                         logger.warn { "Rule is about to expire or expired already : ${it.organisasjonsnummer} - with domene ${it.domene} - has date ${it.tilDato} !" }
                     }
-                    logger.info { "${it.organisasjonsnummer} - with domene ${it.domene} - has date ${it.tilDato}" }
+                    logger.debug { "${it.organisasjonsnummer} - with domene ${it.domene} - has date ${it.tilDato}" }
                 }
                 logger.info { "done fetching rules for serviceCode $sc" }
             }
