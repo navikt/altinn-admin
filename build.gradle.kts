@@ -84,6 +84,7 @@ dependencies {
     compile("net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion")
     compile("com.natpryce:konfig:$konfigVersion")
     compile("javax.xml.ws:jaxws-api:$jaxwsVersion")
+    compile("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.1.1")
 
     implementation("org.apache.cxf:cxf-rt-frontend-jaxws:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")

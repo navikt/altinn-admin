@@ -21,6 +21,9 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.util.error
 import io.prometheus.client.hotspot.DefaultExports
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.slf4j.MDCContext
 import mu.KotlinLogging
 import no.nav.altinn.admin.api.nais
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Contact
@@ -29,13 +32,16 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Swagger
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.SwaggerUi
 import no.nav.altinn.admin.common.*
 import no.nav.altinn.admin.ldap.LDAPAuthenticate
+import no.nav.altinn.admin.service.alerts.ExpireAlerts
 import no.nav.altinn.admin.service.srr.AltinnSRRService
 import no.nav.altinn.admin.service.srr.ssrAPI
 import no.nav.altinn.admin.ws.*
 import org.slf4j.event.Level
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 const val AUTHENTICATION_BASIC = "basicAuth"
+private val backgroundTasksContext = Executors.newFixedThreadPool(2).asCoroutineDispatcher() + MDCContext()
 
 val swagger = Swagger(
         info = Information(
@@ -120,6 +126,13 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
                 stsUrl = environment.stsUrl,
                 credentials = environment.application.username to environment.application.password
         )
+    }
+
+    val expireAlerts = ExpireAlerts(environment, applicationState)
+    if (!environment.application.devProfile) {
+        launch(backgroundTasksContext) {
+            expireAlerts.checkDates()
+        }
     }
 
     logger.info { "Installing routes" }
