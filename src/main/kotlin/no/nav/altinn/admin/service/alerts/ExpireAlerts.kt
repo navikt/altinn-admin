@@ -19,9 +19,12 @@ class ExpireAlerts(
             val dateTime = DateTime.now()
             logger.info { "Running thread check dates...$dateTime" }
             val serviceCodes = env.application.serviceCodes.split(",")
-            serviceCodes.forEach() {
-                val responsList = altinnSRRService.getRightsForAllBusinesses(it)
-                logger.info { responsList }
+            serviceCodes.forEach {
+                val responseList = altinnSRRService.getRightsForAllBusinesses(it)
+                if (responseList.status != "Ok")
+                responseList.register.register.forEach {
+                    logger.info { "${it.organisasjonsnummer} - with domene ${it.domene} - has date ${it.tilDato} !" }
+                }
             }
 
             delay(60_000L)
