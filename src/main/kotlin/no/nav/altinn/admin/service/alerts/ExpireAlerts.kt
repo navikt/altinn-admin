@@ -4,6 +4,7 @@ import kotlinx.coroutines.delay
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.ApplicationState
+import no.nav.altinn.admin.metrics.Metrics
 import no.nav.altinn.admin.service.srr.AltinnSRRService
 import org.joda.time.DateTime
 import java.util.*
@@ -30,6 +31,7 @@ class ExpireAlerts(
                 responseList.register.register.forEach {
                     val dd = DateTime.parse(it.tilDato).toCalendar(Locale.getDefault())
                     if (expires > dd) {
+                        Metrics.srrExipingRules.labels("$sc").inc()
                         logger.warn { "Rule is about to expire or expired already : ${it.organisasjonsnummer} - with domene ${it.domene} - has date ${it.tilDato} !" }
                     }
                     logger.debug { "${it.organisasjonsnummer} - with domene ${it.domene} - has date ${it.tilDato}" }
