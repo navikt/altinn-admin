@@ -31,6 +31,7 @@
     <logger name="io.ktor" level="TRACE"/>
     <logger name="org.apache.cxf.service.invoker.AbstractInvoker" level="OFF" />
     <logger name="org.apache.cxf.service" level="WARN" additivity="false"/>
+    <logger name="org.apache.cxf.ws.addressing" level="ERROR" />
 
     <root level="WARN">
         <appender-ref ref="stdout_json"/>
