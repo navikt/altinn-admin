@@ -6,6 +6,7 @@ import io.ktor.application.install
 import io.ktor.auth.Authentication
 import io.ktor.auth.UserIdPrincipal
 import io.ktor.auth.basic
+import io.ktor.client.utils.CacheControl
 import io.ktor.features.*
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
@@ -82,7 +83,9 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     logger.info { "Starting server" }
     System.setProperty("javax.xml.soap.SAAJMetaFactory", "com.sun.xml.messaging.saaj.soap.SAAJMetaFactoryImpl")
 
-    install(DefaultHeaders)
+    install(DefaultHeaders) {
+        header(HttpHeaders.CacheControl, CacheControl.NO_CACHE)
+    }
     install(ConditionalHeaders)
     install(Compression)
     install(AutoHeadResponse)
