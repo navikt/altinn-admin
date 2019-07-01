@@ -9,6 +9,7 @@ import org.joda.time.DateTime
 import java.util.*
 
 private val logger = KotlinLogging.logger { }
+private val regexExpireDate = """\d+[yY]\d+[mM]\d+[dD]""".toRegex()
 
 class ExpireAlerts(
     private val env: Environment,
@@ -18,17 +19,13 @@ class ExpireAlerts(
     suspend fun checkDates() {
         while (applicationState.running) {
             val today = Calendar.getInstance().time
-            val expires = Calendar.getInstance()
-            expires.add(Calendar.YEAR, 0)
-            expires.add(Calendar.MONTH, 9)
-            expires.add(Calendar.DATE, 1)
+            val expires = getRelativeExpireDate(env.srrExpireDate)
             logger.debug { "Expires date add 9m and 1d : ${expires.time}" }
             logger.debug { "Running thread check dates...$today" }
 
             val serviceCodes = env.application.serviceCodes.split(",")
-            logger.debug { "...fetching " }
             serviceCodes.forEach { sc ->
-                logger.debug { "...fetching rules for serviceCode $sc" }
+                logger.debug { "Fetching rules for serviceCode $sc" }
                 val responseList = altinnSRRService.getRightsForAllBusinesses(sc)
                 responseList.register.register.forEach {
                     val dd = DateTime.parse(it.tilDato).toCalendar(Locale.getDefault())
@@ -37,10 +34,28 @@ class ExpireAlerts(
                     }
                     logger.debug { "${it.organisasjonsnummer} - with domene ${it.domene} - has date ${it.tilDato}" }
                 }
-                logger.debug { "done fetching rules for serviceCode $sc" }
+                logger.debug { "Done fetching rules for serviceCode $sc" }
             }
 
-            delay(60_000L)
+            delay(1000*60*2)
         }
     }
+}
+
+fun getRelativeExpireDate(srrExpire: String): Calendar {
+    val expires = Calendar.getInstance()
+    if (regexExpireDate.matches(srrExpire)) {
+        val lsrr = srrExpire.toLowerCase()
+        val values = lsrr.split("y", "m", "d")
+        expires.add(Calendar.YEAR, values[0].toInt())
+        expires.add(Calendar.MONTH, values[1].toInt())
+        expires.add(Calendar.DATE, values[2].toInt())
+    } else {
+        logger.warn { "No expired date configured or given in wrong format, defaulting to 2 months expiring date warning." }
+        expires.add(Calendar.YEAR, 0)
+        expires.add(Calendar.MONTH, 2)
+        expires.add(Calendar.DATE, 0)
+    }
+
+    return expires
 }

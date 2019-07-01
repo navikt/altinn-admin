@@ -27,6 +27,7 @@ private val config = if (System.getenv("APPLICATION_PROFILE") == "remote") {
 
 data class Environment(
     val stsUrl: String = config[Key("sts.url", stringType)],
+    var srrExpireDate: String = config[Key("srr.expiring.date", stringType)],
     val altinn: Altinn = Altinn(),
     val application: Application = Application(),
     val mock: Mock = Mock()
