@@ -19,7 +19,11 @@ spec:
       expr: selftests_aggregate_result_status{app="altinn-admin"} > 0
       for: 1m
       action: "Sjekk {{ $labels.app }} i {{ $labels.kubernetes_namespace }} sine selftest for å se hva som er galt"
-    - alert: altinn-admin har rettighetsregler som har kort gyldighetstid igjen
-      expr: altinn_admin_expiring_rettighetsregler{app="altinn-admin"} > 0
+    - alert: altinn-admin dsop AAP har rettighetsregler som har kort gyldighetstid igjen
+      expr: sum(altinn_admin_expiring_rettighetsregler{sc="5252", app="altinn-admin"}) > 1
       for: 1m
-      action: "Sjekk {{ $labels.app }} i {{ $labels.kubernetes_namespace }} sine selftest for å se hva som er galt"
+      action: "Sjekk `kubectl logs {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for å se hvilke virksomheter det gjelder"
+    - alert: altinn-admin dsop UFO har rettighetsregler som har kort gyldighetstid igjen
+      expr: sum(altinn_admin_expiring_rettighetsregler{sc="5382", app="altinn-admin"}) > 1
+      for: 1m
+      action: "Sjekk `kubectl logs {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for å se hvilke virksomheter det gjelder"

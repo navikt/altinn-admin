@@ -31,7 +31,7 @@ class ExpireAlerts(
                 responseList.register.register.forEach {
                     val dd = DateTime.parse(it.tilDato).toCalendar(Locale.getDefault())
                     if (expires > dd) {
-                        Metrics.srrExipingRules.labels("$sc").inc()
+                        Metrics.srrExipingRightsRules.labels("$sc").inc()
                         logger.warn { "Rule is about to expire or expired already : ${it.organisasjonsnummer} - with domene ${it.domene} - has date ${it.tilDato} !" }
                     }
                     logger.debug { "${it.organisasjonsnummer} - with domene ${it.domene} - has date ${it.tilDato}" }
@@ -39,7 +39,7 @@ class ExpireAlerts(
                 logger.debug { "Done fetching rules for serviceCode $sc" }
             }
 
-            delay(1000*60*2)
+            delay(1000*60*60*24)
         }
     }
 }

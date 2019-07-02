@@ -5,7 +5,7 @@ import io.prometheus.client.Counter
 private const val NAMESPACE = "altinn_admin"
 
 object Metrics {
-    val srrExipingRules: Counter = Counter.build()
+    val srrExipingRightsRules: Counter = Counter.build()
         .namespace(NAMESPACE)
         .name("expiring_rettighetsregler")
         .labelNames("sc")
