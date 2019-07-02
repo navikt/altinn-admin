@@ -32,7 +32,7 @@ spec:
   vault:
     enabled: true
     paths:
-      - kvPath: {{TEST_VAULT_PATH}}
+      - kvPath: {{ALTINN_ADMIN_VAULT_PATH}}
         mountPath: /var/run/secrets/nais.io/vault
   webproxy: true
   resources:
