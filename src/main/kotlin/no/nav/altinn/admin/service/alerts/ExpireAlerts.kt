@@ -21,7 +21,6 @@ class ExpireAlerts(
         while (applicationState.running) {
             val today = Calendar.getInstance().time
             val expires = getRelativeExpireDate(env.srrExpireDate)
-            logger.debug { "Expires date add 9m and 1d : ${expires.time}" }
             logger.debug { "Running thread check dates...$today" }
 
             val serviceCodes = env.application.serviceCodes.split(",")
@@ -30,7 +29,6 @@ class ExpireAlerts(
                 val responseList = altinnSRRService.getRightsForAllBusinesses(sc)
                 val currentExpired = Metrics.srrExipingRightsRules.labels("$sc").get()
                 var numberOfExpiredRules = 0
-                logger.info { "$sc currentExpired : $currentExpired" }
                 responseList.register.register.forEach {
                     val dd = DateTime.parse(it.tilDato).toCalendar(Locale.getDefault())
                     if (expires > dd) {
@@ -40,23 +38,21 @@ class ExpireAlerts(
                     logger.debug { "${it.organisasjonsnummer} - with domene ${it.domene} - has date ${it.tilDato}" }
                 }
                 if (numberOfExpiredRules > 0 && currentExpired == 0.0) {
-                    logger.info { "$sc ADD expiring: $numberOfExpiredRules" }
+                    logger.debug { "$sc ADD expiring: $numberOfExpiredRules" }
                     Metrics.srrExipingRightsRules.labels("$sc").inc(numberOfExpiredRules.toDouble())
                 }
                 if (numberOfExpiredRules == 0 && currentExpired > 0.0) {
-                    logger.info { "$sc REMOVE expiring: $currentExpired" }
+                    logger.debug { "$sc REMOVE expiring: $currentExpired" }
                     Metrics.srrExipingRightsRules.labels("$sc").dec(currentExpired)
                 }
                 if (numberOfExpiredRules > 0 && currentExpired > 0) {
                     val diff = numberOfExpiredRules - currentExpired
-                    logger.info { "$sc UPDATE expiring: $diff" }
+                    logger.debug { "$sc UPDATE expiring: $diff" }
                     Metrics.srrExipingRightsRules.labels("$sc").inc(diff)
                 }
                 logger.debug { "Done fetching rules for serviceCode $sc" }
             }
-            delay(1000*60)
-
-//            delay(1000*60*60*24)
+            delay(1000*60*60*24)
         }
     }
 }
