@@ -6,9 +6,6 @@ metadata:
     team: alf
 spec:
   receivers: # receivers for all alerts below
-    slack:
-      channel: '#team_altinn_difi'
-      prependText: '<!here> | '
     email:
       to: 'richard.oseng@nav.no' # sends email as well
       send_resolved: false # notify about resolved alerts
