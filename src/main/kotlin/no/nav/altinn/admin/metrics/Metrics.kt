@@ -1,11 +1,12 @@
 package no.nav.altinn.admin.metrics
 
 import io.prometheus.client.Counter
+import io.prometheus.client.Gauge
 
 private const val NAMESPACE = "altinn_admin"
 
 object Metrics {
-    val srrExipingRightsRules: Counter = Counter.build()
+    val srrExipingRightsRules: Gauge = Gauge.build()
         .namespace(NAMESPACE)
         .name("expiring_rettighetsregler")
         .labelNames("sc")
