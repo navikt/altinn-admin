@@ -27,7 +27,7 @@ class ExpireAlerts(
             serviceCodes.forEach { sc ->
                 logger.debug { "Fetching rules for serviceCode $sc" }
                 val responseList = altinnSRRService.getRightsForAllBusinesses(sc)
-                val currentExpired = Metrics.srrExipingRightsRules.labels("$sc").get()
+                val currentExpired = Metrics.srrExipingRightsRules.labels(sc).get()
                 var numberOfExpiredRules = 0
                 responseList.register.register.forEach {
                     val dd = DateTime.parse(it.tilDato).toCalendar(Locale.getDefault())
@@ -39,16 +39,16 @@ class ExpireAlerts(
                 }
                 if (numberOfExpiredRules > 0 && currentExpired == 0.0) {
                     logger.debug { "$sc ADD expiring: $numberOfExpiredRules" }
-                    Metrics.srrExipingRightsRules.labels("$sc").inc(numberOfExpiredRules.toDouble())
+                    Metrics.srrExipingRightsRules.labels(sc).inc(numberOfExpiredRules.toDouble())
                 }
                 if (numberOfExpiredRules == 0 && currentExpired > 0.0) {
                     logger.debug { "$sc REMOVE expiring: $currentExpired" }
-                    Metrics.srrExipingRightsRules.labels("$sc").dec(currentExpired)
+                    Metrics.srrExipingRightsRules.labels(sc).dec(currentExpired)
                 }
                 if (numberOfExpiredRules > 0 && currentExpired > 0) {
                     val diff = numberOfExpiredRules - currentExpired
                     logger.debug { "$sc UPDATE expiring: $diff" }
-                    Metrics.srrExipingRightsRules.labels("$sc").inc(diff)
+                    Metrics.srrExipingRightsRules.labels(sc).inc(diff)
                 }
                 logger.debug { "Done fetching rules for serviceCode $sc" }
             }
