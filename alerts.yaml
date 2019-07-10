@@ -6,9 +6,9 @@ metadata:
     team: alf
 spec:
   receivers: # receivers for all alerts below
-    email:
-      to: 'richard.oseng@nav.no' # sends email as well
-      send_resolved: false # notify about resolved alerts
+    slack:
+      channel: '#team_altinn_difi'
+      prependText: '<!here> | ' # this text will be prepended to the Slack alert title
   alerts:
     - alert: altinn-admin er nede
       expr: up{app="altinn-admin", job="kubernetes-pods"} == 0
@@ -21,12 +21,12 @@ spec:
       for: 1m
       action: "Sjekk {{ $labels.app }} i {{ $labels.kubernetes_namespace }} sine selftest for å se hva som er galt"
       severity: critical
-    - alert: altinn-admin dsop AAP har rettighetsregler som har kort gyldighetstid igjen
+    - alert: altinn-admin DSOP AAP har rettighetsregler som har kort gyldighetstid igjen
       expr: 'altinn_admin_expiring_rettighetsregler{sc="5252", app="altinn-admin"} > 0'
       for: 1m
       action: "Sjekk `kubectl logs {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for å se hvilke virksomheter det gjelder"
       severity: critical
-    - alert: altinn-admin dsop UFO har rettighetsregler som har kort gyldighetstid igjen
+    - alert: altinn-admin DSOP UFO har rettighetsregler som har kort gyldighetstid igjen
       expr: 'altinn_admin_expiring_rettighetsregler{sc="5382", app="altinn-admin"} > 0'
       for: 1m
       action: "Sjekk `kubectl logs {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for å se hvilke virksomheter det gjelder"
