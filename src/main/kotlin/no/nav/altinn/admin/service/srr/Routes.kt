@@ -167,7 +167,7 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment
                     srrType = RegisterSRRRightsType.WRITE
                 }
 
-                if (body.domene.isNullOrEmpty()) {
+                if (body.domene.isEmpty()) {
                     call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig domene"))
                     return@post
                 }
@@ -223,7 +223,7 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
                 srrType = RegisterSRRRightsType.WRITE
             }
 
-            if (param.domene.trim().isNullOrEmpty()) {
+            if (param.domene.trim().isEmpty()) {
                 call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig domene"))
                 return@delete
             }

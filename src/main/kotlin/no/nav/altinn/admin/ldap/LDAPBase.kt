@@ -14,7 +14,7 @@ import mu.KotlinLogging
  * - check if connected
  */
 
-abstract class LDAPBase(private val connInfo: LDAPBase.Companion.ConnectionInfo) : AutoCloseable {
+abstract class LDAPBase(private val connInfo: ConnectionInfo) : AutoCloseable {
 
     val regexNAVIdent = """^[a-zA-Z]\d{6}$""".toRegex()
 
