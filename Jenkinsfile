@@ -53,7 +53,8 @@ pipeline {
     post {
         always {
             postProcess action: 'always'
-            archiveArtifacts artifacts: 'build/reports/rules.csv', allowEmptyArchive: true
+            junit testResults: '**/build/test-results/test/*.xml'
+            archiveArtifacts artifacts: '**/build/libs/*', allowEmptyArchive: true
         }
         success {
             postProcess action: 'success'
