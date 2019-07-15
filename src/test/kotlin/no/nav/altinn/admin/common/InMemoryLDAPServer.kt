@@ -58,7 +58,7 @@ object InMemoryLDAPServer {
 
     private val imDS = InMemoryDirectoryServer(imConf).apply {
         try {
-            importFromLDIF(true, "src/test/resources/UsersAndGroups.ldif")
+            importFromLDIF(true, "src/test/resources/Users.ldif")
         } catch (e: Exception) {
             logger.error { "Exception occurred  $e" }
         }
