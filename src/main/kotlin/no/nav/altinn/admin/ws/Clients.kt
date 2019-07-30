@@ -1,5 +1,6 @@
 package no.nav.altinn.admin.ws
 
+import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.altinn.services.register.srr._2015._06.IRegisterSRRAgencyExternalBasic
 import org.apache.cxf.ext.logging.LoggingFeature
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean
@@ -10,6 +11,12 @@ object Clients {
         createServicePort(
             serviceUrl = serviceUrl,
             serviceClazz = IRegisterSRRAgencyExternalBasic::class.java
+        )
+
+    fun iDownloadQueueExternalBasic(serviceUrl: String): IDownloadQueueExternalBasic =
+        createServicePort(
+            serviceUrl = serviceUrl,
+            serviceClazz = IDownloadQueueExternalBasic::class.java
         )
 
     private fun <PORT_TYPE> createServicePort(

@@ -22,6 +22,7 @@ val jaxwsToolsVersion = "2.3.1"
 val javaxActivationVersion = "1.1.1"
 val cxfVersion = "3.3.1"
 val unboundidVersion = "4.0.8"
+val tjenestespesifikasjonerVersion = "1.2019.02.28-12.52-e0a79af1ccde"
 
 val swaggerVersion = "3.1.7"
 
@@ -85,6 +86,7 @@ dependencies {
     compile("com.natpryce:konfig:$konfigVersion")
     compile("javax.xml.ws:jaxws-api:$jaxwsVersion")
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.1.1")
+    compile("no.nav.tjenestespesifikasjoner:altinn-download-queue-external:$tjenestespesifikasjonerVersion")
 
     implementation("org.apache.cxf:cxf-rt-frontend-jaxws:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")

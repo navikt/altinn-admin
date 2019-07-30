@@ -34,6 +34,8 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.SwaggerUi
 import no.nav.altinn.admin.common.*
 import no.nav.altinn.admin.ldap.LDAPAuthenticate
 import no.nav.altinn.admin.service.alerts.ExpireAlerts
+import no.nav.altinn.admin.service.dq.AltinnDQService
+import no.nav.altinn.admin.service.dq.dqAPI
 import no.nav.altinn.admin.service.srr.AltinnSRRService
 import no.nav.altinn.admin.service.srr.ssrAPI
 import no.nav.altinn.admin.ws.*
@@ -132,13 +134,22 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     }
 
     val altinnSRRService = AltinnSRRService(environment) {
-        Clients.iRegisterSRRAgencyExternalBasic(environment.altinn.altinnAdminUrl).apply {
+        Clients.iRegisterSRRAgencyExternalBasic(environment.altinn.altinnSrrUrl).apply {
             when (environment.application.devProfile) {
                 true -> stsClient.configureFor(this, STS_SAML_POLICY_NO_TRANSPORT_BINDING)
                 false -> stsClient.configureFor(this)
             }
         }
     }
+    val altinnDqService = AltinnDQService(environment) {
+        Clients.iDownloadQueueExternalBasic(environment.altinn.altinnDqUrl).apply {
+            when (environment.application.devProfile) {
+                true -> stsClient.configureFor(this, STS_SAML_POLICY_NO_TRANSPORT_BINDING)
+                false -> stsClient.configureFor(this)
+            }
+        }
+    }
+
     val expireAlerts = ExpireAlerts(environment, applicationState, altinnSRRService)
     if (!environment.application.devProfile) {
         launch(backgroundTasksContext) {
@@ -159,6 +170,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
 
         logger.info { "Installing altinn srr api" }
         ssrAPI(altinnSrrService = altinnSRRService, environment = environment)
+        dqAPI(altinnDqService = altinnDqService, environment = environment)
         nais(environment, readinessCheck = { applicationState.initialized }, livenessCheck = { applicationState.running })
     }
 }

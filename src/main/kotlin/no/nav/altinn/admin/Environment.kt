@@ -34,7 +34,8 @@ data class Environment(
 ) {
 
     data class Altinn(
-        val altinnAdminUrl: String = config[Key("altinn.rettighetsregister.url", stringType)],
+        val altinnSrrUrl: String = config[Key("altinn.rettighetsregister.url", stringType)],
+        val altinnDqUrl: String = config[Key("altinn.downloadqueue.url", stringType)],
         val username: String = config[Key("altinn.username", stringType)],
         val password: String = config[Key("altinn.password", stringType)]
     )
@@ -58,7 +59,12 @@ data class Environment(
 
         // ldap details for managing ldap groups - different LDAP servers (test, preprod, production)
         val ldapHost: String = config[Key("ldap.host", stringType)],
-        val ldapPort: Int = config[Key("ldap.port", intType)]
+        val ldapPort: Int = config[Key("ldap.port", intType)],
+        val dq: Dq = Dq()
+    )
+
+    data class Dq(
+        val serviceCodes: String = config[Key("dq.servicecode.list", stringType)]
     )
 
     data class Mock(
