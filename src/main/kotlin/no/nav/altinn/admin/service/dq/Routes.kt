@@ -4,7 +4,6 @@ import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
 import io.ktor.response.respond
-import io.ktor.response.respondFile
 import io.ktor.routing.Routing
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
@@ -13,11 +12,9 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.badRequest
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.get
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ok
-import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.responds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndReponds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.common.API_V1
-import java.io.File
 
 fun Routing.dqAPI(altinnDqService: AltinnDQService, environment: Environment) {
     getARmessage(altinnDqService, environment)
