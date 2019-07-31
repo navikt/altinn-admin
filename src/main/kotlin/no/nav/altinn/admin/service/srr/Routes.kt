@@ -240,7 +240,7 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
         }
 
 @Group(GROUP_NAME)
-@Location("$API_V1/altinn/dq/hent/tull")
+@Location("$API_V1/altinn/rettighetsregister/tull")
 data class TullReferanse(val test: String?)
 
 fun Routing.getTullmessage(altinnDqService: AltinnSRRService, environment: Environment) =
