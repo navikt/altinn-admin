@@ -4,6 +4,7 @@ import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
 import io.ktor.response.respond
+import io.ktor.response.respondFile
 import io.ktor.routing.Routing
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
@@ -12,12 +13,15 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.badRequest
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.get
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ok
+import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.responds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndReponds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.common.API_V1
+import java.io.File
 
 fun Routing.dqAPI(altinnDqService: AltinnDQService, environment: Environment) {
     getARmessage(altinnDqService, environment)
+    getTullmessage(altinnDqService, environment)
 }
 
 internal data class AnError(val error: String)
@@ -53,4 +57,17 @@ fun Routing.getARmessage(altinnDqService: AltinnDQService, environment: Environm
             }
             call.respond(HttpStatusCode.InternalServerError, AnError("IDownloadQueueExternalBasic.GetArchivedFormTaskBasicDQ feilet"))
         }
+    }
+
+@Group(GROUP_NAME)
+@Location("$API_V1/altinn/dq/hent/tull")
+data class TullReferanse(val test: String?)
+
+fun Routing.getTullmessage(altinnDqService: AltinnDQService, environment: Environment) =
+    get<TullReferanse>("hent AR melding fra dq".responds(
+        ok<DqResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+
+        var file = File.createTempFile("temp", "xml")
+        file.writeText("Some text")
+        call.respondFile(file)
     }
