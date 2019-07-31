@@ -21,7 +21,6 @@ import java.io.File
 
 fun Routing.dqAPI(altinnDqService: AltinnDQService, environment: Environment) {
     getARmessage(altinnDqService, environment)
-    getTullmessage(altinnDqService, environment)
 }
 
 internal data class AnError(val error: String)
@@ -57,17 +56,4 @@ fun Routing.getARmessage(altinnDqService: AltinnDQService, environment: Environm
             }
             call.respond(HttpStatusCode.InternalServerError, AnError("IDownloadQueueExternalBasic.GetArchivedFormTaskBasicDQ feilet"))
         }
-    }
-
-@Group(GROUP_NAME)
-@Location("$API_V1/altinn/dq/hent/tull")
-data class TullReferanse(val test: String?)
-
-fun Routing.getTullmessage(altinnDqService: AltinnDQService, environment: Environment) =
-    get<TullReferanse>("hent AR melding fra dq".responds(
-        ok<DqResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
-
-        var file = File.createTempFile("temp", "xml")
-        file.writeText("Some text")
-        call.respondFile(file)
     }

@@ -7,6 +7,7 @@ import io.ktor.auth.principal
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
 import io.ktor.response.respond
+import io.ktor.response.respondFile
 import io.ktor.routing.*
 import mu.KotlinLogging
 import no.altinn.schemas.services.register._2015._06.RegisterSRRRightsType
@@ -25,12 +26,14 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndReponds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.common.API_V1
+import java.io.File
 
 fun Routing.ssrAPI(altinnSrrService: AltinnSRRService, environment: Environment) {
     getRightsList(altinnSrrService, environment)
     getRightsForReportee(altinnSrrService, environment)
     addRightsForReportee(altinnSrrService, environment)
     deleteRightsForReportee(altinnSrrService, environment)
+    getTullmessage(altinnSrrService, environment)
 }
 
 internal data class AnError(val error: String)
@@ -235,3 +238,16 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
             }
             call.respond(HttpStatusCode.OK, rightResponse)
         }
+
+@Group(GROUP_NAME)
+@Location("$API_V1/altinn/dq/hent/tull")
+data class TullReferanse(val test: String?)
+
+fun Routing.getTullmessage(altinnDqService: AltinnSRRService, environment: Environment) =
+    get<TullReferanse>("hent AR melding fra dq".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+        logger.info { "Create file" }
+        var file = File.createTempFile("temp", "xml")
+        file.writeText("Some text")
+        logger.info { "Written some text to file ${file.absolutePath} : ${file.toURI().toURL()}" }
+        call.respondFile(file)
+    }
