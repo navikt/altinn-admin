@@ -4,8 +4,10 @@ import io.ktor.application.application
 import io.ktor.application.call
 import io.ktor.auth.UserIdPrincipal
 import io.ktor.auth.principal
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
+import io.ktor.response.header
 import io.ktor.response.respond
 import io.ktor.routing.*
 import mu.KotlinLogging
@@ -26,6 +28,7 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.common.API_V1
 import java.io.File
+import java.io.FileWriter
 
 fun Routing.ssrAPI(altinnSrrService: AltinnSRRService, environment: Environment) {
     getRightsList(altinnSrrService, environment)
@@ -240,18 +243,17 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
 
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/rettighetsregister/tull")
-data class TullReferanse(val test: String?)
+class TullReferanse
 
 fun Routing.getTullmessage(altinnDqService: AltinnSRRService, environment: Environment) =
     get<TullReferanse>("hent AR melding fra dq".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
-        param ->
         try {
-            logger.info { "param is not used : ${param.test}" }
             logger.info { "Create file" }
-            var file = File.createTempFile("temp", "xml")
-            file.writeText("Some text")
+            var file = File.createTempFile("temp", ".xml")
+            FileWriter(file).write("Some text")
             logger.info { "Written some text to file ${file.absolutePath} : ${file.toURI().toURL()}" }
             val empty = RegistryResponse(emptyList())
+            call.response.header(HttpHeaders.ContentDisposition, "attachment; filename=\"${file.absolutePath}\"")
             call.respond(HttpStatusCode.OK, empty)
         } catch (e: Exception) {
             call.respond(HttpStatusCode.BadRequest, AnError(e.message.toString()))
