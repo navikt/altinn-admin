@@ -116,6 +116,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     }
     install(ContentNegotiation) {
         register(ContentType.Application.Json, JacksonConverter(objectMapper))
+        register(ContentType.Application.Xml, JacksonConverter(objectMapper))
     }
     install(Locations)
     install(CallId) {

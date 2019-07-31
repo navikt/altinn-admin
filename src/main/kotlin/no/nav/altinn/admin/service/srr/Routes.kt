@@ -246,7 +246,7 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
 class TullReferanse
 
 fun Routing.getTullmessage(altinnDqService: AltinnSRRService, environment: Environment) =
-    get<TullReferanse>("hent AR melding fra dq".responds()) {
+    get<TullReferanse>("hent AR melding fra dq".responds(ok<Any>(), badRequest<Any>())) {
         call.response.header(HttpHeaders.ContentType, "application/xml")
         try {
             logger.info { "Create file" }
