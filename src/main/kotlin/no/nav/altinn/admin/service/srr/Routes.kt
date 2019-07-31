@@ -244,7 +244,9 @@ data class TullReferanse(val test: String?)
 
 fun Routing.getTullmessage(altinnDqService: AltinnSRRService, environment: Environment) =
     get<TullReferanse>("hent AR melding fra dq".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+        param ->
         try {
+            logger.info { "param is not used : ${param.test}" }
             logger.info { "Create file" }
             var file = File.createTempFile("temp", "xml")
             file.writeText("Some text")
