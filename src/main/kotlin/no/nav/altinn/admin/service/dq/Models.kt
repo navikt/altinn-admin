@@ -3,6 +3,10 @@ package no.nav.altinn.admin.service.dq
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class DqResponse(
+    @JsonProperty("schema")
+    val schema: String,
+    @JsonProperty("type")
+    val type: String = "file",
     @JsonProperty("status")
     val status: String,
     @JsonProperty("message")

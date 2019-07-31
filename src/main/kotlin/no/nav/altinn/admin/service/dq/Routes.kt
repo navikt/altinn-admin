@@ -15,7 +15,6 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ok
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndReponds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.common.API_V1
-import no.nav.altinn.admin.service.srr.RegistryResponse
 
 fun Routing.dqAPI(altinnDqService: AltinnDQService, environment: Environment) {
     getARmessage(altinnDqService, environment)
@@ -32,7 +31,7 @@ data class ArkivReferanse(val arNummer: String)
 
 fun Routing.getARmessage(altinnDqService: AltinnDQService, environment: Environment) =
     get<ArkivReferanse>("hent AR melding fra dq".securityAndReponds(BasicAuthSecurity(),
-        ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+        ok<DqResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
 
         if (param.arNummer.isNullOrEmpty()) {

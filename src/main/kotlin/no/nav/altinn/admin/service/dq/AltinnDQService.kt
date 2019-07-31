@@ -19,30 +19,28 @@ class AltinnDQService(private val env: Environment, iDownloadQueueExternalBasicF
     private val iDownloadQueueExternalBasic by lazy(iDownloadQueueExternalBasicFactory)
     private val documentBuilder: DocumentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
 
-    fun getMessageFromDq(arNummer: String): DqResponse {
+    fun getMessageFromDq(arNummer: String): DqResponseFormData {
         try {
 //            Metrics.getRightsRequest.labels(arNummer).inc()
-            logger.debug { "Tries to get ar message." }
+            logger.info { "Tries to get AR message." }
             val archivedFormTaskBasicDQ = iDownloadQueueExternalBasic.getArchivedFormTaskBasicDQ(altinnUsername, altinnUserPassword,
                 arNummer, null, false)
             val dqList = env.application.dq.serviceCodes.split(",")
             if (!dqList.contains(archivedFormTaskBasicDQ.serviceCode)) {
-                return DqResponse("Ok", "ServiceCode is not whitelisted: ${archivedFormTaskBasicDQ.serviceCode}")
+                return DqResponseFormData("Ok", "ServiceCode is not whitelisted: ${archivedFormTaskBasicDQ.serviceCode}", "")
             }
-            logger.debug { "Message from DQ: $archivedFormTaskBasicDQ" }
-            val doc: Document = documentBuilder.parse(
-                InputSource(
-                    archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData
-                        .removePrefix("<![CDATA[")
-                        .removeSuffix("]]>")
-                        .reader()
-                )
-            )
+            logger.info { "Message from DQ: $archivedFormTaskBasicDQ" }
+            val formData = archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData
+                .removePrefix("<![CDATA[")
+                .removeSuffix("]]>")
+            val doc: Document = documentBuilder.parse(InputSource(formData.reader()))
 
-            File("$arNummer.xml").writeText(doc.textContent)
+            val file = File.createTempFile("$arNummer", "xml")
+            file.writeText(formData)
+            logger.info { "File ${file.absolutePath} written, ${file.name}" }
 
 //            Metrics.getRightsResponse.labels(arNummer).inc()
-            return DqResponse("Ok", "Ok")
+            return DqResponseFormData("Ok", "Ok", formData)
         } catch (e: IDownloadQueueExternalBasicGetArchivedFormTaskBasicDQAltinnFaultFaultFaultMessage) {
             logger.error { "iDownloadQueueExternalBasic.getArchivedFormTaskBasicDQ feilet \n" +
                         "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
@@ -54,6 +52,6 @@ class AltinnDQService(private val env: Environment, iDownloadQueueExternalBasicF
             }
         }
 //        Metrics.getRightsFailed.labels(arNummer).inc()
-        return DqResponse("Failed", "Unknown error occurred when getting rights registry, check logger")
+        return DqResponseFormData("Failed", "Unknown error occurred when getting rights registry, check logger", "")
     }
 }
