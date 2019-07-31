@@ -247,7 +247,6 @@ class TullReferanse
 
 fun Routing.getTullmessage(altinnDqService: AltinnSRRService, environment: Environment) =
     get<TullReferanse>("hent AR melding fra dq".responds(ok<Any>(), badRequest<Any>())) {
-        call.response.header(HttpHeaders.ContentType, "application/xml")
         try {
             logger.info { "Create file" }
             var file = File.createTempFile("temp", ".xml")
@@ -255,7 +254,7 @@ fun Routing.getTullmessage(altinnDqService: AltinnSRRService, environment: Envir
             logger.info { "Written some text to file ${file.absolutePath} : ${file.toURI().toURL()}" }
 //            call.response.header(HttpHeaders.ContentDisposition, ContentDisposition.Attachment.withParameter(ContentDisposition.Parameters.FileName, "${file.absolutePath}").toString())
             call.response.header(HttpHeaders.ContentDisposition, "attachment; filename=\"${file.absolutePath}\"")
-
+            call.response.header(HttpHeaders.ContentType, "application/pdf")
             call.respond(HttpStatusCode.OK)
         } catch (e: Exception) {
             call.respond(HttpStatusCode.BadRequest, AnError(e.message.toString()))
