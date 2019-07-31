@@ -244,10 +244,14 @@ data class TullReferanse(val test: String?)
 
 fun Routing.getTullmessage(altinnDqService: AltinnSRRService, environment: Environment) =
     get<TullReferanse>("hent AR melding fra dq".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
-        logger.info { "Create file" }
-        var file = File.createTempFile("temp", "xml")
-        file.writeText("Some text")
-        logger.info { "Written some text to file ${file.absolutePath} : ${file.toURI().toURL()}" }
-        val empty = RegistryResponse(emptyList())
-        call.respond(empty)
+        try {
+            logger.info { "Create file" }
+            var file = File.createTempFile("temp", "xml")
+            file.writeText("Some text")
+            logger.info { "Written some text to file ${file.absolutePath} : ${file.toURI().toURL()}" }
+            val empty = RegistryResponse(emptyList())
+            call.respond(HttpStatusCode.OK, empty)
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.BadRequest, AnError(e.message.toString()))
+        }
     }
