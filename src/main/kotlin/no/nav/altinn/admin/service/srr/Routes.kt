@@ -254,7 +254,7 @@ fun Routing.getTullmessage(altinnDqService: AltinnSRRService, environment: Envir
             logger.info { "Written some text to file ${file.absolutePath} : ${file.toURI().toURL()}" }
 //            call.response.header(HttpHeaders.ContentDisposition, ContentDisposition.Attachment.withParameter(ContentDisposition.Parameters.FileName, "${file.absolutePath}").toString())
             call.response.header(HttpHeaders.ContentDisposition, "attachment; filename=\"${file.absolutePath}\"")
-            call.response.header(HttpHeaders.ContentType, "application/pdf")
+            call.response.header(HttpHeaders.ContentType, "application/xml")
             call.respond(HttpStatusCode.OK)
         } catch (e: Exception) {
             call.respond(HttpStatusCode.BadRequest, AnError(e.message.toString()))
