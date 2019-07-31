@@ -7,7 +7,6 @@ import io.ktor.auth.principal
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
 import io.ktor.response.respond
-import io.ktor.response.respondFile
 import io.ktor.routing.*
 import mu.KotlinLogging
 import no.altinn.schemas.services.register._2015._06.RegisterSRRRightsType
@@ -249,5 +248,6 @@ fun Routing.getTullmessage(altinnDqService: AltinnSRRService, environment: Envir
         var file = File.createTempFile("temp", "xml")
         file.writeText("Some text")
         logger.info { "Written some text to file ${file.absolutePath} : ${file.toURI().toURL()}" }
-        call.respondFile(file)
+        val empty = RegistryResponse(emptyList())
+        call.respond(empty)
     }
