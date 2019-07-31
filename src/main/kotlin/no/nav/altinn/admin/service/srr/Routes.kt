@@ -4,6 +4,7 @@ import io.ktor.application.application
 import io.ktor.application.call
 import io.ktor.auth.UserIdPrincipal
 import io.ktor.auth.principal
+import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
@@ -252,9 +253,8 @@ fun Routing.getTullmessage(altinnDqService: AltinnSRRService, environment: Envir
             var file = File.createTempFile("temp", ".xml")
             FileWriter(file).write("Some text")
             logger.info { "Written some text to file ${file.absolutePath} : ${file.toURI().toURL()}" }
-            val empty = RegistryResponse(emptyList())
             call.response.header(HttpHeaders.ContentDisposition, "attachment; filename=\"${file.absolutePath}\"")
-            call.respond(HttpStatusCode.OK, empty)
+            call.respond(HttpStatusCode.OK, ContentType.Application.Xml)
         } catch (e: Exception) {
             call.respond(HttpStatusCode.BadRequest, AnError(e.message.toString()))
         }
