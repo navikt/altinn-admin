@@ -27,9 +27,11 @@ private val config = if (System.getenv("APPLICATION_PROFILE") == "remote") {
 
 data class Environment(
     val stsUrl: String = config[Key("sts.url", stringType)],
-    var srrExpireDate: String = config[Key("srr.expiring.date", stringType)],
     val altinn: Altinn = Altinn(),
     val application: Application = Application(),
+    val srrService: SrrService = SrrService(),
+    val dqService: DqService = DqService(),
+
     val mock: Mock = Mock()
 ) {
 
@@ -46,7 +48,6 @@ data class Environment(
         val username: String = config[Key("serviceuser.username", stringType)],
         val password: String = config[Key("serviceuser.password", stringType)],
         val users: String = config[Key("approved.users.list", stringType)],
-        val serviceCodes: String = config[Key("servicecode.list", stringType)],
 
         // common ldap details for both authentication and group management
         val ldapConnTimeout: Int = config[Key("ldap.conntimeout", intType)],
@@ -59,11 +60,15 @@ data class Environment(
 
         // ldap details for managing ldap groups - different LDAP servers (test, preprod, production)
         val ldapHost: String = config[Key("ldap.host", stringType)],
-        val ldapPort: Int = config[Key("ldap.port", intType)],
-        val dq: Dq = Dq()
+        val ldapPort: Int = config[Key("ldap.port", intType)]
     )
 
-    data class Dq(
+    data class SrrService(
+        val serviceCodes: String = config[Key("srr.servicecode.list", stringType)],
+        val srrExpireDate: String = config[Key("srr.expiring.date", stringType)]
+    )
+
+    data class DqService(
         val serviceCodes: String = config[Key("dq.servicecode.list", stringType)]
     )
 

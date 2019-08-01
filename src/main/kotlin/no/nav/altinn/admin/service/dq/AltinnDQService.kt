@@ -18,7 +18,7 @@ class AltinnDQService(private val env: Environment, iDownloadQueueExternalBasicF
             logger.debug { "Tries to get AR message." }
             val archivedFormTaskBasicDQ = iDownloadQueueExternalBasic.getArchivedFormTaskBasicDQ(altinnUsername, altinnUserPassword,
                 arNummer, null, false)
-            val dqList = env.application.dq.serviceCodes.split(",")
+            val dqList = env.dqService.serviceCodes.split(",")
             if (!dqList.contains(archivedFormTaskBasicDQ.serviceCode)) {
                 return DqResponseFormData("Ok", "ServiceCode is not whitelisted: ${archivedFormTaskBasicDQ.serviceCode}", FormData(""))
             }

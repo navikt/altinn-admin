@@ -20,10 +20,10 @@ class ExpireAlerts(
     suspend fun checkDates() {
         while (applicationState.running) {
             val today = Calendar.getInstance().time
-            val expires = getRelativeExpireDate(env.srrExpireDate)
+            val expires = getRelativeExpireDate(env.srrService.srrExpireDate)
             logger.debug { "Running thread check dates...$today" }
 
-            val serviceCodes = env.application.serviceCodes.split(",")
+            val serviceCodes = env.srrService.serviceCodes.split(",")
             serviceCodes.forEach { sc ->
                 logger.debug { "Fetching rules for serviceCode $sc" }
                 val responseList = altinnSRRService.getRightsForAllBusinesses(sc)

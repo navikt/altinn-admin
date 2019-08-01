@@ -45,7 +45,7 @@ data class Rettighetsregister(val tjenesteKode: String)
 fun Routing.getRightsList(altinnSrrService: AltinnSRRService, environment: Environment) =
     get<Rettighetsregister>("hent rettigheter for alle virksomheter".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
-        val scList = environment.application.serviceCodes.split(",")
+        val scList = environment.srrService.serviceCodes.split(",")
         if (!scList.contains(param.tjenesteKode)) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
             return@get
@@ -87,7 +87,7 @@ fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService, environment
         param ->
         val virksomhetsnummer: String? = param.orgnr
 
-        val scList = environment.application.serviceCodes.split(",")
+        val scList = environment.srrService.serviceCodes.split(",")
         if (!scList.contains(param.tjenesteKode)) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
             return@get
@@ -146,7 +146,7 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment
                 val logEntry = "Bruker $currentUser forsøker å legge til rettighet til virksomhet  - ${ParameterInputType.body}"
                 application.environment.log.info(logEntry)
 
-                val scList = environment.application.serviceCodes.split(",")
+                val scList = environment.srrService.serviceCodes.split(",")
                 if (!scList.contains(body.tjenesteKode)) {
                     call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
                     return@post
@@ -201,7 +201,7 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
             val logEntry = "Forsøker å slette en rettighet for en virksomhet $currentUser - $param"
             application.environment.log.info(logEntry)
 
-            val scList = environment.application.serviceCodes.split(",")
+            val scList = environment.srrService.serviceCodes.split(",")
             if (!scList.contains(param.tjenesteKode)) {
                 call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
                 return@delete

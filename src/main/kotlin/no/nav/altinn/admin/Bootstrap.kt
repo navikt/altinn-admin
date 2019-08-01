@@ -85,11 +85,6 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     logger.info { "Starting server" }
     System.setProperty("javax.xml.soap.SAAJMetaFactory", "com.sun.xml.messaging.saaj.soap.SAAJMetaFactoryImpl")
 
-    val envs = System.getProperties()
-    for (env in envs) {
-        logger.info { "prop : ${env.key} : ${env.value}" }
-    }
-
     install(DefaultHeaders) {
         header(HttpHeaders.CacheControl, CacheControl.NO_CACHE)
     }
