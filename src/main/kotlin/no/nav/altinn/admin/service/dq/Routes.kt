@@ -30,8 +30,8 @@ private val logger = KotlinLogging.logger { }
 data class ArkivReferanse(val arNummer: String)
 
 fun Routing.getARmessage(altinnDqService: AltinnDQService, environment: Environment) =
-    get<ArkivReferanse>("hent AR melding fra dq".securityAndReponds(BasicAuthSecurity(),
-        ok<DqResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+    get<ArkivReferanse>("Hent AR melding fra dq".securityAndReponds(BasicAuthSecurity(),
+        ok<FormData>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
 
         if (param.arNummer.isNullOrEmpty()) {
@@ -42,7 +42,7 @@ fun Routing.getARmessage(altinnDqService: AltinnDQService, environment: Environm
         try {
             val dqResponse = altinnDqService.getMessageFromDq(param.arNummer)
             if (dqResponse.status == "Ok")
-                call.respond(dqResponse)
+                call.respond(dqResponse.formData)
             else
                 call.respond(HttpStatusCode.NotFound, dqResponse.message)
         } catch (ee: Exception) {
@@ -51,6 +51,6 @@ fun Routing.getARmessage(altinnDqService: AltinnDQService, environment: Environm
                     "\n ErrorMessage  ${ee.message}" +
                     "\n LocalizedErrorMessage  ${ee.localizedMessage}"
             }
-            call.respond(HttpStatusCode.InternalServerError, AnError("IDownloadQueueExternalBasic.GetArchivedFormTaskBasicDQ feilet"))
+            call.respond(HttpStatusCode.InternalServerError, AnError("IDownloadQueueExternalBasic.GetArchivedFormTaskBasicDQ feilet: ${ee.message}"))
         }
     }

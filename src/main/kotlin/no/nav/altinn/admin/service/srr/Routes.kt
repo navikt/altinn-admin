@@ -4,10 +4,8 @@ import io.ktor.application.application
 import io.ktor.application.call
 import io.ktor.auth.UserIdPrincipal
 import io.ktor.auth.principal
-import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
-import io.ktor.response.header
 import io.ktor.response.respond
 import io.ktor.routing.*
 import mu.KotlinLogging
@@ -27,15 +25,12 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndReponds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.common.API_V1
-import java.io.File
-import java.io.FileWriter
 
 fun Routing.ssrAPI(altinnSrrService: AltinnSRRService, environment: Environment) {
     getRightsList(altinnSrrService, environment)
     getRightsForReportee(altinnSrrService, environment)
     addRightsForReportee(altinnSrrService, environment)
     deleteRightsForReportee(altinnSrrService, environment)
-    getTullmessage(altinnSrrService, environment)
 }
 
 internal data class AnError(val error: String)
@@ -240,23 +235,3 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
             }
             call.respond(HttpStatusCode.OK, rightResponse)
         }
-
-@Group(GROUP_NAME)
-@Location("$API_V1/altinn/rettighetsregister/tull")
-class TullReferanse
-
-fun Routing.getTullmessage(altinnDqService: AltinnSRRService, environment: Environment) =
-    get<TullReferanse>("hent AR melding fra dq".responds(ok<Any>(), badRequest<Any>())) {
-        try {
-            logger.info { "Create file" }
-            var file = File.createTempFile("temp", ".xml")
-            FileWriter(file).write("Some text")
-            logger.info { "Written some text to file ${file.absolutePath} : ${file.toURI().toURL()}" }
-//            call.response.header(HttpHeaders.ContentDisposition, ContentDisposition.Attachment.withParameter(ContentDisposition.Parameters.FileName, "${file.absolutePath}").toString())
-            call.response.header(HttpHeaders.ContentDisposition, "attachment; filename=\"${file.absolutePath}\"")
-            call.response.header(HttpHeaders.ContentType, "application/xml")
-            call.respond(HttpStatusCode.OK)
-        } catch (e: Exception) {
-            call.respond(HttpStatusCode.BadRequest, AnError(e.message.toString()))
-        }
-    }

@@ -22,7 +22,7 @@ val jaxwsToolsVersion = "2.3.1"
 val javaxActivationVersion = "1.1.1"
 val cxfVersion = "3.3.1"
 val unboundidVersion = "4.0.8"
-val tjenestespesifikasjonerVersion = "1.2019.02.28-12.52-e0a79af1ccde"
+val tjenestespesifikasjonerVersion = "1.2019.07.10-12.21-b55f47790a9d"
 
 val swaggerVersion = "3.1.7"
 
