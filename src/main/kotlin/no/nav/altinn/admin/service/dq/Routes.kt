@@ -21,6 +21,7 @@ fun Routing.dqAPI(altinnDqService: AltinnDQService, environment: Environment) {
     getFormData(altinnDqService, environment)
     getDqItems(altinnDqService, environment)
     logger.info { "Dev Profile ? ${environment.application.devProfile}" }
+    logger.info { "Dev Profile  ${environment.application.devProfile2}" }
     if (environment.application.devProfile) {
         purgeItem(altinnDqService, environment)
     }
