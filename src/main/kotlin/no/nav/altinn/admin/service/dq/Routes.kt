@@ -20,9 +20,8 @@ import no.nav.altinn.admin.common.API_V1
 fun Routing.dqAPI(altinnDqService: AltinnDQService, environment: Environment) {
     getFormData(altinnDqService, environment)
     getDqItems(altinnDqService, environment)
-    logger.info { "Dev Profile ? ${environment.application.devProfile}" }
-    logger.info { "Dev Profile  ${environment.application.devProfile2}" }
-    if (environment.application.devProfile) {
+    logger.info { "Local env ? ${environment.application.localEnv}" }
+    if (environment.application.localEnv == "preprod") {
         purgeItem(altinnDqService, environment)
     }
 }
