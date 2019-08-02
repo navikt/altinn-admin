@@ -62,9 +62,12 @@ class AltinnDQService(private val env: Environment, iDownloadQueueExternalBasicF
             val dqItems = iDownloadQueueExternalBasic.getDownloadQueueItems(altinnUsername, altinnUserPassword, serviceCode).downloadQueueItemBE
             var dqList = mutableListOf<DqItem>()
             for (dqItem in dqItems) {
-                dqList.add(DqItem(dqItem.archiveReference))
+                dqList.add(DqItem(dqItem.archiveReference,
+                    dqItem.serviceCode,
+                    dqItem.serviceEditionCode.toString()
+                ))
             }
-            return DqItems("Ok", dqList)
+            return DqItems("Ok", dqList.size, dqList)
         } catch (e: IDownloadQueueExternalBasicGetDownloadQueueItemsAltinnFaultFaultFaultMessage) {
             logger.error { "Exception iDownloadQueueExternalBasic.getDownloadQueueItems\n" +
                     "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
@@ -74,9 +77,8 @@ class AltinnDQService(private val env: Environment, iDownloadQueueExternalBasicF
                     "\n UserGuid  ${e.faultInfo.userGuid}" +
                     "\n UserId  ${e.faultInfo.userId}"
             }
-            return DqItems("Failed", emptyList())
+            return DqItems("Failed", 0, emptyList())
         }
-        return DqItems("Failed", emptyList())
     }
 
     fun purgeItem(archiveReference: String): DqPurge {
@@ -95,6 +97,5 @@ class AltinnDQService(private val env: Environment, iDownloadQueueExternalBasicF
             }
             return DqPurge("Failed", "Error when purge item : ${e.message}")
         }
-        return DqPurge("Failed", "Unknown error when purge item, check logs")
     }
 }

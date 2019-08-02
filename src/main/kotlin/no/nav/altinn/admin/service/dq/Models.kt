@@ -14,13 +14,19 @@ data class DqResponseFormData(
 data class DqItems(
     @JsonProperty("status")
     val status: String,
+    @JsonProperty("size")
+    val size: Int,
     @JsonProperty("items")
     val items: List<DqItem>
 )
 
 data class DqItem(
     @JsonProperty("archiveReference")
-    val archiveReference: String
+    val archiveReference: String,
+    @JsonProperty("serviceCode")
+    val serviceCode: String,
+    @JsonProperty("serviceEditionCode")
+    val serviceEditionCode: String
 )
 
 data class Attachments(
