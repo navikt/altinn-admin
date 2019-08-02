@@ -18,7 +18,7 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.common.API_V1
 
 fun Routing.dqAPI(altinnDqService: AltinnDQService, environment: Environment) {
-    getFormData(altinnDqService, environment)
+    getFormMessage(altinnDqService, environment)
     getDqItems(altinnDqService, environment)
     logger.info { "Local env ? ${environment.application.localEnv}" }
     if (environment.application.localEnv == "preprod") {
@@ -35,7 +35,7 @@ private val logger = KotlinLogging.logger { }
 @Location("$API_V1/altinn/dq/hent/{arNummer}")
 data class ArkivReferanse(val arNummer: String)
 
-fun Routing.getFormData(altinnDqService: AltinnDQService, environment: Environment) =
+fun Routing.getFormMessage(altinnDqService: AltinnDQService, environment: Environment) =
     get<ArkivReferanse>("Hent melding fra en Arkiv Referanse via DQ".securityAndReponds(BasicAuthSecurity(),
         ok<FormData>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->

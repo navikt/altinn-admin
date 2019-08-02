@@ -23,6 +23,26 @@ data class DqItem(
     val archiveReference: String
 )
 
+data class Attachments(
+    @JsonProperty("attachments")
+    val attachments: List<Attachment>
+)
+
+data class Attachment(
+    @JsonProperty("filename")
+    val filename: String,
+    @JsonProperty("index")
+    val index: Int,
+    @JsonProperty("dataBase64")
+    val dataBase64: String,
+    @JsonProperty("fileSize")
+    val fileSize: Int,
+    @JsonProperty("encrypted")
+    val encrypted: Boolean,
+    @JsonProperty("type")
+    val type: String
+)
+
 data class DqPurge(
     @JsonProperty("status")
     val status: String,
@@ -32,5 +52,7 @@ data class DqPurge(
 
 data class FormData(
     @JsonProperty("formData")
-    val formData: String
+    val formData: String,
+    @JsonProperty("attachments")
+    val attachments: Attachments?
 )
