@@ -20,6 +20,7 @@ import no.nav.altinn.admin.common.API_V1
 fun Routing.dqAPI(altinnDqService: AltinnDQService, environment: Environment) {
     getFormData(altinnDqService, environment)
     getDqItems(altinnDqService, environment)
+    logger.info { "Dev Profile ? ${environment.application.devProfile}" }
     if (environment.application.devProfile) {
         purgeItem(altinnDqService, environment)
     }
@@ -65,19 +66,19 @@ fun Routing.getFormData(altinnDqService: AltinnDQService, environment: Environme
 data class TjenesteKode(val tjenesteKode: String)
 
 fun Routing.getDqItems(altinnDqService: AltinnDQService, environment: Environment) =
-    delete<TjenesteKode>("Hent elementer som ligger på download queue".securityAndReponds(
+    get<TjenesteKode>("Hent elementer som ligger på download queue".securityAndReponds(
         BasicAuthSecurity(), ok<DqItems>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
 
         if (param.tjenesteKode.isNullOrEmpty()) {
             call.respond(HttpStatusCode.BadRequest, AnError("Blank tjeneste kode oppgitt"))
-            return@delete
+            return@get
         }
 
         val dqList = environment.dqService.serviceCodes.split(",")
         if (!dqList.contains(param.tjenesteKode)) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
-            return@delete
+            return@get
         }
 
         try {
