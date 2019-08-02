@@ -11,6 +11,25 @@ data class DqResponseFormData(
     val formData: FormData
 )
 
+data class DqItems(
+    @JsonProperty("status")
+    val status: String,
+    @JsonProperty("items")
+    val items: List<DqItem>
+)
+
+data class DqItem(
+    @JsonProperty("archiveReference")
+    val archiveReference: String
+)
+
+data class DqPurge(
+    @JsonProperty("status")
+    val status: String,
+    @JsonProperty("message")
+    val message: String
+)
+
 data class FormData(
     @JsonProperty("formData")
     val formData: String
