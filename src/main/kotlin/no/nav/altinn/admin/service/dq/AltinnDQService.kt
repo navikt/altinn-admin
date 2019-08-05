@@ -57,11 +57,13 @@ class AltinnDQService(private val env: Environment, iDownloadQueueExternalBasicF
         return DqResponseFormData("Failed", "Unknown error occurred when getting rights registry, check logger", FormData("", null))
     }
 
-    fun getDownloadQueueItems(serviceCode: String): DqItems {
+    fun getDownloadQueueItems(serviceCode: String, serviceEdtionCode: String): DqItems {
         try {
             val dqItems = iDownloadQueueExternalBasic.getDownloadQueueItems(altinnUsername, altinnUserPassword, serviceCode).downloadQueueItemBE
             var dqList = mutableListOf<DqItem>()
             for (dqItem in dqItems) {
+                if (serviceEdtionCode.isNotEmpty() && serviceEdtionCode != dqItem.serviceEditionCode.toString())
+                    continue
                 dqList.add(DqItem(dqItem.archiveReference,
                     dqItem.serviceCode,
                     dqItem.serviceEditionCode.toString()

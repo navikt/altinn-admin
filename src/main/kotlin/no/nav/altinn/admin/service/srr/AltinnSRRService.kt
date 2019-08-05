@@ -12,7 +12,7 @@ import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.metrics.Metrics
 import javax.xml.datatype.DatatypeFactory
 import java.time.ZonedDateTime
-import java.util.GregorianCalendar
+import java.util.*
 
 private val logger = KotlinLogging.logger { }
 

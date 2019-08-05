@@ -20,8 +20,9 @@ import no.nav.altinn.admin.common.API_V1
 fun Routing.dqAPI(altinnDqService: AltinnDQService, environment: Environment) {
     getFormMessage(altinnDqService, environment)
     getDqItems(altinnDqService, environment)
+    getDqItemsSec(altinnDqService, environment)
     logger.info { "Local env ? ${environment.application.localEnv}" }
-    if (environment.application.localEnv == "preprod") {
+    if (environment.application.localEnv != "prod") {
         purgeItem(altinnDqService, environment)
     }
 }
@@ -40,13 +41,14 @@ fun Routing.getFormMessage(altinnDqService: AltinnDQService, environment: Enviro
         ok<FormData>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
 
-        if (param.arNummer.isNullOrEmpty()) {
+        val arNummer = param.arNummer.trim()
+        if (arNummer.isNullOrEmpty()) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig AR nummer oppgitt"))
             return@get
         }
 
         try {
-            val dqResponse = altinnDqService.getFormData(param.arNummer)
+            val dqResponse = altinnDqService.getFormData(arNummer)
             if (dqResponse.status == "Ok")
                 call.respond(dqResponse.formData)
             else
@@ -70,19 +72,60 @@ fun Routing.getDqItems(altinnDqService: AltinnDQService, environment: Environmen
         BasicAuthSecurity(), ok<DqItems>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
 
-        if (param.tjenesteKode.isNullOrEmpty()) {
+        val tjenesteKode = param.tjenesteKode.trim()
+        if (tjenesteKode.isNullOrEmpty()) {
             call.respond(HttpStatusCode.BadRequest, AnError("Blank tjeneste kode oppgitt"))
             return@get
         }
 
         val dqList = environment.dqService.serviceCodes.split(",")
-        if (!dqList.contains(param.tjenesteKode)) {
+        if (!dqList.contains(tjenesteKode)) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
             return@get
         }
 
         try {
-            val dqResponse = altinnDqService.getDownloadQueueItems(param.tjenesteKode)
+            val dqResponse = altinnDqService.getDownloadQueueItems(tjenesteKode, "")
+            call.respond(dqResponse)
+        } catch (ee: Exception) {
+            logger.error {
+                "IDownloadQueueExternalBasic.GetArchivedFormTaskBasicDQ feilet  \n" +
+                    "\n ErrorMessage  ${ee.message}" +
+                    "\n LocalizedErrorMessage  ${ee.localizedMessage}"
+            }
+            call.respond(HttpStatusCode.InternalServerError, AnError("IDownloadQueueExternalBasic.GetArchivedFormTaskBasicDQ feilet: ${ee.message}"))
+        }
+    }
+
+@Group(GROUP_NAME)
+@Location("$API_V1/altinn/dq/elementer/{tjenesteKode}/{utgaveKode}")
+data class TjenesteOgUtgaveKode(val tjenesteKode: String, val utgaveKode: String)
+
+fun Routing.getDqItemsSec(altinnDqService: AltinnDQService, environment: Environment) =
+    get<TjenesteOgUtgaveKode>("Hent elementer som ligger på download queue filtrert med utgave kode".securityAndReponds(
+        BasicAuthSecurity(), ok<DqItems>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+        param ->
+
+        val tjenesteKode = param.tjenesteKode.trim()
+        if (tjenesteKode.isNullOrEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Blank tjeneste kode oppgitt"))
+            return@get
+        }
+
+        val utgaveKode = param.utgaveKode.trim()
+        if (utgaveKode.isNullOrEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Blank utgave kode oppgitt"))
+            return@get
+        }
+
+        val dqList = environment.dqService.serviceCodes.split(",")
+        if (!dqList.contains(tjenesteKode)) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
+            return@get
+        }
+
+        try {
+            val dqResponse = altinnDqService.getDownloadQueueItems(tjenesteKode, utgaveKode)
             call.respond(dqResponse)
         } catch (ee: Exception) {
             logger.error {
@@ -103,13 +146,14 @@ fun Routing.purgeItem(altinnDqService: AltinnDQService, environment: Environment
         BasicAuthSecurity(), ok<DqPurge>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
 
-        if (param.arNummer.isNullOrEmpty()) {
+        val arNummer = param.arNummer.trim()
+        if (arNummer.isNullOrEmpty()) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig AR nummer oppgitt"))
             return@delete
         }
 
         try {
-            val dqResponse = altinnDqService.purgeItem(param.arNummer)
+            val dqResponse = altinnDqService.purgeItem(arNummer)
             call.respond(dqResponse)
         } catch (ee: Exception) {
             logger.error {

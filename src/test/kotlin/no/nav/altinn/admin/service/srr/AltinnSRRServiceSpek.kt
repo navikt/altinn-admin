@@ -16,13 +16,13 @@ import no.altinn.schemas.services.register.srr._2015._06.DeleteRightResponseList
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.ApplicationState
 import no.nav.altinn.admin.common.InMemoryLDAPServer
+import no.nav.altinn.admin.common.encodeBase64
 import no.nav.altinn.admin.common.objectMapper
 import no.nav.altinn.admin.common.xmlMapper
 import no.nav.altinn.admin.mainModule
 import org.amshove.kluent.shouldEqual
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
-import java.util.*
 
 object AltinnSRRServiceSpek : Spek({
     val applicationState = ApplicationState(running = true, initialized = true)
@@ -332,5 +332,3 @@ object AltinnSRRServiceSpek : Spek({
         }
     }
 })
-
-private fun encodeBase64(bytes: ByteArray): String = Base64.getEncoder().encodeToString(bytes)
