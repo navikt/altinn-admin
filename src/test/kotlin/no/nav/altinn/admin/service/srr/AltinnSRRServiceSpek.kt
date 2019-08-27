@@ -293,6 +293,20 @@ object AltinnSRRServiceSpek : Spek({
                         req.requestHandled shouldEqual true
                         req.response.status() shouldEqual HttpStatusCode.BadRequest
                     }
+                    it("ServiceAccounts har aksess til slett rettighet med alle param gyldig skal feile 'bad request'") {
+                        val tjenesteKode = "1234"
+                        val orgnr = "123123123"
+                        val lesEllerSkriv = "les"
+                        val domene = "*.nav.no"
+                        val params = "/$tjenesteKode/$orgnr/$lesEllerSkriv/$domene"
+                        val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
+                            addHeader(HttpHeaders.Accept, "application/json")
+                            addHeader("Content-Type", "application/json")
+                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("srvp01:dummy".toByteArray())}")
+                        }
+                        req.requestHandled shouldEqual true
+                        req.response.status() shouldEqual HttpStatusCode.BadRequest
+                    }
                 }
             }
 

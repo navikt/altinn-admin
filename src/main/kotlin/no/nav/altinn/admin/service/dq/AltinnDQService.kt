@@ -16,22 +16,22 @@ class AltinnDQService(private val env: Environment, iDownloadQueueExternalBasicF
     private val altinnUserPassword = env.altinn.password
     private val iDownloadQueueExternalBasic by lazy(iDownloadQueueExternalBasicFactory)
 
-    fun getFormData(arNummer: String): DqResponseFormData {
+    fun getFormData(arNummer: String): DqResponseFormTask {
         try {
             logger.debug { "Tries to get AR message." }
-            val archivedFormTaskBasicDQ = iDownloadQueueExternalBasic.getArchivedFormTaskBasicDQ(altinnUsername, altinnUserPassword,
+            val dq = iDownloadQueueExternalBasic.getArchivedFormTaskBasicDQ(altinnUsername, altinnUserPassword,
                 arNummer, null, false)
             val dqList = env.dqService.serviceCodes.split(",")
-            if (!dqList.contains(archivedFormTaskBasicDQ.serviceCode)) {
-                return DqResponseFormData("Ok", "ServiceCode is not whitelisted: ${archivedFormTaskBasicDQ.serviceCode}", FormData("", null))
+            if (!dqList.contains(dq.serviceCode)) {
+                return DqResponseFormTask("Ok", "ServiceCode is not whitelisted: ${dq.serviceCode}", ArData())
             }
-            logger.debug { "Message from DQ: $archivedFormTaskBasicDQ" }
-            val formData = archivedFormTaskBasicDQ.forms.archivedFormDQBE[0].formData
+            logger.debug { "Message from DQ: $dq" }
+            val formData = dq.forms.archivedFormDQBE[0].formData
                 .removePrefix("<![CDATA[")
                 .removeSuffix("]]>")
             logger.debug { "FormData: $formData" }
 
-            val attachments = archivedFormTaskBasicDQ.attachments.archivedAttachmentDQBE
+            val attachments = dq.attachments.archivedAttachmentDQBE
             logger.info { "DownloadQueue: processing '${attachments.size}' attachments for AR: '$arNummer'" }
             val atMents = mutableListOf<Attachment>()
             attachments.forEachIndexed { index, attachment ->
@@ -43,7 +43,17 @@ class AltinnDQService(private val env: Environment, iDownloadQueueExternalBasicF
                     attachment.isIsEncrypted,
                     attachment.attachmentType))
             }
-            return DqResponseFormData("Ok", "Ok", FormData(formData, Attachments(atMents)))
+            return DqResponseFormTask("Ok", "Ok",
+                ArData(dq.archiveReference,
+                    dq.archiveTimeStamp.toString(),
+                    dq.serviceCode,
+                    dq.serviceEditionCode,
+                    dq.forms.archivedFormDQBE[0].dataFormatID,
+                    dq.forms.archivedFormDQBE[0].dataFormatVersionID,
+                    dq.formsInResponse,
+                    dq.attachmentsInResponse,
+                    formData,
+                    Attachments(atMents)))
         } catch (e: IDownloadQueueExternalBasicGetArchivedFormTaskBasicDQAltinnFaultFaultFaultMessage) {
             logger.error { "iDownloadQueueExternalBasic.getArchivedFormTaskBasicDQ feilet \n" +
                         "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
@@ -54,7 +64,7 @@ class AltinnDQService(private val env: Environment, iDownloadQueueExternalBasicF
                         "\n UserId  ${e.faultInfo.userId}"
             }
         }
-        return DqResponseFormData("Failed", "Unknown error occurred when getting rights registry, check logger", FormData("", null))
+        return DqResponseFormTask("Failed", "Unknown error occurred when getting rights registry, check logger", ArData())
     }
 
     fun getDownloadQueueItems(serviceCode: String, serviceEdtionCode: String): DqItems {

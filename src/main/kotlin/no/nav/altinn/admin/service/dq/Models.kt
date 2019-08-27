@@ -2,13 +2,13 @@ package no.nav.altinn.admin.service.dq
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class DqResponseFormData(
+data class DqResponseFormTask(
     @JsonProperty("status")
     val status: String,
     @JsonProperty("message")
     val message: String,
-    @JsonProperty("formData")
-    val formData: FormData
+    @JsonProperty("arData")
+    val arData: ArData
 )
 
 data class DqItems(
@@ -56,9 +56,25 @@ data class DqPurge(
     val message: String
 )
 
-data class FormData(
+data class ArData(
+    @JsonProperty("archiveReference")
+    val archiveReference: String = "",
+    @JsonProperty("archiveTimeStamp")
+    val archiveTimeStamp: String = "",
+    @JsonProperty("serviceCode")
+    val serviceCode: String = "",
+    @JsonProperty("serviceEditionCode")
+    val serviceEditionCode: String = "",
+    @JsonProperty("dataFormatId")
+    val dataFormatId: String = "",
+    @JsonProperty("dataFormatVersion")
+    val dataFormatVersion: Int = -1,
+    @JsonProperty("numberOfForms")
+    val numberOfForms: Int = 0,
+    @JsonProperty("numberOfAttachments")
+    val numberOfAttachments: Int = 0,
     @JsonProperty("formData")
-    val formData: String,
+    val formData: String = "",
     @JsonProperty("attachments")
-    val attachments: Attachments?
+    val attachments: Attachments? = null
 )

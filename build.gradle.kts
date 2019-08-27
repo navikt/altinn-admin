@@ -4,9 +4,9 @@ import no.nils.wsdl2java.Wsdl2JavaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "no.nav"
-version = "0.9.1-SNAPSHOT"
+version = "0.9.5-SNAPSHOT"
 
-val kotlinVersion = "1.3.31"
+val kotlinVersion = "1.3.50"
 val ktorVersion = "1.2.1"
 val jacksonVersion = "2.9.8"
 
@@ -131,7 +131,9 @@ tasks {
     withType<Wsdl2JavaTask> {
         wsdlDir = file("$projectDir/src/main/resources/wsdl")
         wsdlsToGenerate = listOf(
-            mutableListOf("-xjc", "-b", "$projectDir/src/main/xjb/binding.xml", "$projectDir/src/main/resources/wsdl/RegisterSRRAgencyExternalBasic.wsdl")
+            mutableListOf("-xjc", "-b", "$projectDir/src/main/xjb/binding.xml", "$projectDir/src/main/resources/wsdl/RegisterSRRAgencyExternalBasic.wsdl"),
+            mutableListOf("-xjc", "-b", "$projectDir/src/main/xjb/binding.xml", "$projectDir/src/main/resources/wsdl/ReceiptAgencyExternalBasic.wsdl"),
+            mutableListOf("-xjc", "-b", "$projectDir/src/main/xjb/binding.xml", "$projectDir/src/main/resources/wsdl/ServiceOwnerArchiveExternalBasic.wsdl")
         )
         generatedWsdlDir = file(generatedSourcesDir)
     }

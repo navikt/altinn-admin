@@ -38,7 +38,7 @@ data class ArkivReferanse(val arNummer: String)
 
 fun Routing.getFormMessage(altinnDqService: AltinnDQService, environment: Environment) =
     get<ArkivReferanse>("Hent melding fra en Arkiv Referanse via DQ".securityAndReponds(BasicAuthSecurity(),
-        ok<FormData>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+        ok<ArData>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
 
         val arNummer = param.arNummer.trim()
@@ -50,7 +50,7 @@ fun Routing.getFormMessage(altinnDqService: AltinnDQService, environment: Enviro
         try {
             val dqResponse = altinnDqService.getFormData(arNummer)
             if (dqResponse.status == "Ok")
-                call.respond(dqResponse.formData)
+                call.respond(dqResponse.arData)
             else
                 call.respond(HttpStatusCode.NotFound, dqResponse.message)
         } catch (ee: Exception) {
