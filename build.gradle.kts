@@ -4,7 +4,7 @@ import no.nils.wsdl2java.Wsdl2JavaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "no.nav"
-version = "0.9.5"
+version = "0.9.6-SNAPSHOT"
 
 val kotlinVersion = "1.3.50"
 val ktorVersion = "1.2.1"
@@ -87,6 +87,7 @@ dependencies {
     compile("javax.xml.ws:jaxws-api:$jaxwsVersion")
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.1.1")
     compile("no.nav.tjenestespesifikasjoner:altinn-download-queue-external:$tjenestespesifikasjonerVersion")
+    compile("no.nav.tjenestespesifikasjoner:altinn-correspondence-agency-external-basic:$tjenestespesifikasjonerVersion")
 
     implementation("org.apache.cxf:cxf-rt-frontend-jaxws:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")

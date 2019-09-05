@@ -2,6 +2,7 @@ package no.nav.altinn.admin.ws
 
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
 import no.altinn.services.register.srr._2015._06.IRegisterSRRAgencyExternalBasic
+import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondenceAgencyExternalBasic
 import org.apache.cxf.ext.logging.LoggingFeature
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean
 import org.apache.cxf.ws.addressing.WSAddressingFeature
@@ -17,6 +18,12 @@ object Clients {
         createServicePort(
             serviceUrl = serviceUrl,
             serviceClazz = IDownloadQueueExternalBasic::class.java
+        )
+
+    fun iCorrespondenceExternalBasic(serviceUrl: String): ICorrespondenceAgencyExternalBasic =
+        createServicePort(
+            serviceUrl = serviceUrl,
+            serviceClazz = ICorrespondenceAgencyExternalBasic::class.java
         )
 
     private fun <PORT_TYPE> createServicePort(

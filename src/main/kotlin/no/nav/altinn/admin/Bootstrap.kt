@@ -34,6 +34,8 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.SwaggerUi
 import no.nav.altinn.admin.common.*
 import no.nav.altinn.admin.ldap.LDAPAuthenticate
 import no.nav.altinn.admin.service.alerts.ExpireAlerts
+import no.nav.altinn.admin.service.correspondence.AltinnCorrespondenceService
+import no.nav.altinn.admin.service.correspondence.correspondenceAPI
 import no.nav.altinn.admin.service.dq.AltinnDQService
 import no.nav.altinn.admin.service.dq.dqAPI
 import no.nav.altinn.admin.service.srr.AltinnSRRService
@@ -150,6 +152,14 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
             }
         }
     }
+    val altinnCorrespondenceService = AltinnCorrespondenceService(environment) {
+        Clients.iCorrespondenceExternalBasic(environment.altinn.altinnCorrespondenceUrl).apply {
+            when (environment.application.devProfile) {
+                true -> stsClient.configureFor(this, STS_SAML_POLICY_NO_TRANSPORT_BINDING)
+                false -> stsClient.configureFor(this)
+            }
+        }
+    }
 
     val expireAlerts = ExpireAlerts(environment, applicationState, altinnSRRService)
     if (!environment.application.devProfile) {
@@ -172,6 +182,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         logger.info { "Installing altinn srr api" }
         ssrAPI(altinnSrrService = altinnSRRService, environment = environment)
         dqAPI(altinnDqService = altinnDqService, environment = environment)
+        correspondenceAPI(altinnCorrespondenceService = altinnCorrespondenceService, environment = environment)
         nais(environment, readinessCheck = { applicationState.initialized }, livenessCheck = { applicationState.running })
     }
 }
