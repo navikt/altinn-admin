@@ -68,11 +68,11 @@ fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorresp
                 call.respond(HttpStatusCode.NotFound, correspondenceResponse.message)
         } catch (ee: Exception) {
             logger.error {
-                "IDownloadQueueExternalBasic.GetArchivedFormTaskBasicDQ feilet  \n" +
+                "iCorrespondenceExternalBasic.getCorrespondenceDetails feilet  \n" +
                     "\n ErrorMessage  ${ee.message}" +
                     "\n LocalizedErrorMessage  ${ee.localizedMessage}"
             }
-            call.respond(HttpStatusCode.InternalServerError, AnError("IDownloadQueueExternalBasic.GetArchivedFormTaskBasicDQ feilet: ${ee.message}"))
+            call.respond(HttpStatusCode.InternalServerError, AnError("iCorrespondenceExternalBasic.getCorrespondenceDetails feilet: ${ee.message}"))
         }
     }
 
@@ -95,11 +95,11 @@ fun Routing.getCorrespondence(altinnCorrespondenceService: AltinnCorrespondenceS
                 call.respond(HttpStatusCode.NotFound, correspondenceResponse.message)
         } catch (ee: Exception) {
             logger.error {
-                "IDownloadQueueExternalBasic.GetArchivedFormTaskBasicDQ feilet  \n" +
+                "iCorrespondenceExternalBasic.getCorrespondenceDetails feilet \n" +
                     "\n ErrorMessage  ${ee.message}" +
                     "\n LocalizedErrorMessage  ${ee.localizedMessage}"
             }
-            call.respond(HttpStatusCode.InternalServerError, AnError("IDownloadQueueExternalBasic.GetArchivedFormTaskBasicDQ feilet: ${ee.message}"))
+            call.respond(HttpStatusCode.InternalServerError, AnError("iCorrespondenceExternalBasic.getCorrespondenceDetails feilet: ${ee.message}"))
         }
     }
 

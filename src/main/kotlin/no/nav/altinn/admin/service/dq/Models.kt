@@ -69,6 +69,8 @@ data class ArData(
     val dataFormatId: String = "",
     @JsonProperty("dataFormatVersion")
     val dataFormatVersion: Int = -1,
+    @JsonProperty("reportee")
+    val reportee: String = "",
     @JsonProperty("numberOfForms")
     val numberOfForms: Int = 0,
     @JsonProperty("numberOfAttachments")

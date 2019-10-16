@@ -50,6 +50,7 @@ class AltinnDQService(private val env: Environment, iDownloadQueueExternalBasicF
                     dq.serviceEditionCode,
                     dq.forms.archivedFormDQBE[0].dataFormatID,
                     dq.forms.archivedFormDQBE[0].dataFormatVersionID,
+                    dq.reportee,
                     dq.formsInResponse,
                     dq.attachmentsInResponse,
                     formData,

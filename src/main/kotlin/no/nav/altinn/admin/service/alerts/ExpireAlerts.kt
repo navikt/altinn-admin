@@ -27,7 +27,6 @@ class ExpireAlerts(
             serviceCodes.forEach { sc ->
                 logger.debug { "Fetching rules for serviceCode $sc" }
                 val responseList = altinnSRRService.getRightsForAllBusinesses(sc)
-                val currentExpired = Metrics.srrExipingRightsRules.labels(sc).get()
                 var numberOfExpiredRules = 0
                 responseList.register.register.forEach {
                     val dd = DateTime.parse(it.tilDato).toCalendar(Locale.getDefault())
@@ -37,22 +36,17 @@ class ExpireAlerts(
                     }
                     logger.debug { "${it.organisasjonsnummer} - with domene ${it.domene} - has date ${it.tilDato}" }
                 }
-                if (numberOfExpiredRules > 0 && currentExpired == 0.0) {
+                if (numberOfExpiredRules > 0) {
                     logger.debug { "$sc ADD expiring: $numberOfExpiredRules" }
                     Metrics.srrExipingRightsRules.labels(sc).inc(numberOfExpiredRules.toDouble())
                 }
-                if (numberOfExpiredRules == 0 && currentExpired > 0.0) {
-                    logger.debug { "$sc REMOVE expiring: $currentExpired" }
-                    Metrics.srrExipingRightsRules.labels(sc).dec(currentExpired)
-                }
-                if (numberOfExpiredRules > 0 && currentExpired > 0) {
-                    val diff = numberOfExpiredRules - currentExpired
-                    logger.debug { "$sc UPDATE expiring: $diff" }
-                    Metrics.srrExipingRightsRules.labels(sc).inc(diff)
-                }
                 logger.debug { "Done fetching rules for serviceCode $sc" }
             }
-            delay(1000*60*60*24)
+            // alertrator gives notification every 5 minutes as long as condition is true.
+            // Hence, reset srrExipingRightsRules, so we get one or two notification pr day.
+            delay(1000*60*5)
+            Metrics.srrExipingRightsRules.set(0.0)
+            delay(1000*60*60*24 - 1000*60*5)
         }
     }
 }
