@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class PostLeggTilRettighetBody(
     @JsonProperty("tjenesteKode")
     val tjenesteKode: String,
+    @JsonProperty("utgaveKode")
+    val utgaveKode: String,
     @JsonProperty("orgnr")
     val orgnr: String,
     @JsonProperty("lesEllerSkriv")
@@ -33,6 +35,8 @@ data class RegistryResponse(
     val register: List<Register>
 ) {
     data class Register(
+        @JsonProperty("tjenesteOgUtgave")
+        val tjenesteOgUtgave: String,
         @JsonProperty("virksomhetsnummer")
         val organisasjonsnummer: String,
         @JsonProperty("domene")

@@ -40,7 +40,7 @@ object AltinnSRRServiceSpek : Spek({
             with(engine) {
                 context("Route /api/v1/altinn/rettighetsregister/leggtil") {
                     it("Legg til rettighet med tomt virksomhetsnummer skal feile med 'bad request'") {
-                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "", "les", "*.nav.no"))
+                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "1", "", "les", "*.nav.no"))
                         val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -52,7 +52,19 @@ object AltinnSRRServiceSpek : Spek({
                         req.response.status() shouldEqual HttpStatusCode.BadRequest
                     }
                     it("Legg til rettighet med ugyldig tjenesteKode skal feile med 'bad request'") {
-                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("5252", "123123123", "les", "*.nav.no"))
+                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("5252", "1", "123123123", "les", "*.nav.no"))
+                        val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
+                            addHeader(HttpHeaders.Accept, "application/json")
+                            addHeader("Content-Type", "application/json")
+                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+                            setBody(test)
+                        }
+
+                        req.requestHandled shouldEqual true
+                        req.response.status() shouldEqual HttpStatusCode.BadRequest
+                    }
+                    it("Legg til rettighet med ugyldig utgaveKode skal feile med 'bad request'") {
+                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "T", "123123123", "les", "*.nav.no"))
                         val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -64,7 +76,7 @@ object AltinnSRRServiceSpek : Spek({
                         req.response.status() shouldEqual HttpStatusCode.BadRequest
                     }
                     it("Legg til rettighet med feil lesEllerSkriv skal feile med 'bad request'") {
-                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "123123123", "dust", "*.nav.no"))
+                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "1", "123123123", "dust", "*.nav.no"))
                         val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -76,7 +88,7 @@ object AltinnSRRServiceSpek : Spek({
                         req.response.status() shouldEqual HttpStatusCode.BadRequest
                     }
                     it("Legg til rettighet med tomt domene skal feile med 'bad request'") {
-                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "123123123", "les", ""))
+                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "1", "123123123", "les", ""))
                         val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -88,7 +100,7 @@ object AltinnSRRServiceSpek : Spek({
                         req.response.status() shouldEqual HttpStatusCode.BadRequest
                     }
                     it("Legg til rettighet som er gyldig, skal gi ok respons") {
-                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "123123123", "les", "*.nav.no"))
+                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "1", "123123123", "les", "*.nav.no"))
                         val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -109,7 +121,7 @@ object AltinnSRRServiceSpek : Spek({
                                             "               <OperationResult>RULE_ALREADY_EXISTS</OperationResult>\n" +
                                             "            </AddRightResponse>\n", AddRightResponse::class.java))
                         }
-                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "123123123", "les", "*.nav.no"))
+                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "1", "123123123", "les", "*.nav.no"))
                         val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -130,7 +142,7 @@ object AltinnSRRServiceSpek : Spek({
                                             "    <OperationResult>EMPTY_OR_NOT_A_VALID_SSN_OR_ORGANISATION</OperationResult>\n" +
                                             "    </AddRightResponse>\n", AddRightResponse::class.java))
                         }
-                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "123123123", "les", "*.nav.no"))
+                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "1", "123123123", "les", "*.nav.no"))
                         val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -151,7 +163,7 @@ object AltinnSRRServiceSpek : Spek({
                                             "    <OperationResult>Right_Already_Expired</OperationResult>\n" +
                                             "    </AddRightResponse>\n", AddRightResponse::class.java))
                         }
-                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "123123123", "les", "*.nav.no"))
+                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "1", "123123123", "les", "*.nav.no"))
                         val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -172,7 +184,7 @@ object AltinnSRRServiceSpek : Spek({
                                             "    <OperationResult>Unknown</OperationResult>\n" +
                                             "    </AddRightResponse>\n", AddRightResponse::class.java))
                         }
-                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "123123123", "les", "*.nav.no"))
+                        val test = objectMapper.writeValueAsString(PostLeggTilRettighetBody("1234", "1", "123123123", "les", "*.nav.no"))
                         val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -202,10 +214,26 @@ object AltinnSRRServiceSpek : Spek({
                 context("Route /api/v1/altinn/rettighetsregister/slett/{tjenesteKode}/{orgnr}/{lesEllerSkriv}/{domene}") {
                     it("Slett rettighet med ugyldig tjenestekode skal feile med 'bad request'") {
                         val tjenesteKode = "5252"
+                        val utgaveKode = "1"
                         val orgnr = "123123123"
                         val lesEllerSkriv = "les"
                         val domene = "*.nav.no"
-                        val params = "/$tjenesteKode/$orgnr/$lesEllerSkriv/$domene"
+                        val params = "/$tjenesteKode/$utgaveKode/$orgnr/$lesEllerSkriv/$domene"
+                        val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
+                            addHeader(HttpHeaders.Accept, "application/json")
+                            addHeader("Content-Type", "application/json")
+                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+                        }
+                        req.requestHandled shouldEqual true
+                        req.response.status() shouldEqual HttpStatusCode.BadRequest
+                    }
+                    it("Slett rettighet med ugyldig utgavekode skal feile med 'bad request'") {
+                        val tjenesteKode = "1234"
+                        val utgaveKode = "T"
+                        val orgnr = "123123123"
+                        val lesEllerSkriv = "les"
+                        val domene = "*.nav.no"
+                        val params = "/$tjenesteKode/$utgaveKode/$orgnr/$lesEllerSkriv/$domene"
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -216,10 +244,11 @@ object AltinnSRRServiceSpek : Spek({
                     }
                     it("Slett rettighet med ugyldig virksomhetsnummer skal feile med 'bad request'") {
                         val tjenesteKode = "1234"
+                        val utgaveKode = "1"
                         val orgnr = "123"
                         val lesEllerSkriv = "les"
                         val domene = "*.nav.no"
-                        val params = "/$tjenesteKode/$orgnr/$lesEllerSkriv/$domene"
+                        val params = "/$tjenesteKode/$utgaveKode/$orgnr/$lesEllerSkriv/$domene"
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -230,10 +259,11 @@ object AltinnSRRServiceSpek : Spek({
                     }
                     it("Slett rettighet med ugyldig lesEllerSkriv skal feile med 'bad request'") {
                         val tjenesteKode = "1234"
+                        val utgaveKode = "1"
                         val orgnr = "123123123"
                         val lesEllerSkriv = "dust"
                         val domene = "*.nav.no"
-                        val params = "/$tjenesteKode/$orgnr/$lesEllerSkriv/$domene"
+                        val params = "/$tjenesteKode/$utgaveKode/$orgnr/$lesEllerSkriv/$domene"
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -244,10 +274,11 @@ object AltinnSRRServiceSpek : Spek({
                     }
                     it("Slett rettighet med tomt domene skal feile med 'bad request'") {
                         val tjenesteKode = "1234"
+                        val utgaveKode = "1"
                         val orgnr = "123123123"
                         val lesEllerSkriv = "les"
                         val domene = " "
-                        val params = "/$tjenesteKode/$orgnr/$lesEllerSkriv/$domene"
+                        val params = "/$tjenesteKode/$utgaveKode/$orgnr/$lesEllerSkriv/$domene"
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -258,10 +289,11 @@ object AltinnSRRServiceSpek : Spek({
                     }
                     it("Slett rettighet med alle param gyldig skal gi ok respons") {
                         val tjenesteKode = "1234"
+                        val utgaveKode = "1"
                         val orgnr = "123123123"
                         val lesEllerSkriv = "les"
                         val domene = "*.nav.no"
-                        val params = "/$tjenesteKode/$orgnr/$lesEllerSkriv/$domene"
+                        val params = "/$tjenesteKode/$utgaveKode/$orgnr/$lesEllerSkriv/$domene"
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -281,10 +313,11 @@ object AltinnSRRServiceSpek : Spek({
                                             "    </DeleteRightResponse>", DeleteRightResponse::class.java))
                         }
                         val tjenesteKode = "1234"
+                        val utgaveKode = "1"
                         val orgnr = "123123123"
                         val lesEllerSkriv = "les"
                         val domene = "*.nav.no"
-                        val params = "/$tjenesteKode/$orgnr/$lesEllerSkriv/$domene"
+                        val params = "/$tjenesteKode/$utgaveKode/$orgnr/$lesEllerSkriv/$domene"
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -295,10 +328,11 @@ object AltinnSRRServiceSpek : Spek({
                     }
                     it("ServiceAccounts har aksess til slett rettighet med alle param gyldig skal feile 'bad request'") {
                         val tjenesteKode = "1234"
+                        val utgaveKode = "1"
                         val orgnr = "123123123"
                         val lesEllerSkriv = "les"
                         val domene = "*.nav.no"
-                        val params = "/$tjenesteKode/$orgnr/$lesEllerSkriv/$domene"
+                        val params = "/$tjenesteKode/$utgaveKode/$orgnr/$lesEllerSkriv/$domene"
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")

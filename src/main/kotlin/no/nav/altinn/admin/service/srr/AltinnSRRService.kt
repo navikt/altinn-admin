@@ -22,11 +22,11 @@ class AltinnSRRService(private val env: Environment, iRegisterSRRAgencyExternalB
     private val altinnUserPassword = env.altinn.password
     private val iRegisterSRRAgencyExternalBasic: IRegisterSRRAgencyExternalBasic by lazy(iRegisterSRRAgencyExternalBasicFactory)
 
-    fun addRights(serviceCode: String, reportee: String, redirectDomain: String, type: RegisterSRRRightsType): RightsResponse {
+    fun addRights(serviceCode: String, editionCode: String, reportee: String, redirectDomain: String, type: RegisterSRRRightsType): RightsResponse {
         logger.info { "Adding $type rights for business number $reportee with redirect url $redirectDomain." }
         try {
             Metrics.addRightsRequest.labels(serviceCode).inc()
-            val response = env.mock.srrAddResponse ?: iRegisterSRRAgencyExternalBasic.addRightsBasic(altinnUsername, altinnUserPassword, serviceCode, 1,
+            val response = env.mock.srrAddResponse ?: iRegisterSRRAgencyExternalBasic.addRightsBasic(altinnUsername, altinnUserPassword, serviceCode, editionCode.toInt(),
                     createAddRightsList(reportee, redirectDomain, type))
 
             return createAddResponseMessage(serviceCode, response, type, reportee)
@@ -45,11 +45,11 @@ class AltinnSRRService(private val env: Environment, iRegisterSRRAgencyExternalB
         return RightsResponse("Failed", "Unknown error occurred when adding $type rights, check logger")
     }
 
-    fun deleteRights(serviceCode: String, reportee: String, redirectDomain: String, type: RegisterSRRRightsType): RightsResponse {
+    fun deleteRights(serviceCode: String, editionCode: String, reportee: String, redirectDomain: String, type: RegisterSRRRightsType): RightsResponse {
         logger.info { "Removing read rights for business number $reportee with redirect url $redirectDomain." }
         try {
             Metrics.deleteRightsRequest.labels(serviceCode).inc()
-            val response = env.mock.srrDeleteResponse ?: iRegisterSRRAgencyExternalBasic.deleteRightsBasic(altinnUsername, altinnUserPassword, serviceCode, 1,
+            val response = env.mock.srrDeleteResponse ?: iRegisterSRRAgencyExternalBasic.deleteRightsBasic(altinnUsername, altinnUserPassword, serviceCode, editionCode.toInt(),
                     createDeleteRightsList(reportee, redirectDomain, type))
             return createDeleteResponseMessage(serviceCode, response, type, reportee)
         } catch (e: IRegisterSRRAgencyExternalBasicDeleteRightsBasicAltinnFaultFaultFaultMessage) {
@@ -66,17 +66,17 @@ class AltinnSRRService(private val env: Environment, iRegisterSRRAgencyExternalB
         return RightsResponse("Failed", "Unknown error occurred when removing $type rights, check logger")
     }
 
-    fun getRightsForAllBusinesses(tjenesteKode: String): RightsResponseWithList {
+    fun getRightsForAllBusinesses(tjenesteKode: String, utgaveKode: String = "1"): RightsResponseWithList {
         try {
             Metrics.getRightsRequest.labels(tjenesteKode).inc()
             logger.debug { "Tries to get all righsts..." }
             val register = env.mock.srrGetResponse ?: iRegisterSRRAgencyExternalBasic.getRightsBasic(altinnUsername, altinnUserPassword,
-                tjenesteKode, 1, null)
+                tjenesteKode, utgaveKode.toInt(), null)
             logger.debug { "REGISTER size ${register.getRightResponse.size}" }
             val result = mutableListOf<RegistryResponse.Register>()
             register.getRightResponse.forEach {
                 logger.debug { "reportee: ${it.reportee} og condition: ${it.condition}" }
-                result.add(RegistryResponse.Register(it.reportee, it.condition, it.right.toString(), it.validTo.toString()))
+                result.add(RegistryResponse.Register("$tjenesteKode:$utgaveKode", it.reportee, it.condition, it.right.toString(), it.validTo.toString()))
             }
             Metrics.getRightsResponse.labels(tjenesteKode).inc()
             return RightsResponseWithList("Ok", "Ok", RegistryResponse(result))
@@ -94,13 +94,13 @@ class AltinnSRRService(private val env: Environment, iRegisterSRRAgencyExternalB
         return RightsResponseWithList("Failed", "Unknown error occurred when getting rights registry, check logger", RegistryResponse(emptyList()))
     }
 
-    fun getRightsForABusiness(tjenesteKode: String, reportee: String): RightsResponseWithList {
+    fun getRightsForABusiness(tjenesteKode: String, reportee: String, utgaveKode: String = "1"): RightsResponseWithList {
         try {
             val register = env.mock.srrGetResponse ?: iRegisterSRRAgencyExternalBasic.getRightsBasic(altinnUsername, altinnUserPassword,
-                    tjenesteKode, 1, reportee)
+                    tjenesteKode, utgaveKode.toInt(), reportee)
             val result = mutableListOf<RegistryResponse.Register>()
             register.getRightResponse.forEach {
-                result.add(RegistryResponse.Register(it.reportee, it.condition, it.right.toString(), it.validTo.toString()))
+                result.add(RegistryResponse.Register("$tjenesteKode:$utgaveKode", it.reportee, it.condition, it.right.toString(), it.validTo.toString()))
             }
 
             return RightsResponseWithList("Ok", "Ok", RegistryResponse(result))
