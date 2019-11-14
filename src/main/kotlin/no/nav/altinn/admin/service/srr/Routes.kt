@@ -54,11 +54,21 @@ fun Routing.getRightsList(altinnSrrService: AltinnSRRService, environment: Envir
         }
 
         try {
-            val rightsResponse = altinnSrrService.getRightsForAllBusinesses(param.tjenesteKode)
-            if (rightsResponse.status == "Ok")
-                call.respond(rightsResponse.register)
+            var editionCode = 1
+            var ok: Pair<String, String>
+            val srr = mutableListOf<RegistryResponse.Register>()
+            do {
+                val rightsResponse = altinnSrrService.getRightsForAllBusinesses(param.tjenesteKode, editionCode.toString())
+                ok = Pair(rightsResponse.status, rightsResponse.message)
+                if (rightsResponse.status == "Ok") {
+                    srr.addAll(rightsResponse.register.register)
+                    editionCode++
+                }
+            } while (ok.first == "Ok" && editionCode < 10)
+            if (editionCode > 1)
+                call.respond(HttpStatusCode.OK, RegistryResponse(srr))
             else
-                call.respond(HttpStatusCode.NotFound, rightsResponse.message)
+                call.respond(HttpStatusCode.NotFound, ok.second)
         } catch (e: IRegisterSRRAgencyExternalBasicGetRightsBasicAltinnFaultFaultFaultMessage) {
             logger.error {
                 "IRegisterSRRAgencyExternalBasic.GetRightsBasic feilet \n" +
