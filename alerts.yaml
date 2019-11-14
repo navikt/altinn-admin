@@ -7,7 +7,7 @@ metadata:
 spec:
   receivers: # receivers for all alerts below
     slack:
-      channel: '#team_altinn_difi'
+      channel: '#alf-alerts'
       prependText: '<!here> | ' # this text will be prepended to the Slack alert title
   alerts:
     - alert: altinn-admin er nede
