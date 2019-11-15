@@ -26,13 +26,15 @@ class ExpireAlerts(
             val serviceCodes = env.srrService.serviceCodes.split(",")
             serviceCodes.forEach { sc ->
                 logger.debug { "Fetching rules for serviceCode $sc" }
-                val responseList = altinnSRRService.getRightsForAllBusinesses(sc)
+                val scSec = sc.split(":")
+                val sec = if (scSec.size > 1) scSec[1] else "1"
+                val responseList = altinnSRRService.getRightsForAllBusinesses(scSec[0], sec)
                 var numberOfExpiredRules = 0
                 responseList.register.register.forEach {
                     val dd = DateTime.parse(it.tilDato).toCalendar(Locale.getDefault())
                     if (expires > dd) {
                         numberOfExpiredRules++
-                        logger.warn { "Rule is about to expire or expired already : ${it.organisasjonsnummer} - with domene ${it.domene} - has date ${it.tilDato} !" }
+                        logger.warn { "Rule for ${scSec[0]}:$sec is about to expire or expired already : ${it.organisasjonsnummer} - with domene ${it.domene} - has date ${it.tilDato} !" }
                     }
                     logger.debug { "${it.organisasjonsnummer} - with domene ${it.domene} - has date ${it.tilDato}" }
                 }

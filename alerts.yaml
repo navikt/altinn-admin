@@ -15,19 +15,19 @@ spec:
       for: 2m
       description: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
       action: "`kubectl describe pod {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for logger"
-      severity: critical
+      severity: danger
     - alert: altinn-admin feil i selftest
       expr: 'selftests_aggregate_result_status{app="altinn-admin"} > 0'
       for: 1m
       action: "Sjekk {{ $labels.app }} i {{ $labels.kubernetes_namespace }} sine selftest for å se hva som er galt"
-      severity: critical
+      severity: danger
     - alert: altinn-admin DSOP AAP har rettighetsregler som har kort gyldighetstid igjen
       expr: 'altinn_admin_expiring_rettighetsregler{sc="5252", app="altinn-admin"} > 0'
       for: 1m
       action: "Sjekk `kubectl logs {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for å se hvilke virksomheter det gjelder"
-      severity: critical
+      severity: warning
     - alert: altinn-admin DSOP UFO har rettighetsregler som har kort gyldighetstid igjen
       expr: 'altinn_admin_expiring_rettighetsregler{sc="5382", app="altinn-admin"} > 0'
       for: 1m
       action: "Sjekk `kubectl logs {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for å se hvilke virksomheter det gjelder"
-      severity: critical
+      severity: warning

@@ -47,28 +47,23 @@ data class Rettighetsregister(val tjenesteKode: String)
 fun Routing.getRightsList(altinnSrrService: AltinnSRRService, environment: Environment) =
     get<Rettighetsregister>("hent rettigheter for alle virksomheter".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
-        val scList = environment.srrService.serviceCodes.split(",")
-        if (!scList.contains(param.tjenesteKode)) {
+        val scList = filterOutServiceCode(environment, param.tjenesteKode)
+        if (scList.size == 0) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
             return@get
         }
 
         try {
-            var editionCode = 1
-            var ok: Pair<String, String>
             val srr = mutableListOf<RegistryResponse.Register>()
-            do {
-                val rightsResponse = altinnSrrService.getRightsForAllBusinesses(param.tjenesteKode, editionCode.toString())
-                ok = Pair(rightsResponse.status, rightsResponse.message)
-                if (rightsResponse.status == "Ok") {
+            scList.forEach {
+                val rightsResponse = altinnSrrService.getRightsForAllBusinesses(it.first, it.second)
+                if (rightsResponse.status == "Ok")
                     srr.addAll(rightsResponse.register.register)
-                    editionCode++
-                }
-            } while (ok.first == "Ok" && editionCode < 10)
-            if (editionCode > 1)
+            }
+            if (srr.size > 0)
                 call.respond(HttpStatusCode.OK, RegistryResponse(srr))
             else
-                call.respond(HttpStatusCode.NotFound, ok.second)
+                call.respond(HttpStatusCode.NotFound, "Did not find any rights, check log for more information")
         } catch (e: IRegisterSRRAgencyExternalBasicGetRightsBasicAltinnFaultFaultFaultMessage) {
             logger.error {
                 "IRegisterSRRAgencyExternalBasic.GetRightsBasic feilet \n" +
@@ -97,8 +92,8 @@ data class RettighetsregisterUtgave(val tjenesteKode: String, val utgaveKode: St
 fun Routing.getRightsListServiceEdition(altinnSrrService: AltinnSRRService, environment: Environment) =
     get<RettighetsregisterUtgave>("hent rettigheter for alle virksomheter".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
-        val scList = environment.srrService.serviceCodes.split(",")
-        if (!scList.contains(param.tjenesteKode)) {
+        val scList = filterOutServiceCode(environment, param.tjenesteKode)
+        if (scList.size == 0) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
             return@get
         }
@@ -138,9 +133,8 @@ fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService, environment
     get<FirmaRettigheter>("hent rettigheter for en virksomhet".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
         val virksomhetsnummer: String? = param.orgnr
-
-        val scList = environment.srrService.serviceCodes.split(",")
-        if (!scList.contains(param.tjenesteKode)) {
+        val scList = filterOutServiceCode(environment, param.tjenesteKode)
+        if (scList.size == 0) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
             return@get
         }
@@ -185,8 +179,8 @@ fun Routing.getRightsForReporteeServiceEdition(altinnSrrService: AltinnSRRServic
         param ->
         val virksomhetsnummer: String? = param.orgnr
 
-        val scList = environment.srrService.serviceCodes.split(",")
-        if (!scList.contains(param.tjenesteKode)) {
+        val scList = filterOutServiceCode(environment, param.tjenesteKode)
+        if (scList.size == 0) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
             return@get
         }
@@ -244,8 +238,8 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment
                 val logEntry = "Bruker $currentUser forsøker å legge til rettighet til virksomhet  - ${ParameterInputType.body}"
                 application.environment.log.info(logEntry)
 
-                val scList = environment.srrService.serviceCodes.split(",")
-                if (!scList.contains(body.tjenesteKode)) {
+                val scList = filterOutServiceCode(environment, body.tjenesteKode)
+                if (scList.size == 0) {
                     call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
                     return@post
                 }
@@ -304,8 +298,8 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
             val logEntry = "Forsøker å slette en rettighet for en virksomhet $currentUser - $param"
             application.environment.log.info(logEntry)
 
-            val scList = environment.srrService.serviceCodes.split(",")
-            if (!scList.contains(param.tjenesteKode)) {
+            val scList = filterOutServiceCode(environment, param.tjenesteKode)
+            if (scList.size == 0) {
                 call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
                 return@delete
             }
@@ -343,3 +337,14 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
             }
             call.respond(HttpStatusCode.OK, rightResponse)
         }
+
+private fun filterOutServiceCode(environment: Environment, tjenesteKode: String): MutableList<Pair<String, String>> {
+    val scSecList = environment.srrService.serviceCodes.split(",")
+    val scList = mutableListOf<Pair<String, String>>()
+    scSecList.forEach {
+        val sc = it.split(":")
+        if (sc[0] == tjenesteKode)
+            scList.add(Pair(sc[0], if (sc.size > 1) sc[1] else "1"))
+    }
+    return scList
+}
