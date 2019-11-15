@@ -46,7 +46,7 @@ class ExpireAlerts(
             }
             // alertrator gives notification every 5 minutes as long as condition is true.
             // Hence, reset srrExipingRightsRules, so we get one or two notification pr day.
-            delay(1000*60*5)
+            delay(1000*60*9)
             serviceCodes.forEach { sc ->
                 Metrics.srrExipingRightsRules.labels(sc).set(0.0)
             }
