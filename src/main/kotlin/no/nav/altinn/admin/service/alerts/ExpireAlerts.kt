@@ -40,7 +40,7 @@ class ExpireAlerts(
                 }
                 if (numberOfExpiredRules > 0) {
                     logger.debug { "$sc ADD expiring: $numberOfExpiredRules" }
-                    Metrics.srrExipingRightsRules.labels(sc).inc(numberOfExpiredRules.toDouble())
+                    Metrics.srrExipingRightsRules.labels(scSec[0], sec).inc(numberOfExpiredRules.toDouble())
                 }
                 logger.debug { "Done fetching rules for serviceCode $sc" }
             }
@@ -48,7 +48,9 @@ class ExpireAlerts(
             // Hence, reset srrExipingRightsRules, so we get one or two notification pr day.
             delay(1000*60*9)
             serviceCodes.forEach { sc ->
-                Metrics.srrExipingRightsRules.labels(sc).set(0.0)
+                val scSec = sc.split(":")
+                val sec = if (scSec.size > 1) scSec[1] else "1"
+                Metrics.srrExipingRightsRules.labels(scSec[0], sec).set(0.0)
             }
             delay(1000*60*60*24 - 1000*60*5)
         }

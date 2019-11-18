@@ -9,7 +9,7 @@ object Metrics {
     val srrExipingRightsRules: Gauge = Gauge.build()
         .namespace(NAMESPACE)
         .name("expiring_rettighetsregler")
-        .labelNames("sc")
+        .labelNames("sc", "sec")
         .help("Antall regler i rettighetsregister som er utgående")
         .register()
     val getRightsRequest: Counter = Counter.build()
