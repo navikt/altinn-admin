@@ -22,7 +22,12 @@ spec:
       action: "Sjekk {{ $labels.app }} i {{ $labels.kubernetes_namespace }} sine selftest for å se hva som er galt"
       severity: danger
     - alert: altinn-admin DSOP AAP har rettighetsregler som har kort gyldighetstid igjen
-      expr: 'altinn_admin_expiring_rettighetsregler{sc="5252", app="altinn-admin"} > 0'
+      expr: 'altinn_admin_expiring_rettighetsregler{sc="5252", sec="1", app="altinn-admin"} > 0'
+      for: 1m
+      action: "Sjekk `kubectl logs {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for å se hvilke virksomheter det gjelder"
+      severity: warning
+    - alert: altinn-admin DSOP AAP og UFO har rettighetsregler som har kort gyldighetstid igjen
+      expr: 'altinn_admin_expiring_rettighetsregler{sc="5252", sec="2", app="altinn-admin"} > 0'
       for: 1m
       action: "Sjekk `kubectl logs {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for å se hvilke virksomheter det gjelder"
       severity: warning
