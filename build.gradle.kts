@@ -4,7 +4,7 @@ import no.nils.wsdl2java.Wsdl2JavaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "no.nav"
-version = "1.0.0"
+version = "1.0.1-SNAPSHOT"
 
 val kotlinVersion = "1.3.50"
 val ktorVersion = "1.2.1"
