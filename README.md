@@ -1,6 +1,6 @@
 # altinn-admin
 
-[![Build Status](https://travis-ci.com/navikt/altinn-admin.svg?branch=master)](https://travis-ci.com/navikt/altinn-admin)
+[![Github Actions](https://github.com/navikt/altinn-admin/workflows/Build,%20push,%20and%20deploy/badge.svg)](https://github.com/navikt/altinn-admin/actions?query=workflow%3A%22Build%2C+push%2C+and+deploy%22)
 
 Application for administration of Altinn in the role as a serviceowner. It gives users access to control the 
 serviceowners rights register (SRR). 

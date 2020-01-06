@@ -2,11 +2,11 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: altinn-admin
-  namespace: {{NAMESPACE}}
+  namespace: default
   labels:
     team: alf
 spec:
-  image: "repo.adeo.no:5443/alf/altinn-admin:@@VERSION@@"
+  image: {{ image }}
   team: alf
   replicas:
     min: 1
@@ -27,13 +27,14 @@ spec:
     path: /internal/prometheus
   istio:
     enabled: false
+  {{#if ingresses}}
   ingresses:
-    - {{INGRESS_URL}}
+    {{#each ingresses}}
+    - "{{this}}"
+    {{/each}}
+  {{/if}}
   vault:
     enabled: true
-    paths:
-      - kvPath: {{ALTINN_ADMIN_VAULT_PATH}}
-        mountPath: /var/run/secrets/nais.io/vault
   webproxy: true
   resources:
     limits:
