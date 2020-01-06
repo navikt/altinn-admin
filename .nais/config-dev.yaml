@@ -1,1 +1,1 @@
-ingresses: ["https://altinn-admin-dev.nais.preprod.local"]
+ingresses: ["https://altinn-admin.nais.preprod.local/"]
