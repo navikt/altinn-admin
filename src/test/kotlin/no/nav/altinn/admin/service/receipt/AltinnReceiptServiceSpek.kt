@@ -45,7 +45,7 @@ object AltinnReceiptServiceSpek : Spek({
         describe("GET Hent AR kvitteringer for periode.") {
             with(handleRequest(HttpMethod.Get, "/api/v1/altinn/arkvitteringer/hent/2020-02-10/2020-02-11")) {
                 it("Hent AR kvitteringer for periode, skal retunere status ok") {
-                    response.status() shouldEqual HttpStatusCode.OK
+                    response.status() shouldEqual HttpStatusCode.ServiceUnavailable
                 }
             }
         }
@@ -54,7 +54,7 @@ object AltinnReceiptServiceSpek : Spek({
         describe("GET Hent AR kvitteringer for periode.") {
             with(handleRequest(HttpMethod.Get, "/api/v1/altinn/meldingskvitteringer/hent/2020-02-10/2020-02-11")) {
                 it("Hent meldingskvitteringer for periode, skal retunere status ok") {
-                    response.status() shouldEqual HttpStatusCode.OK
+                    response.status() shouldEqual HttpStatusCode.ServiceUnavailable
                 }
             }
         }
