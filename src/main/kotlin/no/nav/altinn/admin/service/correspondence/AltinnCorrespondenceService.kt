@@ -7,8 +7,7 @@ import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondence
 import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondenceAgencyExternalBasicGetCorrespondenceStatusDetailsBasicV3AltinnFaultFaultFaultMessage
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.randomUuid
-import org.joda.time.DateTime
-import javax.xml.datatype.DatatypeFactory
+import javax.xml.datatype.XMLGregorianCalendar
 
 private val logger = KotlinLogging.logger { }
 
@@ -18,14 +17,14 @@ class AltinnCorrespondenceService(private val env: Environment, iCorrepsondenceE
     private val SYSTEM_CODE = "NAV_ALF"
     private val iCorrespondenceExternalBasic by lazy(iCorrepsondenceExternalBasicFactory)
 
-    fun getCorrespondenceDetails(serviceCode: String, fromDate: DateTime? = null, toDate: DateTime? = null, reportee: String? = ""): CorrespondenceResponse {
+    fun getCorrespondenceDetails(serviceCode: String, fromDate: XMLGregorianCalendar? = null, toDate: XMLGregorianCalendar? = null, reportee: String? = ""): CorrespondenceResponse {
         val corrFilter = CorrespondenceStatusFilterV3()
         corrFilter.serviceCode = serviceCode
         corrFilter.serviceEditionCode = 1
         if (fromDate != null)
-            corrFilter.createdAfterDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(fromDate.toGregorianCalendar())
+            corrFilter.createdAfterDate = fromDate
         if (toDate != null)
-            corrFilter.createdBeforeDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(toDate.toGregorianCalendar())
+            corrFilter.createdBeforeDate = toDate
         if (!reportee.isNullOrEmpty())
             corrFilter.reportee = reportee
 

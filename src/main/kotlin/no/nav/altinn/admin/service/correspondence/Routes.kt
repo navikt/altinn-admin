@@ -17,8 +17,8 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ok
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndReponds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.common.API_V1
-import org.joda.time.LocalDateTime
-import org.joda.time.format.DateTimeFormat
+import no.nav.altinn.admin.common.isDate
+import no.nav.altinn.admin.common.toXmlGregorianCalendar
 
 fun Routing.correspondenceAPI(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) {
     getCorrespondence(altinnCorrespondenceService, environment)
@@ -27,10 +27,8 @@ fun Routing.correspondenceAPI(altinnCorrespondenceService: AltinnCorrespondenceS
 
 internal data class AnError(val error: String)
 internal const val GROUP_NAME = "Correspondence"
-val regexDateFormat = """\d{4}-\d{2}-\d{2}${'$'}""".toRegex()
 
 private val logger = KotlinLogging.logger { }
-private fun isDate(date: String): Boolean = regexDateFormat.matches(date)
 
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/meldinger/hent/{tjenesteKode}/{fraDato}/{tilDato}/{avgiver}")
@@ -58,8 +56,8 @@ fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorresp
             return@get
         }
         try {
-            val fraDato = LocalDateTime.parse(fromDate, DateTimeFormat.forPattern("yyyy-MM-dd")).toDateTime()
-            val tilDato = LocalDateTime.parse(toDate, DateTimeFormat.forPattern("yyyy-MM-dd")).toDateTime()
+            val fraDato = toXmlGregorianCalendar(fromDate)
+            val tilDato = toXmlGregorianCalendar(toDate)
             val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, fraDato, tilDato, param.avgiver)
 
             if (correspondenceResponse.status == "Ok")
