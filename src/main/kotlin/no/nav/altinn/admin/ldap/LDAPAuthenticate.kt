@@ -39,16 +39,21 @@ class LDAPAuthenticate(private val config: Environment.Application) :
         val rdns = DN(userDn).rdNs
         val dnPrefix = rdns[rdns.indices.first]
         val dnPostfix = "${rdns[rdns.indices.last - 1]},${rdns[rdns.indices.last]}"
-        val srvAccounts = listOf("OU=ApplAccounts,OU=ServiceAccounts", "OU=ServiceAccounts")
-        logger.info { "DNs : $userDn  srv: $srvAccounts" }
+        val srvAccounts = listOf("CN=0000-GA-pdp-user", "OU=ApplAccounts,OU=ServiceAccounts", "OU=ServiceAccounts")
         if (isNAVIdent(user)) listOf(userDn)
         else srvAccounts.map { srvAccount -> "$dnPrefix,$srvAccount,$dnPostfix" }
     }
 
     private fun authenticated(dn: String, pwd: String, alreadyAuthenticated: Boolean): Boolean =
             if (alreadyAuthenticated) true
-            else
-                try { ldapConnection.bind(dn, pwd).resultCode == ResultCode.SUCCESS } catch (e: LDAPException) { false }
+            else {
+                logger.info { "DNs : $dn  " }
+                try {
+                    ldapConnection.bind(dn, pwd).resultCode == ResultCode.SUCCESS
+                } catch (e: LDAPException) {
+                    false
+                }
+            }
 
     companion object {
 
