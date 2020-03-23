@@ -89,7 +89,7 @@ data class Vedlegg(
     @JsonProperty("navn")
     val navn: String,
     @JsonProperty("data")
-    val data: ByteArray
+    val data: Array<Byte>
 )
 
 data class CorrespondenceDetails(

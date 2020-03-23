@@ -199,7 +199,7 @@ fun getContentMessage(body: PostCorrespondenceBody): ExternalContentV2 {
         val attachmentV2 = BinaryAttachmentV2()
         attachmentV2.fileName = vedlegg.filnavn
         attachmentV2.name = vedlegg.navn
-        attachmentV2.data = vedlegg.data
+        attachmentV2.data = vedlegg.data.toByteArray()
         attachmentV2.functionType = AttachmentFunctionType.UNSPECIFIED
         contentV2.attachments.binaryAttachments.binaryAttachmentV2.add(attachmentV2)
     }
