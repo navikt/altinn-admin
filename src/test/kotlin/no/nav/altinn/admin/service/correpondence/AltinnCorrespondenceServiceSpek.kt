@@ -1,6 +1,5 @@
 package no.nav.altinn.admin.service.correpondence
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
@@ -11,10 +10,7 @@ import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.ApplicationState
 import no.nav.altinn.admin.common.InMemoryLDAPServer
 import no.nav.altinn.admin.common.encodeBase64
-import no.nav.altinn.admin.common.objectMapper
 import no.nav.altinn.admin.mainModule
-import no.nav.altinn.admin.service.correspondence.CorrespondenceDetails
-import org.amshove.kluent.shouldBeGreaterOrEqualTo
 import org.amshove.kluent.shouldEqual
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
