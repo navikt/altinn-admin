@@ -1,8 +1,10 @@
 package no.nav.altinn.admin.service.correspondence
 
 import mu.KotlinLogging
+import no.altinn.schemas.services.serviceengine.correspondence._2010._10.ExternalContentV2
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.InsertCorrespondenceV2
 import no.altinn.schemas.services.serviceengine.correspondence._2016._02.CorrespondenceStatusFilterV3
+import no.altinn.schemas.services.serviceengine.notification._2009._10.NotificationBEList
 import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondenceAgencyExternalBasic
 import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondenceAgencyExternalBasicGetCorrespondenceStatusDetailsBasicV3AltinnFaultFaultFaultMessage
 import no.nav.altinn.admin.Environment
@@ -11,7 +13,7 @@ import javax.xml.datatype.XMLGregorianCalendar
 
 private val logger = KotlinLogging.logger { }
 
-class AltinnCorrespondenceService(private val env: Environment, iCorrepsondenceExternalBasicFactory: () -> ICorrespondenceAgencyExternalBasic) {
+class AltinnCorrespondenceService(env: Environment, iCorrepsondenceExternalBasicFactory: () -> ICorrespondenceAgencyExternalBasic) {
     private val altinnUsername = env.altinn.username
     private val altinnUserPassword = env.altinn.password
     private val SYSTEM_CODE = "NAV_ALF"
@@ -31,7 +33,7 @@ class AltinnCorrespondenceService(private val env: Environment, iCorrepsondenceE
         try {
             val results = iCorrespondenceExternalBasic.getCorrespondenceStatusDetailsBasicV3(altinnUsername, altinnUserPassword,
                 corrFilter).correspondenceStatusInformation.correspondenceStatusDetailsList.statusV2
-            var correspondenceDetails = mutableListOf<CorrespondenceDetails>()
+            val correspondenceDetails = mutableListOf<CorrespondenceDetails>()
             for (detail in results) {
                 correspondenceDetails.add(CorrespondenceDetails(
                     detail.correspondenceID,
@@ -55,7 +57,31 @@ class AltinnCorrespondenceService(private val env: Environment, iCorrepsondenceE
         return CorrespondenceResponse("Failed", "Could not get any correspondence, check log.", emptyList())
     }
 
-    fun insertCorrespondence() {
-        iCorrespondenceExternalBasic.insertCorrespondenceBasicV2(altinnUsername, altinnUserPassword, SYSTEM_CODE, randomUuid(), InsertCorrespondenceV2())
+    fun insertCorrespondence(serviceCode: String, serviceEdition: String, reportee: String, content: ExternalContentV2, notifications: NotificationBEList? = null, visibleDate: XMLGregorianCalendar? = null, dueDate: XMLGregorianCalendar? = null): InsertCorrespondenceResponse {
+        val correspondence = InsertCorrespondenceV2()
+        correspondence.serviceCode = serviceCode
+        correspondence.serviceEdition = serviceEdition
+        correspondence.reportee = reportee
+        correspondence.dueDateTime = dueDate
+        correspondence.visibleDateTime = visibleDate
+        correspondence.content = content
+        correspondence.notifications = notifications
+        try {
+            logger.debug { "try sending a message to ${correspondence.reportee}" }
+            val result = iCorrespondenceExternalBasic.insertCorrespondenceBasicV2(altinnUsername, altinnUserPassword, SYSTEM_CODE, randomUuid(), correspondence)
+            return InsertCorrespondenceResponse(result.receiptStatusCode.name, result.receiptText)
+        } catch (e: ICorrespondenceAgencyExternalBasicGetCorrespondenceStatusDetailsBasicV3AltinnFaultFaultFaultMessage) {
+            logger.error { "iCorrespondenceExternalBasic.insertCorrespondenceBasicV2 feilet \n" +
+                "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
+                "\n ExtendedErrorMessage  ${e.faultInfo.altinnExtendedErrorMessage}" +
+                "\n LocalizedErrorMessage  ${e.faultInfo.altinnLocalizedErrorMessage}" +
+                "\n ErrorGuid  ${e.faultInfo.errorGuid}" +
+                "\n UserGuid  ${e.faultInfo.userGuid}" +
+                "\n UserId  ${e.faultInfo.userId}"
+            }
+        } catch (ee: Exception) {
+            logger.error { ee.message }
+        }
+        return InsertCorrespondenceResponse("Failed", "Could not send correspondence, check log.")
     }
 }
