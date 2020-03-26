@@ -7,11 +7,17 @@ import io.ktor.auth.UserIdPrincipal
 import io.ktor.auth.principal
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.content.PartData
+import io.ktor.http.content.forEachPart
+import io.ktor.http.content.streamProvider
 import io.ktor.locations.Location
+import io.ktor.locations.post
 import io.ktor.request.ApplicationRequest
 import io.ktor.request.contentType
+import io.ktor.request.receiveMultipart
 import io.ktor.response.respond
 import io.ktor.routing.Routing
+import io.ktor.routing.contentType
 import io.ktor.util.pipeline.PipelineContext
 import mu.KotlinLogging
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.AttachmentsV2
@@ -152,28 +158,55 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/meldinger/vedlegg")
 data class NyttVedlegg(val tull: String = "formData", val name: String, val type: File, val description: String)
+class NoBody
 
 fun Routing.postFile(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
-    post<NyttVedlegg, PostSpamCorrespondenceBody> ("Last opp et vedlegg"
-        .responds(ok<CorrespondenceResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
-    ) { _, body ->
-        logger.info { "Upload a file to service" }
-        if (!call.request.isFormMultipart()) {
-            logger.error { "Not contenttype form-mulitpart" }
-            return@post
-        }
-        val currentUser = call.principal<UserIdPrincipal>()!!.name
+    post<NyttVedlegg, NoBody>("Last opp vedleg".responds(ok<CorrespondenceResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+        param, body ->
+        val multipart = call.receiveMultipart()
+        var title = ""
+        var videoFile: File? = null
+        var uploadDir: File = File("tmp.file")
+        multipart.forEachPart { part ->
+            if (part is PartData.FormItem) {
+                if (part.name == "title") {
+                    title = part.value
+                }
+            } else if (part is PartData.FileItem) {
+                val ext = File(part.originalFileName).extension
+                val file = File(
+                    uploadDir,
+                    "upload-${System.currentTimeMillis()}-${title.hashCode()}.$ext"
+                )
 
-        val approvedUsers = environment.application.users.split(",")
-        val userExist = approvedUsers.contains(currentUser)
-        if (!userExist) {
-            val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
-            application.environment.log.warn(msg)
-            call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
-            return@post
+                part.streamProvider().use { its -> file.outputStream().buffered().use { its.copyTo(it) } }
+                videoFile = file
+            }
+            part.dispose()
         }
+        call.respond(mapOf("status" to true))
+    }
 
-        if (notValidServiceCode(body.tjenesteKode, environment)) return@post
+//    { param ->
+// ("Last opp et vedlegg".responds(ok<CorrespondenceResponse>(),
+// serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>()))
+//        logger.info { "Upload a file to service" }
+//        if (!call.request.isFormMultipart()) {
+//            logger.error { "Not contenttype form-mulitpart" }
+//            return@post
+//        }
+//        val currentUser = call.principal<UserIdPrincipal>()!!.name
+//
+//        val approvedUsers = environment.application.users.split(",")
+//        val userExist = approvedUsers.contains(currentUser)
+//        if (!userExist) {
+//            val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
+//            application.environment.log.warn(msg)
+//            call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
+//            return@post
+//        }
+
+//        if (notValidServiceCode(body.tjenesteKode, environment)) return@post
 
 //        val content = getContentMessage(body)
 //
@@ -183,8 +216,6 @@ fun Routing.postFile(altinnCorrespondenceService: AltinnCorrespondenceService, e
 //            return@post
 //        }
 //        call.respond(HttpStatusCode.OK, meldingResponse.message)
-    }
-
 fun getContentMessage(body: PostCorrespondenceBody): ExternalContentV2 {
     val contentV2 = ExternalContentV2()
     contentV2.languageCode = "1044"
