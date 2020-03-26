@@ -11,13 +11,11 @@ import io.ktor.http.content.PartData
 import io.ktor.http.content.forEachPart
 import io.ktor.http.content.streamProvider
 import io.ktor.locations.Location
-import io.ktor.locations.post
 import io.ktor.request.ApplicationRequest
 import io.ktor.request.contentType
 import io.ktor.request.receiveMultipart
 import io.ktor.response.respond
 import io.ktor.routing.Routing
-import io.ktor.routing.contentType
 import io.ktor.util.pipeline.PipelineContext
 import mu.KotlinLogging
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.AttachmentsV2
@@ -157,13 +155,12 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
 
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/meldinger/vedlegg")
-data class NyttVedlegg(val `in`: String = "formData" , val name: String, val type: File, val description: String)
+data class NyttVedlegg(val `in`: String = "formData", val name: String, val type: File, val description: String)
 class NoBody
 
 fun Routing.postFile(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     post<NyttVedlegg, NoBody>("Last opp vedlegg".responds(ok<CorrespondenceResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
-        param, _->
-
+        param, _ ->
         val multipart = call.receiveMultipart()
         var title = ""
         var videoFile: File? = null
