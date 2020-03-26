@@ -33,6 +33,7 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.common.API_V1
 import no.nav.altinn.admin.common.isDate
 import no.nav.altinn.admin.common.toXmlGregorianCalendar
+import java.io.File
 
 fun Routing.correspondenceAPI(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) {
     getCorrespondence(altinnCorrespondenceService, environment)
@@ -150,7 +151,7 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
 
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/meldinger/vedlegg")
-class NyttVedlegg
+data class NyttVedlegg(val tull: String = "formData", val name: String, val type: File, val description: String)
 
 fun Routing.postFile(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     post<NyttVedlegg, PostSpamCorrespondenceBody> ("Last opp et vedlegg"
