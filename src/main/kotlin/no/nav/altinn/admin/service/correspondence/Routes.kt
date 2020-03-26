@@ -157,12 +157,13 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
 
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/meldinger/vedlegg")
-data class NyttVedlegg(val tull: String = "formData", val name: String, val type: File, val description: String)
+data class NyttVedlegg(val `in`: String = "formData" , val name: String, val type: File, val description: String)
 class NoBody
 
 fun Routing.postFile(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
-    post<NyttVedlegg, NoBody>("Last opp vedleg".responds(ok<CorrespondenceResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
-        param, body ->
+    post<NyttVedlegg, NoBody>("Last opp vedlegg".responds(ok<CorrespondenceResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+        param, _->
+
         val multipart = call.receiveMultipart()
         var title = ""
         var videoFile: File? = null
