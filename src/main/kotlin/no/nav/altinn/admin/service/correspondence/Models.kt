@@ -50,6 +50,16 @@ data class PostSpamCorrespondenceBody(
     val vedlegger: List<Vedlegg>? = null
 )
 
+data class VedleggBody(
+    @JsonProperty("requestBody")
+    val requestBody: Content
+)
+
+data class Content(
+    @JsonProperty("requestBody")
+    val requestBody: String
+)
+
 data class Melding(
     @JsonProperty("tittel")
     val tittel: String,

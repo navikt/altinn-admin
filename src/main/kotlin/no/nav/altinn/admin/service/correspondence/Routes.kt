@@ -7,13 +7,9 @@ import io.ktor.auth.UserIdPrincipal
 import io.ktor.auth.principal
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.content.PartData
-import io.ktor.http.content.forEachPart
-import io.ktor.http.content.streamProvider
 import io.ktor.locations.Location
 import io.ktor.request.ApplicationRequest
 import io.ktor.request.contentType
-import io.ktor.request.receiveMultipart
 import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.util.pipeline.PipelineContext
@@ -30,20 +26,18 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.badRequest
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.get
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ok
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.post
-import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.responds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndReponds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.common.API_V1
 import no.nav.altinn.admin.common.isDate
 import no.nav.altinn.admin.common.toXmlGregorianCalendar
-import java.io.File
 
 fun Routing.correspondenceAPI(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) {
     getCorrespondence(altinnCorrespondenceService, environment)
     getCorrespondenceFiltered(altinnCorrespondenceService, environment)
     postCorrespondence(altinnCorrespondenceService, environment)
-    postFile(altinnCorrespondenceService, environment)
+//    postFile(altinnCorrespondenceService, environment)
 }
 
 internal data class AnError(val error: String)
@@ -153,37 +147,35 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
         call.respond(HttpStatusCode.OK, meldingResponse.message)
     }
 
-@Group(GROUP_NAME)
-@Location("$API_V1/altinn/meldinger/vedlegg")
-data class NyttVedlegg(val `in`: String = "formData", val name: String, val type: File, val description: String)
-class NoBody
+// @Group(GROUP_NAME)
+// @Location("$API_V1/altinn/meldinger/vedlegg")
+// data class NyttVedlegg(val `in`: String = "formData", val name: String, val type: File, val description: String)
+// class MultiPartFormDataContent
 
-fun Routing.postFile(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
-    post<NyttVedlegg, NoBody>("Last opp vedlegg".responds(ok<CorrespondenceResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
-        param, _ ->
-        val multipart = call.receiveMultipart()
-        var title = ""
-        var videoFile: File? = null
-        var uploadDir: File = File("tmp.file")
-        multipart.forEachPart { part ->
-            if (part is PartData.FormItem) {
-                if (part.name == "title") {
-                    title = part.value
-                }
-            } else if (part is PartData.FileItem) {
-                val ext = File(part.originalFileName).extension
-                val file = File(
-                    uploadDir,
-                    "upload-${System.currentTimeMillis()}-${title.hashCode()}.$ext"
-                )
-
-                part.streamProvider().use { its -> file.outputStream().buffered().use { its.copyTo(it) } }
-                videoFile = file
-            }
-            part.dispose()
-        }
-        call.respond(mapOf("status" to true))
-    }
+// fun Routing.postFile(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
+//    post<NyttVedlegg, NoBody>("Last opp vedlegg".responds(ok<CorrespondenceResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+//        param, _ ->
+//
+//        val multipart = call.receiveMultipart()
+//        multipart.forEachPart { part ->
+//            when (part) {
+//                is PartData.FormItem -> {
+//                    if (part.name == "title") {
+//                        title = part.value
+//                    }
+//                }
+//                is PartData.FileItem -> {
+//                    val ext = File(part.originalFileName).extension
+//                    val file = File(uploadDir, "upload-${System.currentTimeMillis()}-${session.userId.hashCode()}-${title.hashCode()}.$ext")
+//                    part.streamProvider().use { input -> file.outputStream().buffered().use { output -> input.copyToSuspend(output) } }
+//                    videoFile = file
+//                }
+//            }
+//
+//            part.dispose()
+//        }
+//        call.respond(mapOf("status" to true))
+//    }
 
 //    { param ->
 // ("Last opp et vedlegg".responds(ok<CorrespondenceResponse>(),
