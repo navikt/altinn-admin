@@ -216,14 +216,14 @@ fun getContentMessage(body: PostCorrespondenceBody): ExternalContentV2 {
     if (body.vedlegger != null) {
         contentV2.attachments = AttachmentsV2()
         contentV2.attachments.binaryAttachments = BinaryAttachmentExternalBEV2List()
-    }
-    body.vedlegger?.forEach { vedlegg ->
-        val attachmentV2 = BinaryAttachmentV2()
-        attachmentV2.fileName = vedlegg.filnavn
-        attachmentV2.name = vedlegg.navn
-        attachmentV2.data = vedlegg.data.toByteArray()
-        attachmentV2.functionType = AttachmentFunctionType.UNSPECIFIED
-        contentV2.attachments.binaryAttachments.binaryAttachmentV2.add(attachmentV2)
+        body.vedlegger?.forEach { vedlegg ->
+            val attachmentV2 = BinaryAttachmentV2()
+            attachmentV2.fileName = vedlegg.filnavn
+            attachmentV2.name = vedlegg.navn
+            attachmentV2.data = vedlegg.data.toByteArray()
+            attachmentV2.functionType = AttachmentFunctionType.UNSPECIFIED
+            contentV2.attachments.binaryAttachments.binaryAttachmentV2.add(attachmentV2)
+        }
     }
     return contentV2
 }
