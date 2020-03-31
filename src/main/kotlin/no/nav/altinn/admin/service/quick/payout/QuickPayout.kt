@@ -6,6 +6,7 @@ import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.ApplicationState
 import no.nav.altinn.admin.common.objectMapper
+import no.nav.altinn.admin.metrics.Metrics
 import no.nav.altinn.admin.service.dq.AltinnDQService
 import java.io.StringReader
 import java.util.*
@@ -27,6 +28,7 @@ class QuickPayout(
             val response = dqService.getDownloadQueueItems("5546", "1")
 
             val quickList = mutableListOf<Quick>()
+            val failedAR = mutableListOf<String>()
             response.items.forEach item@{ ar ->
                 logger.debug { "Fetching rules for serviceCode $ar" }
                 val melding = dqService.getFormData(ar.archiveReference)
@@ -34,6 +36,7 @@ class QuickPayout(
                     logger.debug { "Message received from DQ ${ar.archiveReference}." }
                 } else {
                     logger.error { "Failed to get message ${ar.archiveReference}, from DQ." }
+                    failedAR.add(ar.archiveReference)
                     return@item
                 }
 
@@ -54,9 +57,13 @@ class QuickPayout(
                 logger.debug { "Got xml data $xml" }
             }
             val result = QuickList(quickList.size, quickList)
+            Metrics.quickPayoutSuccess.labels("5546").inc()
             logger.info { "Result for output from DQ : " + objectMapper.writeValueAsString(result) }
             delay(1000 * 60 * 1) // wait a minute
 //            response.items.forEach { ar ->
+//                if (failedAR.contains(ar.archiveReference)) {
+//                    return@forEach // skip failed message download
+//                }
 //                val purgeResponse = dqService.purgeItem(ar.archiveReference)
 //                if (purgeResponse.status == "Ok") {
 //                    logger.debug { "Message ${ar.archiveReference} deleted from DQ." }
@@ -64,8 +71,7 @@ class QuickPayout(
 //                    logger.error { "Failed to delete ${ar.archiveReference}, will come again next day." }
 //                }
 //            }
-            delay(1000 * 60 * 1)
-            // delay(1000 * 60 * 60 * 24)
+            delay(1000 * 60 * 60 * 24)
         }
     }
 }
