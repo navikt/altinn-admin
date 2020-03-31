@@ -14,8 +14,15 @@ import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.util.pipeline.PipelineContext
 import mu.KotlinLogging
+import no.altinn.schemas.serviceengine.formsengine._2009._10.TransportType
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.AttachmentsV2
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.ExternalContentV2
+import no.altinn.schemas.services.serviceengine.notification._2009._10.Notification
+import no.altinn.schemas.services.serviceengine.notification._2009._10.NotificationBEList
+import no.altinn.schemas.services.serviceengine.notification._2009._10.ReceiverEndPoint
+import no.altinn.schemas.services.serviceengine.notification._2009._10.ReceiverEndPointBEList
+import no.altinn.schemas.services.serviceengine.notification._2009._10.TextToken
+import no.altinn.schemas.services.serviceengine.notification._2009._10.TextTokenSubstitutionBEList
 import no.altinn.schemas.services.serviceengine.subscription._2009._10.AttachmentFunctionType
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentExternalBEV2List
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentV2
@@ -30,6 +37,7 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndReponds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.common.API_V1
+import no.nav.altinn.admin.common.decodeBase64
 import no.nav.altinn.admin.common.isDate
 import no.nav.altinn.admin.common.toXmlGregorianCalendar
 
@@ -138,14 +146,51 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
         if (notValidServiceCode(body.tjenesteKode, environment)) return@post
 
         val content = getContentMessage(body)
+        var notifications: NotificationBEList? = null
+        if (body.varsel != null) {
+            notifications = getNotification(body.varsel)
+        }
 
-        val meldingResponse = altinnCorrespondenceService.insertCorrespondence(body.tjenesteKode, body.utgaveKode, body.orgnr, content)
+        val meldingResponse = altinnCorrespondenceService.insertCorrespondence(body.tjenesteKode, body.utgaveKode,
+            body.orgnr, content, notifications = notifications)
         if (meldingResponse.status != "OK") {
             call.respond(HttpStatusCode.BadRequest, AnError(meldingResponse.message))
             return@post
         }
         call.respond(HttpStatusCode.OK, meldingResponse.message)
     }
+
+fun getNotification(varsel: List<Varsel>): NotificationBEList? {
+    val notificationBEList = NotificationBEList()
+    varsel.forEach { varsel ->
+        val notification = Notification()
+        notification.textTokens = TextTokenSubstitutionBEList()
+        notification.fromAddress = varsel.fraAdresse
+        notification.languageCode = "1044"
+        notification.shipmentDateTime = toXmlGregorianCalendar(varsel.forsendelseDatoTid)
+        notification.notificationType = varsel.varselType.toString()
+        val tittelToken = TextToken()
+        tittelToken.tokenNum = 0
+        tittelToken.tokenValue = if (varsel.varselType == VarselType.TokenTextOnly) varsel.tittel else varsel.melding
+        notification.textTokens.textToken.add(tittelToken)
+        val meldingToken = TextToken()
+        meldingToken.tokenNum = 1
+        meldingToken.tokenValue = if (varsel.varselType == VarselType.TokenTextOnly) varsel.melding else ""
+        notification.textTokens.textToken.add(meldingToken)
+        if (varsel.ekstraMottakere != null) {
+            notification.receiverEndPoints = ReceiverEndPointBEList()
+            varsel.ekstraMottakere.forEach {
+                val receiverEndPoint = ReceiverEndPoint()
+                receiverEndPoint.receiverAddress = it.mottakerAdresse
+                receiverEndPoint.transportType = TransportType.fromValue(it.forsendelseType.toString())
+                notification.receiverEndPoints.receiverEndPoint.add(receiverEndPoint)
+            }
+        }
+        notificationBEList.notification.add(notification)
+    }
+
+    return notificationBEList
+}
 
 // @Group(GROUP_NAME)
 // @Location("$API_V1/altinn/meldinger/vedlegg")
@@ -214,18 +259,22 @@ fun getContentMessage(body: PostCorrespondenceBody): ExternalContentV2 {
     contentV2.messageSummary = body.melding.sammendrag
     contentV2.customMessageData = body.melding.tjenesteAttributter
     if (body.vedlegger != null) {
-        contentV2.attachments = AttachmentsV2()
-        contentV2.attachments.binaryAttachments = BinaryAttachmentExternalBEV2List()
-        body.vedlegger?.forEach { vedlegg ->
-            val attachmentV2 = BinaryAttachmentV2()
-            attachmentV2.fileName = vedlegg.filnavn
-            attachmentV2.name = vedlegg.navn
-            attachmentV2.data = vedlegg.data.toByteArray()
-            attachmentV2.functionType = AttachmentFunctionType.UNSPECIFIED
-            contentV2.attachments.binaryAttachments.binaryAttachmentV2.add(attachmentV2)
-        }
+        addAttachments(contentV2, body)
     }
     return contentV2
+}
+
+private fun addAttachments(contentV2: ExternalContentV2, body: PostCorrespondenceBody) {
+    contentV2.attachments = AttachmentsV2()
+    contentV2.attachments.binaryAttachments = BinaryAttachmentExternalBEV2List()
+    body.vedlegger?.forEach { vedlegg ->
+        val attachmentV2 = BinaryAttachmentV2()
+        attachmentV2.fileName = vedlegg.filnavn
+        attachmentV2.name = vedlegg.navn
+        attachmentV2.data = decodeBase64(vedlegg.data)
+        attachmentV2.functionType = AttachmentFunctionType.UNSPECIFIED
+        contentV2.attachments.binaryAttachments.binaryAttachmentV2.add(attachmentV2)
+    }
 }
 
 private suspend fun PipelineContext<Unit, ApplicationCall>.notValidServiceCode(tjenesteKode: String, environment: Environment): Boolean {

@@ -1,7 +1,7 @@
 package no.nav.altinn.admin.service.correspondence
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import org.joda.time.DateTime
+import java.time.LocalDateTime
 import javax.xml.datatype.XMLGregorianCalendar
 
 data class CorrespondenceResponse(
@@ -50,16 +50,6 @@ data class PostSpamCorrespondenceBody(
     val vedlegger: List<Vedlegg>? = null
 )
 
-data class VedleggBody(
-    @JsonProperty("requestBody")
-    val requestBody: Content
-)
-
-data class Content(
-    @JsonProperty("requestBody")
-    val requestBody: String
-)
-
 data class Melding(
     @JsonProperty("tittel")
     val tittel: String,
@@ -75,9 +65,11 @@ data class Varsel(
     @JsonProperty("fraAdresse")
     val fraAdresse: String,
     @JsonProperty("forsendelseDatoTid")
-    val forsendelseDatoTid: DateTime,
-    @JsonProperty("forsendelseType")
-    val forsendelseType: String,
+    val forsendelseDatoTid: LocalDateTime,
+    @JsonProperty("varselType")
+    val varselType: VarselType,
+    @JsonProperty("tittel")
+    val tittel: String? = null,
     @JsonProperty("melding")
     val melding: String,
     @JsonProperty("ekstraMottakere")
@@ -85,21 +77,23 @@ data class Varsel(
 )
 
 data class Mottaker(
-    @JsonProperty("mottakerType")
-    val mottakerType: MottakerType,
+    @JsonProperty("forsendelseType")
+    val forsendelseType: ForsendelseType,
     @JsonProperty("mottakerAdresse")
     val mottakerAdresse: String
 )
 
-enum class MottakerType { SMS, EPOST }
+enum class ForsendelseType { SMS, Email, Both }
+
+enum class VarselType { TokenTextOnly, VarselDPVUtenRevarsel, VarselDPVMedRevarsel }
 
 data class Vedlegg(
     @JsonProperty("filnavn")
     val filnavn: String,
     @JsonProperty("navn")
     val navn: String,
-    @JsonProperty("data")
-    val data: List<Byte>
+    @JsonProperty("dataString64")
+    val data: String
 )
 
 data class CorrespondenceDetails(

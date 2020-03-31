@@ -1,6 +1,7 @@
 package no.nav.altinn.admin.common
 
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
 import javax.xml.datatype.DatatypeFactory
@@ -17,4 +18,8 @@ fun toXmlGregorianCalendar(date: String): XMLGregorianCalendar {
     val ld = LocalDate.parse(date, java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))
     val dtf = DatatypeFactory.newInstance()
     return dtf.newXMLGregorianCalendar(GregorianCalendar.from(ld.atStartOfDay(ZoneId.systemDefault())))
+}
+fun toXmlGregorianCalendar(date: LocalDateTime): XMLGregorianCalendar {
+    val gc = GregorianCalendar.from(date.atZone(ZoneId.systemDefault()))
+    return DatatypeFactory.newInstance().newXMLGregorianCalendar(gc)
 }
