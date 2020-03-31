@@ -57,8 +57,9 @@ class QuickPayout(
                 logger.debug { "Got xml data $xml" }
             }
             val result = QuickList(quickList.size, quickList)
-            Metrics.quickPayoutSuccess.labels("5546").inc()
-            logger.info { "Result for output from DQ : " + objectMapper.writeValueAsString(result) }
+            val po = objectMapper.writeValueAsString(result)
+            Metrics.quickPayoutSuccess.labels("5546", po).inc()
+            logger.info { "Result for output from DQ : $po" }
             delay(1000 * 60 * 1) // wait a minute
 //            response.items.forEach { ar ->
 //                if (failedAR.contains(ar.archiveReference)) {

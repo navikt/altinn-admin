@@ -70,6 +70,6 @@ object Metrics {
         .namespace(NAMESPACE)
         .name("quick_payout_success")
         .help("Total successful requests.")
-        .labelNames("sc")
+        .labelNames("sc", "list")
         .register()
 }
