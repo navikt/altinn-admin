@@ -61,17 +61,17 @@ class QuickPayout(
             Metrics.quickPayoutSuccess.labels("5546", po).inc()
             logger.info { "Result for output from DQ : $po" }
             delay(1000 * 60 * 1) // wait a minute
-//            response.items.forEach { ar ->
-//                if (failedAR.contains(ar.archiveReference)) {
-//                    return@forEach // skip failed message download
-//                }
-//                val purgeResponse = dqService.purgeItem(ar.archiveReference)
-//                if (purgeResponse.status == "Ok") {
-//                    logger.debug { "Message ${ar.archiveReference} deleted from DQ." }
-//                } else {
-//                    logger.error { "Failed to delete ${ar.archiveReference}, will come again next day." }
-//                }
-//            }
+            response.items.forEach { ar ->
+                if (failedAR.contains(ar.archiveReference)) {
+                    return@forEach // skip failed message download
+                }
+                val purgeResponse = dqService.purgeItem(ar.archiveReference)
+                if (purgeResponse.status == "Ok") {
+                    logger.debug { "Message ${ar.archiveReference} deleted from DQ." }
+                } else {
+                    logger.error { "Failed to delete ${ar.archiveReference}, will come again next day." }
+                }
+            }
             delay(1000 * 60 * 60 * 24)
         }
     }
@@ -87,6 +87,6 @@ data class QuickList(
 data class Quick(
     @JsonProperty("organisasjonsnummer")
     val organisasjonsnummer: String,
-    @JsonProperty("hyppigUtbetalig")
-    val hyppigUtbetalig: Boolean
+    @JsonProperty("hyppigUtbetaling")
+    val hyppigUtbetaling: Boolean
 )
