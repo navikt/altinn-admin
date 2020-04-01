@@ -23,8 +23,8 @@ class QuickPayout(
 ) {
     fun fetchAndCreateList() {
         val today = Calendar.getInstance()
-        today.set(Calendar.HOUR_OF_DAY, 13)
-        today.set(Calendar.MINUTE, 30)
+        today.set(Calendar.HOUR_OF_DAY, 22)
+        today.set(Calendar.MINUTE, 0)
         today.set(Calendar.SECOND, 0)
         val timer = Timer()
         timer.schedule(object : TimerTask() {
@@ -69,7 +69,7 @@ class QuickPayout(
                 } else {
                     logger.info { "Ingen nye meldinger funnet, bedre lykke neste gang." }
                 }
-                sleep(1000 * 60 * 2) // wait a minute
+                sleep(1000 * 60) // wait a minute
                 response.items.forEach { ar ->
                     if (failedAR.contains(ar.archiveReference)) {
                         return@forEach // skip failed message download
@@ -82,7 +82,7 @@ class QuickPayout(
                     }
                 }
             }
-        }, today.time, 1000 * 60)
+        }, today.time, 1000 * 60 * 60 * 24)
     }
 }
 
