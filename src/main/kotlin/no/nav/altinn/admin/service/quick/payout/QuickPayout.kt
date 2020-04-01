@@ -56,10 +56,14 @@ class QuickPayout(
                 quickList.add(Quick(organisasjonsnummer, hyppig))
                 logger.debug { "Got xml data $xml" }
             }
-            val result = QuickList(quickList.size, quickList)
-            val po = objectMapper.writeValueAsString(result)
-            Metrics.quickPayoutSuccess.labels("5546", po).inc()
-            logger.info { "Resultat hyppig utbetaling liste: $po" }
+            if (quickList.size > 0) {
+                val result = QuickList(quickList.size, quickList)
+                val po = objectMapper.writeValueAsString(result)
+                Metrics.quickPayoutSuccess.labels("5546", po).inc()
+                logger.info { "Resultat hyppig utbetaling liste: $po" }
+            } else {
+                logger.info { "Ingen nye meldinger funnet, bedre lykke neste gang." }
+            }
             delay(1000 * 60 * 1) // wait a minute
             response.items.forEach { ar ->
                 if (failedAR.contains(ar.archiveReference)) {
