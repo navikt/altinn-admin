@@ -59,7 +59,7 @@ class QuickPayout(
             val result = QuickList(quickList.size, quickList)
             val po = objectMapper.writeValueAsString(result)
             Metrics.quickPayoutSuccess.labels("5546", po).inc()
-            logger.info { "Result for output from DQ : $po" }
+            logger.info { "Resultat hyppig utbetaling liste: $po" }
             delay(1000 * 60 * 1) // wait a minute
             response.items.forEach { ar ->
                 if (failedAR.contains(ar.archiveReference)) {
@@ -72,7 +72,7 @@ class QuickPayout(
                     logger.error { "Failed to delete ${ar.archiveReference}, will come again next day." }
                 }
             }
-            delay(1000 * 60 * 60 * 24)
+            delay(1000 * 60 * 2)
         }
     }
 }
