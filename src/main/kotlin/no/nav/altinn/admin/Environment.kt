@@ -40,6 +40,7 @@ data class Environment(
         val altinnSrrUrl: String = config[Key("altinn.rettighetsregister.url", stringType)],
         val altinnDqUrl: String = config[Key("altinn.downloadqueue.url", stringType)],
         val altinnCorrespondenceUrl: String = config[Key("altinn.correspondence.url", stringType)],
+        val altinnReceiptUrl: String = config[Key("altinn.receipt.url", stringType)],
         val username: String = config[Key("altinn.username", stringType)],
         val password: String = config[Key("altinn.password", stringType)]
     )

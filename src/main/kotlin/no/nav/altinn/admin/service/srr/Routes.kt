@@ -220,8 +220,7 @@ fun Routing.getRightsForReporteeServiceEdition(altinnSrrService: AltinnSRRServic
 @Location("$API_V1/altinn/rettighetsregister/leggtil")
 class PostLeggTilRettighet
 
-fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
-            post<PostLeggTilRettighet, PostLeggTilRettighetBody> ("Legg til rettighet for en virksomhet"
+fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) = post<PostLeggTilRettighet, PostLeggTilRettighetBody> ("Legg til rettighet for en virksomhet"
                     .securityAndReponds(BasicAuthSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
             ) { _, body ->
                 val currentUser = call.principal<UserIdPrincipal>()!!.name

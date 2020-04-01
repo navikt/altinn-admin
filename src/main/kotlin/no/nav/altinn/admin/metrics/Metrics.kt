@@ -66,4 +66,10 @@ object Metrics {
         .labelNames("sc")
         .help("Antall slett failed fra rettighetsregisteret")
         .register()
+    val quickPayoutSuccess: Counter = Counter.build()
+        .namespace(NAMESPACE)
+        .name("quick_payout_success")
+        .help("Total successful requests.")
+        .labelNames("sc", "list")
+        .register()
 }

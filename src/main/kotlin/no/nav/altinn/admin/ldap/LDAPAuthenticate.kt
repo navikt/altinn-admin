@@ -35,21 +35,25 @@ class LDAPAuthenticate(private val config: Environment.Application) :
             }
 
     // resolve DNs for both service accounts, including those created in Basta. The order of DNs according to user name
-    private fun resolveDNs(user: String): List<String> = config.userDN(user).let {
-
-        val rdns = DN(it).rdNs
+    private fun resolveDNs(user: String): List<String> = config.userDN(user).let { userDn ->
+        val rdns = DN(userDn).rdNs
         val dnPrefix = rdns[rdns.indices.first]
         val dnPostfix = "${rdns[rdns.indices.last - 1]},${rdns[rdns.indices.last]}"
         val srvAccounts = listOf("OU=ApplAccounts,OU=ServiceAccounts", "OU=ServiceAccounts")
-        logger.info { "DNs : $it" }
-        if (isNAVIdent(user)) listOf(it)
-        else srvAccounts.map { "$dnPrefix,$it,$dnPostfix" }
+        if (isNAVIdent(user)) listOf(userDn)
+        else srvAccounts.map { srvAccount -> "$dnPrefix,$srvAccount,$dnPostfix" }
     }
 
     private fun authenticated(dn: String, pwd: String, alreadyAuthenticated: Boolean): Boolean =
             if (alreadyAuthenticated) true
-            else
-                try { ldapConnection.bind(dn, pwd).resultCode == ResultCode.SUCCESS } catch (e: LDAPException) { false }
+            else {
+                logger.info { "DNs : $dn  " }
+                try {
+                    ldapConnection.bind(dn, pwd).resultCode == ResultCode.SUCCESS
+                } catch (e: LDAPException) {
+                    false
+                }
+            }
 
     companion object {
 
