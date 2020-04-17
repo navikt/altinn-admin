@@ -1,8 +1,6 @@
 name: Build, push, and deploy
 
 on: [push, pull_request]
-  paths-ignore:
-    - 'alerts.yaml'
 
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/altinn-admin:${{ github.sha }}
