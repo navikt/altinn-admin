@@ -352,7 +352,7 @@ object AltinnSRRServiceSpek : Spek({
 
     withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
         describe("GET Hent rettigheter for et virksomhetsnummer.") {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/5252/123")) {
+            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/org/5252/123")) {
                 it("Hent rettigheter for et virksomhetsnummer 123, skal feile med 'bad request'") {
                     response.status() shouldEqual HttpStatusCode.BadRequest
                 }
@@ -372,7 +372,7 @@ object AltinnSRRServiceSpek : Spek({
 
     withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
         describe("GET Hent rettigheter for en virksomhet.") {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/5678/123123123")) {
+            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/org/5678/123123123")) {
                 it("Hent rettigheter for en virksomhet, skal være ok") {
                     response.status() shouldEqual HttpStatusCode.OK
                 }

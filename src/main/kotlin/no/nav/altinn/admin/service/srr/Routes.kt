@@ -126,7 +126,7 @@ fun Routing.getRightsListServiceEdition(altinnSrrService: AltinnSRRService, envi
     }
 
 @Group(GROUP_NAME)
-@Location("$API_V1/altinn/rettighetsregister/hent/{tjenesteKode}/{orgnr}")
+@Location("$API_V1/altinn/rettighetsregister/hent/org/{tjenesteKode}/{orgnr}")
 data class FirmaRettigheter(val tjenesteKode: String, val orgnr: String)
 
 fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
