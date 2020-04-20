@@ -90,11 +90,16 @@ fun Routing.getRightsList(altinnSrrService: AltinnSRRService, environment: Envir
 data class RettighetsregisterUtgave(val tjenesteKode: String, val utgaveKode: String)
 
 fun Routing.getRightsListServiceEdition(altinnSrrService: AltinnSRRService, environment: Environment) =
-    get<RettighetsregisterUtgave>("hent rettigheter for alle virksomheter".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+    get<RettighetsregisterUtgave>("hent rettigheter på tjenesteutgave for alle virksomheter".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
         val scList = filterOutServiceCode(environment, param.tjenesteKode)
         if (scList.size == 0) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
+            return@get
+        }
+
+        if (!scList.contains(Pair(param.tjenesteKode, param.utgaveKode))) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste utgave kode oppgitt"))
             return@get
         }
 

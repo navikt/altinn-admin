@@ -350,6 +350,7 @@ object AltinnSRRServiceSpek : Spek({
         }
     }
 
+    // Hent rettigheter for virksomhetsnummer
     withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
         describe("GET Hent rettigheter for et virksomhetsnummer.") {
             with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/org/5252/123")) {
@@ -359,21 +360,39 @@ object AltinnSRRServiceSpek : Spek({
             }
         }
     }
-
     withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
-        describe("GET Hent rettigheter for alle virksomheter.") {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/1234")) {
-                it("Hent rettigheter for alle virksomheter, skal være ok") {
+        describe("GET Hent rettigheter for en virksomhet.") {
+            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/org/5678/123123123")) {
+                it("Hent rettigheter for en virksomhet, skal være ok") {
                     response.status() shouldEqual HttpStatusCode.OK
                 }
             }
         }
     }
 
+    // Hent rettigheter på tjeneste eller tjenesteutgaver
     withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
-        describe("GET Hent rettigheter for en virksomhet.") {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/org/5678/123123123")) {
-                it("Hent rettigheter for en virksomhet, skal være ok") {
+        describe("GET Hent rettigheter for alle virksomheter.") {
+            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/1234")) {
+                it("Hent rettigheter på tjeneste for alle virksomheter, skal være ok") {
+                    response.status() shouldEqual HttpStatusCode.OK
+                }
+            }
+        }
+    }
+    withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
+        describe("GET Hent rettigheter på tjenesteutgave for alle virksomheter.") {
+            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/1234/12")) {
+                it("Hent rettigheter på tjenesteutgave for alle virksomheter, skal feile") {
+                    response.status() shouldEqual HttpStatusCode.BadRequest
+                }
+            }
+        }
+    }
+    withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
+        describe("GET Hent rettigheter på tjenesteutgave for alle virksomheter.") {
+            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/1234/1")) {
+                it("Hent rettigheter på tjenesteutgave for alle virksomheter, skal være ok") {
                     response.status() shouldEqual HttpStatusCode.OK
                 }
             }
