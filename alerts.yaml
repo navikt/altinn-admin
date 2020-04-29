@@ -1,7 +1,8 @@
-apiVersion: "nais.io/v1alpha1"
+apiVersion: "nais.io/v1"
 kind: "Alert"
 metadata:
   name: altinn-admin-alerts
+  namespace: default
   labels:
     team: alf
 spec:
