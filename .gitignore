@@ -15,3 +15,4 @@ src/generated
 
 # Database
 *.db
+src/test/kotlin/no/nav/altinn/admin/metrics/TheGreenMileSpek.kt

@@ -38,7 +38,6 @@ import no.nav.altinn.admin.service.correspondence.AltinnCorrespondenceService
 import no.nav.altinn.admin.service.correspondence.correspondenceAPI
 import no.nav.altinn.admin.service.dq.AltinnDQService
 import no.nav.altinn.admin.service.dq.dqAPI
-import no.nav.altinn.admin.service.quick.payout.QuickPayout
 import no.nav.altinn.admin.service.receipt.AltinnReceiptService
 import no.nav.altinn.admin.service.receipt.receiptsAPI
 import no.nav.altinn.admin.service.srr.AltinnSRRService
@@ -188,13 +187,6 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     if (!environment.application.devProfile) {
         launch(backgroundTasksContext) {
             expireAlerts.checkDates()
-        }
-    }
-
-    val quickPayout = QuickPayout(environment, applicationState, altinnDqService)
-    if (!environment.application.devProfile) {
-        launch(backgroundTasksContext) {
-            quickPayout.fetchAndCreateList()
         }
     }
 
