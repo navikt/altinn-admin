@@ -55,8 +55,8 @@ internal const val GROUP_NAME = "Correspondence"
 private val logger = KotlinLogging.logger { }
 
 @Group(GROUP_NAME)
-@Location("$API_V1/altinn/meldinger/hent/{tjenesteKode}/{fraDato}/{tilDato}/{avgiver}")
-data class MeldingsFilter(val tjenesteKode: String, val fraDato: String, val tilDato: String, val avgiver: String)
+@Location("$API_V1/altinn/meldinger/hent/{tjenesteKode}/{fraDato}/{tilDato}/{mottaker}")
+data class MeldingsFilter(val tjenesteKode: String, val fraDato: String, val tilDato: String, val mottaker: String)
 
 fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     get<MeldingsFilter>("Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
@@ -64,6 +64,11 @@ fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorresp
         param ->
 
         if (notValidServiceCode(param.tjenesteKode, environment)) return@get
+
+        if (param.mottaker.isNullOrEmpty() || param.mottaker.length < 9) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Mottaker id is empty or wrong"))
+            return@get
+        }
 
         val fromDate = param.fraDato
         val toDate = param.tilDato
@@ -82,7 +87,7 @@ fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorresp
         try {
             val fraDato = toXmlGregorianCalendar(fromDate)
             val tilDato = toXmlGregorianCalendar(toDate)
-            val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, fraDato, tilDato, param.avgiver)
+            val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, fraDato, tilDato, param.mottaker)
 
             if (correspondenceResponse.status == "Ok")
                 call.respond(correspondenceResponse.correspondenceDetails)
