@@ -22,7 +22,7 @@ class AltinnCorrespondenceService(env: Environment, iCorrepsondenceExternalBasic
     fun getCorrespondenceDetails(serviceCode: String, fromDate: XMLGregorianCalendar? = null, toDate: XMLGregorianCalendar? = null, reportee: String? = ""): CorrespondenceResponse {
         val corrFilter = CorrespondenceStatusFilterV3()
         corrFilter.serviceCode = serviceCode
-        corrFilter.serviceEditionCode = 1
+        corrFilter.serviceEditionCode = if (serviceCode != "4503") 1 else 2
         if (fromDate != null)
             corrFilter.createdAfterDate = fromDate
         if (toDate != null)

@@ -44,6 +44,7 @@ import no.nav.altinn.admin.common.toXmlGregorianCalendar
 fun Routing.correspondenceAPI(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) {
     getCorrespondence(altinnCorrespondenceService, environment)
     getCorrespondenceFiltered(altinnCorrespondenceService, environment)
+    getCorrespondenceFiltered2(altinnCorrespondenceService, environment)
     postCorrespondence(altinnCorrespondenceService, environment)
 //    postFile(altinnCorrespondenceService, environment)
 }
@@ -55,7 +56,7 @@ private val logger = KotlinLogging.logger { }
 
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/meldinger/hent/{tjenesteKode}/{fraDato}/{tilDato}/{avgiver}")
-data class MeldingsFilter(val tjenesteKode: String, val fraDato: String = "2019-12-24", val tilDato: String = "2019-12-24", val avgiver: String?)
+data class MeldingsFilter(val tjenesteKode: String, val fraDato: String, val tilDato: String, val avgiver: String)
 
 fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     get<MeldingsFilter>("Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
@@ -82,6 +83,50 @@ fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorresp
             val fraDato = toXmlGregorianCalendar(fromDate)
             val tilDato = toXmlGregorianCalendar(toDate)
             val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, fraDato, tilDato, param.avgiver)
+
+            if (correspondenceResponse.status == "Ok")
+                call.respond(correspondenceResponse.correspondenceDetails)
+            else
+                call.respond(HttpStatusCode.NotFound, correspondenceResponse.message)
+        } catch (ee: Exception) {
+            logger.error {
+                "iCorrespondenceExternalBasic.getCorrespondenceDetails feilet  \n" +
+                    "\n ErrorMessage  ${ee.message}" +
+                    "\n LocalizedErrorMessage  ${ee.localizedMessage}"
+            }
+            call.respond(HttpStatusCode.InternalServerError, AnError("iCorrespondenceExternalBasic.getCorrespondenceDetails feilet: ${ee.message}"))
+        }
+    }
+
+@Group(GROUP_NAME)
+@Location("$API_V1/altinn/meldinger/hent/{tjenesteKode}/{fraDato}/{tilDato}")
+data class MeldingsFilter2(val tjenesteKode: String, val fraDato: String, val tilDato: String)
+
+fun Routing.getCorrespondenceFiltered2(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
+    get<MeldingsFilter2>("Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
+        ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+        param ->
+
+        if (notValidServiceCode(param.tjenesteKode, environment)) return@get
+
+        val fromDate = param.fraDato
+        val toDate = param.tilDato
+        if (fromDate.isNullOrEmpty() || toDate.isNullOrEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Fra eller til dato på filter er ikke oppgitt"))
+            return@get
+        }
+        if (!isDate(fromDate)) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Fra dato er oppgitt i feil format, bruk yyyy-mm-dd"))
+            return@get
+        }
+        if (!isDate(toDate)) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Til dato er oppgitt i feil format, bruk yyyy-mm-dd"))
+            return@get
+        }
+        try {
+            val fraDato = toXmlGregorianCalendar(fromDate)
+            val tilDato = toXmlGregorianCalendar(toDate)
+            val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, fraDato, tilDato)
 
             if (correspondenceResponse.status == "Ok")
                 call.respond(correspondenceResponse.correspondenceDetails)

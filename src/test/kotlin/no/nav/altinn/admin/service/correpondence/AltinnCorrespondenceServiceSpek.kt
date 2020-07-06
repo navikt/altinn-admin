@@ -51,21 +51,19 @@ object AltinnCorrespondenceServiceSpek : Spek({
                         req.response.status() shouldEqual HttpStatusCode.BadRequest
                     }
                 }
-//                context("Route /api/v1/altinn/meldinger/hent/{tjenesteKode}") {
-//                    it("Hent meldingsstatuser fra en meldingstjeneste med gyldig tjenestekode") {
-//                        val params = "4626"
-//                        val req = handleRequest(HttpMethod.Get, "/api/v1/altinn/meldinger/hent/$params") {
-//                            addHeader(HttpHeaders.Accept, "application/json")
-//                            addHeader("Content-Type", "application/json")
-//                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
-//                        }
-//
-//                        req.requestHandled shouldEqual true
-//                        val ar = objectMapper.readValue<List<CorrespondenceDetails>>(req.response.content ?: "")
-//                        ar.size shouldBeGreaterOrEqualTo 1
-//                        req.response.status() shouldEqual HttpStatusCode.OK
-//                    }
-//                }
+                context("Route /api/v1/altinn/meldinger/hent/{tjenesteKode}/{fom}/{tom}/{avgiver}") {
+                    it("Hent meldingsstatuser fra en meldingstjeneste med gyldig tjenestekode") {
+                        val sc = "4626"
+                        val req = handleRequest(HttpMethod.Get, "/api/v1/altinn/meldinger/hent/$sc/01-01-2020/2020-07-06/1") {
+                            addHeader(HttpHeaders.Accept, "application/json")
+                            addHeader("Content-Type", "application/json")
+                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+                        }
+
+                        req.requestHandled shouldEqual true
+                        req.response.status() shouldEqual HttpStatusCode.BadRequest
+                    }
+                }
 //                context("Route /api/v1/altinn/meldinger/send") {
 //                    it("Send melding til en gyldig meldingstjeneste") {
 //                        val test = objectMapper.writeValueAsString(PostCorrespondenceBody("4626", "1", "910521594",
