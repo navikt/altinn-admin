@@ -107,6 +107,19 @@ object AltinnCorrespondenceServiceSpek : Spek({
                         req.response.status() shouldEqual HttpStatusCode.BadRequest
                     }
                 }
+                context("Route /api/v2/altinn/meldinger/hent/{tjenesteKode}/{utgaveKode}/{fom}/{tom}") {
+                    it("Hent meldingsstatuser fra en meldingstjeneste v2 med gyldig tjenestekode, men feil tom dato") {
+                        val sc = "4503"
+                        val req = handleRequest(HttpMethod.Get, "/api/v2/altinn/meldinger/hent/$sc/1/2020-01-01/2020-0706") {
+                            addHeader(HttpHeaders.Accept, "application/json")
+                            addHeader("Content-Type", "application/json")
+                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+                        }
+
+                        req.requestHandled shouldEqual true
+                        req.response.status() shouldEqual HttpStatusCode.BadRequest
+                    }
+                }
 //                context("Route /api/v1/altinn/meldinger/send") {
 //                    it("Send melding til en gyldig meldingstjeneste") {
 //                        val test = objectMapper.writeValueAsString(PostCorrespondenceBody("4626", "1", "910521594",

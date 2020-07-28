@@ -230,16 +230,6 @@ fun Routing.getCorrespondenceFiltered4(altinnCorrespondenceService: AltinnCorres
             return@get
         }
 
-        if (notValidServiceCode(param.tjenesteKode, environment)) {
-            call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig tjenestekode, sjekk whitelist"))
-            return@get
-        }
-
-        if (param.utgaveKode.isNullOrEmpty()) {
-            call.respond(HttpStatusCode.BadRequest, AnError("Utgavekode mangler"))
-            return@get
-        }
-
         val fromDate = param.fraDato
         val toDate = param.tilDato
         if (fromDate.isNullOrEmpty() || toDate.isNullOrEmpty()) {
