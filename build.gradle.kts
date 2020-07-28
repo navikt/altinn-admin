@@ -23,6 +23,7 @@ val javaxActivationVersion = "1.1.1"
 val cxfVersion = "3.3.1"
 val unboundidVersion = "4.0.8"
 val tjenestespesifikasjonerVersion = "1.2019.07.10-12.21-b55f47790a9d"
+val wiremockVersion = "2.23.2"
 
 val swaggerVersion = "3.1.7"
 
@@ -117,6 +118,7 @@ dependencies {
     testImplementation("org.amshove.kluent:kluent:$kluentVersion")
     testImplementation("org.junit.platform:junit-platform-runner:1.3.2")
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+    testCompile("com.github.tomakehurst:wiremock:$wiremockVersion")
 }
 
 val generatedSourcesDir = "$buildDir/generated-sources"

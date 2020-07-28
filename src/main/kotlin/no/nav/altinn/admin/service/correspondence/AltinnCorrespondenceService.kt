@@ -19,10 +19,10 @@ class AltinnCorrespondenceService(env: Environment, iCorrepsondenceExternalBasic
     private val SYSTEM_CODE = "NAV_ALF"
     private val iCorrespondenceExternalBasic by lazy(iCorrepsondenceExternalBasicFactory)
 
-    fun getCorrespondenceDetails(serviceCode: String, fromDate: XMLGregorianCalendar? = null, toDate: XMLGregorianCalendar? = null, reportee: String? = ""): CorrespondenceResponse {
+    fun getCorrespondenceDetails(serviceCode: String, utgaveKode: Int, fromDate: XMLGregorianCalendar? = null, toDate: XMLGregorianCalendar? = null, reportee: String? = ""): CorrespondenceResponse {
         val corrFilter = CorrespondenceStatusFilterV3()
         corrFilter.serviceCode = serviceCode
-        corrFilter.serviceEditionCode = if (serviceCode != "4503") 1 else 2
+        corrFilter.serviceEditionCode = utgaveKode
         if (fromDate != null)
             corrFilter.createdAfterDate = fromDate
         if (toDate != null)

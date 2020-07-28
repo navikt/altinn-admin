@@ -37,14 +37,18 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndReponds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.common.API_V1
+import no.nav.altinn.admin.common.API_V2
 import no.nav.altinn.admin.common.decodeBase64
 import no.nav.altinn.admin.common.isDate
 import no.nav.altinn.admin.common.toXmlGregorianCalendar
 
 fun Routing.correspondenceAPI(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) {
     getCorrespondence(altinnCorrespondenceService, environment)
+    getCorrespondence2(altinnCorrespondenceService, environment)
     getCorrespondenceFiltered(altinnCorrespondenceService, environment)
     getCorrespondenceFiltered2(altinnCorrespondenceService, environment)
+    getCorrespondenceFilteredV2(altinnCorrespondenceService, environment)
+    getCorrespondenceFiltered4(altinnCorrespondenceService, environment)
     postCorrespondence(altinnCorrespondenceService, environment)
 //    postFile(altinnCorrespondenceService, environment)
 }
@@ -87,7 +91,66 @@ fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorresp
         try {
             val fraDato = toXmlGregorianCalendar(fromDate)
             val tilDato = toXmlGregorianCalendar(toDate)
-            val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, fraDato, tilDato, param.mottaker)
+            val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, 1, fraDato, tilDato, param.mottaker)
+
+            if (correspondenceResponse.status == "Ok")
+                call.respond(correspondenceResponse.correspondenceDetails)
+            else
+                call.respond(HttpStatusCode.NotFound, correspondenceResponse.message)
+        } catch (ee: Exception) {
+            logger.error {
+                "iCorrespondenceExternalBasic.getCorrespondenceDetails feilet  \n" +
+                    "\n ErrorMessage  ${ee.message}" +
+                    "\n LocalizedErrorMessage  ${ee.localizedMessage}"
+            }
+            call.respond(HttpStatusCode.InternalServerError, AnError("iCorrespondenceExternalBasic.getCorrespondenceDetails feilet: ${ee.message}"))
+        }
+    }
+
+@Group(GROUP_NAME)
+@Location("$API_V2/altinn/meldinger/hent/{tjenesteKode}/{utgaveKode}/{fraDato}/{tilDato}/{mottaker}")
+data class MeldingsFilter3(val tjenesteKode: String, val utgaveKode: String, val fraDato: String, val tilDato: String, val mottaker: String)
+
+fun Routing.getCorrespondenceFilteredV2(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
+    get<MeldingsFilter3>("Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
+        ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+        param ->
+
+        val scList = filterOutServiceCode(environment, param.tjenesteKode)
+        if (scList.size == 0) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
+            return@get
+        }
+        val secList = scList.map { it.second }
+        if (param.utgaveKode.trim().isEmpty() || param.utgaveKode.toIntOrNull() == null || !secList.contains(param.utgaveKode)) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig utgave kode oppgitt"))
+            return@get
+        }
+
+        if (param.mottaker.isNullOrEmpty() || param.mottaker.length < 9) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Mottaker id is empty or wrong"))
+            return@get
+        }
+
+        val fromDate = param.fraDato
+        val toDate = param.tilDato
+        if (fromDate.isNullOrEmpty() || toDate.isNullOrEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Fra eller til dato på filter er ikke oppgitt"))
+            return@get
+        }
+        if (!isDate(fromDate)) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Fra dato er oppgitt i feil format, bruk yyyy-mm-dd"))
+            return@get
+        }
+        if (!isDate(toDate)) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Til dato er oppgitt i feil format, bruk yyyy-mm-dd"))
+            return@get
+        }
+        try {
+            val fraDato = toXmlGregorianCalendar(fromDate)
+            val tilDato = toXmlGregorianCalendar(toDate)
+            val uk = param.utgaveKode.toInt()
+            val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, uk, fraDato, tilDato, param.mottaker)
 
             if (correspondenceResponse.status == "Ok")
                 call.respond(correspondenceResponse.correspondenceDetails)
@@ -131,7 +194,71 @@ fun Routing.getCorrespondenceFiltered2(altinnCorrespondenceService: AltinnCorres
         try {
             val fraDato = toXmlGregorianCalendar(fromDate)
             val tilDato = toXmlGregorianCalendar(toDate)
-            val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, fraDato, tilDato)
+            val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, 1, fraDato, tilDato)
+
+            if (correspondenceResponse.status == "Ok")
+                call.respond(correspondenceResponse.correspondenceDetails)
+            else
+                call.respond(HttpStatusCode.NotFound, correspondenceResponse.message)
+        } catch (ee: Exception) {
+            logger.error {
+                "iCorrespondenceExternalBasic.getCorrespondenceDetails feilet  \n" +
+                    "\n ErrorMessage  ${ee.message}" +
+                    "\n LocalizedErrorMessage  ${ee.localizedMessage}"
+            }
+            call.respond(HttpStatusCode.InternalServerError, AnError("iCorrespondenceExternalBasic.getCorrespondenceDetails feilet: ${ee.message}"))
+        }
+    }
+
+@Group(GROUP_NAME)
+@Location("$API_V2/altinn/meldinger/hent/{tjenesteKode}/{utgaveKode}/{fraDato}/{tilDato}")
+data class MeldingsFilter4(val tjenesteKode: String, val utgaveKode: String, val fraDato: String, val tilDato: String)
+
+fun Routing.getCorrespondenceFiltered4(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
+    get<MeldingsFilter4>("Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
+        ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+        param ->
+
+        val scList = filterOutServiceCode(environment, param.tjenesteKode)
+        if (scList.size == 0) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
+            return@get
+        }
+        val secList = scList.map { it.second }
+        if (param.utgaveKode.trim().isEmpty() || param.utgaveKode.toIntOrNull() == null || !secList.contains(param.utgaveKode)) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig utgave kode oppgitt"))
+            return@get
+        }
+
+        if (notValidServiceCode(param.tjenesteKode, environment)) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig tjenestekode, sjekk whitelist"))
+            return@get
+        }
+
+        if (param.utgaveKode.isNullOrEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Utgavekode mangler"))
+            return@get
+        }
+
+        val fromDate = param.fraDato
+        val toDate = param.tilDato
+        if (fromDate.isNullOrEmpty() || toDate.isNullOrEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Fra eller til dato på filter er ikke oppgitt"))
+            return@get
+        }
+        if (!isDate(fromDate)) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Fra dato er oppgitt i feil format, bruk yyyy-mm-dd"))
+            return@get
+        }
+        if (!isDate(toDate)) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Til dato er oppgitt i feil format, bruk yyyy-mm-dd"))
+            return@get
+        }
+        try {
+            val fraDato = toXmlGregorianCalendar(fromDate)
+            val tilDato = toXmlGregorianCalendar(toDate)
+            val uk = param.utgaveKode.toInt()
+            val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, uk, fraDato, tilDato)
 
             if (correspondenceResponse.status == "Ok")
                 call.respond(correspondenceResponse.correspondenceDetails)
@@ -158,7 +285,45 @@ fun Routing.getCorrespondence(altinnCorrespondenceService: AltinnCorrespondenceS
 
         if (notValidServiceCode(param.tjenesteKode, environment)) return@get
         try {
-            val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode)
+            val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, 1)
+
+            if (correspondenceResponse.status == "Ok")
+                call.respond(correspondenceResponse.correspondenceDetails)
+            else
+                call.respond(HttpStatusCode.NotFound, correspondenceResponse.message)
+        } catch (ee: Exception) {
+            logger.error {
+                "iCorrespondenceExternalBasic.getCorrespondenceDetails feilet \n" +
+                    "\n ErrorMessage  ${ee.message}" +
+                    "\n LocalizedErrorMessage  ${ee.localizedMessage}"
+            }
+            call.respond(HttpStatusCode.InternalServerError, AnError("iCorrespondenceExternalBasic.getCorrespondenceDetails feilet: ${ee.message}"))
+        }
+    }
+
+@Group(GROUP_NAME)
+@Location("$API_V2/altinn/meldinger/hent/{tjenesteKode}/{utgaveKode}")
+data class TjenesteKode2(val tjenesteKode: String, val utgaveKode: String)
+
+fun Routing.getCorrespondence2(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
+    get<TjenesteKode2>("Hent status meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
+        ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+        param ->
+
+        val scList = filterOutServiceCode(environment, param.tjenesteKode)
+        if (scList.size == 0) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
+            return@get
+        }
+        val secList = scList.map { it.second }
+        if (param.utgaveKode.trim().isEmpty() || param.utgaveKode.toIntOrNull() == null || !secList.contains(param.utgaveKode)) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig utgave kode oppgitt"))
+            return@get
+        }
+
+        try {
+            val uk = param.utgaveKode.toInt()
+            val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, uk)
 
             if (correspondenceResponse.status == "Ok")
                 call.respond(correspondenceResponse.correspondenceDetails)
@@ -342,4 +507,15 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.notValidServiceCode(t
 
 private fun ApplicationRequest.isFormMultipart(): Boolean {
     return contentType().withoutParameters().match(ContentType.MultiPart.FormData)
+}
+
+private fun filterOutServiceCode(environment: Environment, tjenesteKode: String): MutableList<Pair<String, String>> {
+    val scSecList = environment.correspondeceService.serviceCodes.split(",")
+    val scList = mutableListOf<Pair<String, String>>()
+    scSecList.forEach {
+        val sc = it.split(":")
+        if (sc[0] == tjenesteKode)
+            scList.add(Pair(sc[0], if (sc.size > 1) sc[1] else "1"))
+    }
+    return scList
 }
