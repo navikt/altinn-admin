@@ -44,10 +44,10 @@ import no.nav.altinn.admin.common.toXmlGregorianCalendar
 
 fun Routing.correspondenceAPI(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) {
     getCorrespondence(altinnCorrespondenceService, environment)
-    getCorrespondence2(altinnCorrespondenceService, environment)
     getCorrespondenceFiltered(altinnCorrespondenceService, environment)
     getCorrespondenceFiltered2(altinnCorrespondenceService, environment)
-    getCorrespondenceFilteredV2(altinnCorrespondenceService, environment)
+    getCorrespondence2(altinnCorrespondenceService, environment)
+    getCorrespondenceFiltered3(altinnCorrespondenceService, environment)
     getCorrespondenceFiltered4(altinnCorrespondenceService, environment)
     postCorrespondence(altinnCorrespondenceService, environment)
 //    postFile(altinnCorrespondenceService, environment)
@@ -111,7 +111,7 @@ fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorresp
 @Location("$API_V2/altinn/meldinger/hent/{tjenesteKode}/{utgaveKode}/{fraDato}/{tilDato}/{mottaker}")
 data class MeldingsFilter3(val tjenesteKode: String, val utgaveKode: String, val fraDato: String, val tilDato: String, val mottaker: String)
 
-fun Routing.getCorrespondenceFilteredV2(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
+fun Routing.getCorrespondenceFiltered3(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     get<MeldingsFilter3>("Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
         ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
