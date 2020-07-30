@@ -105,15 +105,15 @@ data class CorrespondenceDetails(
     val reportee: String = "",
     @JsonProperty("sendersReference")
     val sendersReference: String = "",
-    @JsonProperty("varsler")
-    val varsler: List<CorrespondenceVarsel>,
+    @JsonProperty("notifications")
+    val notifications: List<Notification>,
     @JsonProperty("lastStatusChangeDate")
     val lastStatusChangeDate: XMLGregorianCalendar? = null,
     @JsonProperty("lastStatus")
     val lastStatus: String = ""
 )
 
-data class CorrespondenceVarsel(
+data class Notification(
     @JsonProperty("transportType")
     val transportType: String,
     @JsonProperty("recipient")
