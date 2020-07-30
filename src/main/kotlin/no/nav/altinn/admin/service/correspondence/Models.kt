@@ -1,6 +1,7 @@
 package no.nav.altinn.admin.service.correspondence
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import no.altinn.schemas.serviceengine.formsengine._2009._10.TransportType
 import java.time.LocalDateTime
 import javax.xml.datatype.XMLGregorianCalendar
 
@@ -103,8 +104,21 @@ data class CorrespondenceDetails(
     val createdDate: XMLGregorianCalendar? = null,
     @JsonProperty("reportee")
     val reportee: String = "",
+    @JsonProperty("sendersReference")
+    val sendersReference: String = "",
+    @JsonProperty("varsler")
+    val varsler: List<CorrespondenceVarsel>,
     @JsonProperty("lastStatusChangeDate")
     val lastStatusChangeDate: XMLGregorianCalendar? = null,
     @JsonProperty("lastStatus")
     val lastStatus: String = ""
+)
+
+data class CorrespondenceVarsel(
+    @JsonProperty("transportType")
+    val transportType: String,
+    @JsonProperty("recipient")
+    val recipient: String,
+    @JsonProperty("sentDate")
+    val sentDate: XMLGregorianCalendar? = null
 )

@@ -35,10 +35,20 @@ class AltinnCorrespondenceService(env: Environment, iCorrepsondenceExternalBasic
                 corrFilter).correspondenceStatusInformation.correspondenceStatusDetailsList.statusV2
             val correspondenceDetails = mutableListOf<CorrespondenceDetails>()
             for (detail in results) {
+                val vList = mutableListOf<CorrespondenceVarsel>()
+                detail.notifications.notification.forEach {
+                    vList.add(CorrespondenceVarsel(
+                        it.transportType.name,
+                        it.recipient,
+                        it.sentDate
+                    ))
+                }
                 correspondenceDetails.add(CorrespondenceDetails(
                     detail.correspondenceID,
                     detail.createdDate,
                     detail.reportee,
+                    detail.sendersReference,
+                    vList,
                     detail.statusChanges.statusChangeV2.last().statusDate,
                     detail.statusChanges.statusChangeV2.last().statusType.toString()
                 ))
