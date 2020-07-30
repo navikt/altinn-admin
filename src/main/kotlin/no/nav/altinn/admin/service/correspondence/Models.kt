@@ -1,7 +1,6 @@
 package no.nav.altinn.admin.service.correspondence
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import no.altinn.schemas.serviceengine.formsengine._2009._10.TransportType
 import java.time.LocalDateTime
 import javax.xml.datatype.XMLGregorianCalendar
 
