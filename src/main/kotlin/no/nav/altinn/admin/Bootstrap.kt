@@ -98,6 +98,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     install(CallLogging) {
         level = Level.INFO
         filter { call -> call.request.path().startsWith(API_V1) }
+        filter { call -> call.request.path().startsWith(API_V2) }
     }
     install(StatusPages) {
         exception<Throwable> { cause ->
