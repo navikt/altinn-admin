@@ -19,10 +19,10 @@ class AltinnCorrespondenceService(env: Environment, iCorrepsondenceExternalBasic
     private val SYSTEM_CODE = "NAV_ALF"
     private val iCorrespondenceExternalBasic by lazy(iCorrepsondenceExternalBasicFactory)
 
-    fun getCorrespondenceDetails(serviceCode: String, fromDate: XMLGregorianCalendar? = null, toDate: XMLGregorianCalendar? = null, reportee: String? = ""): CorrespondenceResponse {
+    fun getCorrespondenceDetails(serviceCode: String, utgaveKode: Int, fromDate: XMLGregorianCalendar? = null, toDate: XMLGregorianCalendar? = null, reportee: String? = ""): CorrespondenceResponse {
         val corrFilter = CorrespondenceStatusFilterV3()
         corrFilter.serviceCode = serviceCode
-        corrFilter.serviceEditionCode = 1
+        corrFilter.serviceEditionCode = utgaveKode
         if (fromDate != null)
             corrFilter.createdAfterDate = fromDate
         if (toDate != null)
@@ -35,10 +35,20 @@ class AltinnCorrespondenceService(env: Environment, iCorrepsondenceExternalBasic
                 corrFilter).correspondenceStatusInformation.correspondenceStatusDetailsList.statusV2
             val correspondenceDetails = mutableListOf<CorrespondenceDetails>()
             for (detail in results) {
+                val vList = mutableListOf<Notification>()
+                detail.notifications.notification.forEach {
+                    vList.add(Notification(
+                        it.transportType.name,
+                        it.recipient,
+                        it.sentDate
+                    ))
+                }
                 correspondenceDetails.add(CorrespondenceDetails(
                     detail.correspondenceID,
                     detail.createdDate,
                     detail.reportee,
+                    detail.sendersReference,
+                    vList,
                     detail.statusChanges.statusChangeV2.last().statusDate,
                     detail.statusChanges.statusChangeV2.last().statusType.toString()
                 ))

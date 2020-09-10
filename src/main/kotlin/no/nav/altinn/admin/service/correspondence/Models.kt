@@ -103,8 +103,21 @@ data class CorrespondenceDetails(
     val createdDate: XMLGregorianCalendar? = null,
     @JsonProperty("reportee")
     val reportee: String = "",
+    @JsonProperty("sendersReference")
+    val sendersReference: String = "",
+    @JsonProperty("notifications")
+    val notifications: List<Notification>,
     @JsonProperty("lastStatusChangeDate")
     val lastStatusChangeDate: XMLGregorianCalendar? = null,
     @JsonProperty("lastStatus")
     val lastStatus: String = ""
+)
+
+data class Notification(
+    @JsonProperty("transportType")
+    val transportType: String,
+    @JsonProperty("recipient")
+    val recipient: String,
+    @JsonProperty("sentDate")
+    val sentDate: XMLGregorianCalendar? = null
 )
