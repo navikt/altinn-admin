@@ -16,7 +16,7 @@ fun isDate(date: String): Boolean {
 }
 
 fun isDateTime(dateTime: String): Boolean {
-    val reg = """\d{4}-\d{2}-\d{2}+T\d{2}:\d{2}:\d{2}""".toRegex()
+    val reg = """\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}""".toRegex()
     return dateTime.matches(reg)
 }
 
@@ -27,7 +27,7 @@ fun dateToXmlGregorianCalendar(date: String): XMLGregorianCalendar {
 }
 
 fun dateTimeToXmlGregorianCalendar(dateTime: String): XMLGregorianCalendar {
-    val ldt = LocalDateTime.parse(dateTime, java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-ddThh:mm:ss"))
+    val ldt = LocalDateTime.parse(dateTime, java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
     val dtf = DatatypeFactory.newInstance()
     return dtf.newXMLGregorianCalendar(GregorianCalendar.from(ldt.atZone(ZoneId.systemDefault())))
 }

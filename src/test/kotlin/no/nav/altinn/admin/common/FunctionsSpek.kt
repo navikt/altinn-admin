@@ -8,7 +8,7 @@ import kotlin.test.assertTrue
 object FunctionsSpek : Spek({
     describe("Testing of date and dateTime regex") {
         it("Quick testing") {
-            var expectedDate = isDateTime("2020-01-01T00:30:12")
+            var expectedDate = isDateTime("2020-01-01 00:30:12")
             assertTrue { expectedDate }
 
             expectedDate = isDate("2020-01-01")
