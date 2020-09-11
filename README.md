@@ -35,4 +35,4 @@ serviceowners rights register (SRR).
 Code/project related questions can be sent to `nav.altinn.lokalforvaltning@nav.no`
 
 #### For NAV employees
-We can be reached on Slack in channel `#team_altinn_difi`
+We can be reached on Slack in channel `#team_altinn`
