@@ -6,18 +6,9 @@
         </encoder>
     </appender>
 
-    <appender name="auditLogger" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>[%boldMagenta(%d{"yyyy-MM-dd'T'HH:mm:ss,SSSXXX", UTC}) %highlight(%level)] %red(%logger{15}) : %mdc - %m%n%xEx</pattern>
-        </encoder>
-    </appender>
-
     <logger name="no.nav" level="DEBUG"/>
     <logger name="ktor.application" level="DEBUG"/>
     <logger name="io.ktor" level="TRACE"/>
-    <logger name="auditLogger" level="INFO" additivity="false">
-        <appender-ref ref="auditLogger" />
-    </logger>
     <logger name="org.apache.cxf.service.invoker.AbstractInvoker" level="OFF" />
     <logger name="org.apache.cxf.services" level="WARN" additivity="false">
         <appender-ref ref="CONSOLE" />
