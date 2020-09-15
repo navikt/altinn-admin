@@ -38,9 +38,12 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.common.API_V1
 import no.nav.altinn.admin.common.API_V2
+import no.nav.altinn.admin.common.dateTimeToXmlGregorianCalendar
+import no.nav.altinn.admin.common.toXmlGregorianCalendar
 import no.nav.altinn.admin.common.decodeBase64
 import no.nav.altinn.admin.common.isDate
-import no.nav.altinn.admin.common.toXmlGregorianCalendar
+import no.nav.altinn.admin.common.dateToXmlGregorianCalendar
+import no.nav.altinn.admin.common.isDateTime
 
 fun Routing.correspondenceAPI(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) {
     getCorrespondence(altinnCorrespondenceService, environment)
@@ -89,8 +92,8 @@ fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorresp
             return@get
         }
         try {
-            val fraDato = toXmlGregorianCalendar(fromDate)
-            val tilDato = toXmlGregorianCalendar(toDate)
+            val fraDato = dateToXmlGregorianCalendar(fromDate)
+            val tilDato = dateToXmlGregorianCalendar(toDate)
             val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, 1, fraDato, tilDato, param.mottaker)
 
             if (correspondenceResponse.status == "Ok")
@@ -147,8 +150,8 @@ fun Routing.getCorrespondenceFiltered3(altinnCorrespondenceService: AltinnCorres
             return@get
         }
         try {
-            val fraDato = toXmlGregorianCalendar(fromDate)
-            val tilDato = toXmlGregorianCalendar(toDate)
+            val fraDato = dateToXmlGregorianCalendar(fromDate)
+            val tilDato = dateToXmlGregorianCalendar(toDate)
             val uk = param.utgaveKode.toInt()
             val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, uk, fraDato, tilDato, param.mottaker)
 
@@ -192,8 +195,8 @@ fun Routing.getCorrespondenceFiltered2(altinnCorrespondenceService: AltinnCorres
             return@get
         }
         try {
-            val fraDato = toXmlGregorianCalendar(fromDate)
-            val tilDato = toXmlGregorianCalendar(toDate)
+            val fraDato = dateToXmlGregorianCalendar(fromDate)
+            val tilDato = dateToXmlGregorianCalendar(toDate)
             val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, 1, fraDato, tilDato)
 
             if (correspondenceResponse.status == "Ok")
@@ -236,17 +239,17 @@ fun Routing.getCorrespondenceFiltered4(altinnCorrespondenceService: AltinnCorres
             call.respond(HttpStatusCode.BadRequest, AnError("Fra eller til dato på filter er ikke oppgitt"))
             return@get
         }
-        if (!isDate(fromDate)) {
-            call.respond(HttpStatusCode.BadRequest, AnError("Fra dato er oppgitt i feil format, bruk yyyy-mm-dd"))
+        if (!(isDate(fromDate) || isDateTime(fromDate))) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Fra dato er oppgitt i feil format, bruk yyyy-mm-dd, eller yyyy-mm-ddThh:mm:ss"))
             return@get
         }
-        if (!isDate(toDate)) {
-            call.respond(HttpStatusCode.BadRequest, AnError("Til dato er oppgitt i feil format, bruk yyyy-mm-dd"))
+        if (!(isDate(toDate) || isDateTime(toDate))) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Til dato er oppgitt i feil format, bruk yyyy-mm-dd, eller yyyy-mm-ddThh:mm:ss"))
             return@get
         }
         try {
-            val fraDato = toXmlGregorianCalendar(fromDate)
-            val tilDato = toXmlGregorianCalendar(toDate)
+            val fraDato = if (isDate(fromDate)) dateToXmlGregorianCalendar(fromDate) else dateTimeToXmlGregorianCalendar(fromDate)
+            val tilDato = if (isDate(toDate)) dateToXmlGregorianCalendar(toDate) else dateTimeToXmlGregorianCalendar(toDate)
             val uk = param.utgaveKode.toInt()
             val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, uk, fraDato, tilDato)
 

@@ -14,11 +14,24 @@ fun isDate(date: String): Boolean {
     val reg = """\d{4}-\d{2}-\d{2}""".toRegex()
     return date.matches(reg)
 }
-fun toXmlGregorianCalendar(date: String): XMLGregorianCalendar {
+
+fun isDateTime(dateTime: String): Boolean {
+    val reg = """\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}""".toRegex()
+    return dateTime.matches(reg)
+}
+
+fun dateToXmlGregorianCalendar(date: String): XMLGregorianCalendar {
     val ld = LocalDate.parse(date, java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))
     val dtf = DatatypeFactory.newInstance()
     return dtf.newXMLGregorianCalendar(GregorianCalendar.from(ld.atStartOfDay(ZoneId.systemDefault())))
 }
+
+fun dateTimeToXmlGregorianCalendar(dateTime: String): XMLGregorianCalendar {
+    val ldt = LocalDateTime.parse(dateTime, java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+    val dtf = DatatypeFactory.newInstance()
+    return dtf.newXMLGregorianCalendar(GregorianCalendar.from(ldt.atZone(ZoneId.systemDefault())))
+}
+
 fun toXmlGregorianCalendar(date: LocalDateTime): XMLGregorianCalendar {
     val gc = GregorianCalendar.from(date.atZone(ZoneId.systemDefault()))
     return DatatypeFactory.newInstance().newXMLGregorianCalendar(gc)

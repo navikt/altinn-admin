@@ -8,7 +8,7 @@ import no.altinn.services.intermediary.receipt._2009._10.IReceiptAgencyExternalB
 import no.altinn.services.intermediary.receipt._2009._10.IReceiptAgencyExternalBasicGetReceiptListBasicV2AltinnFaultFaultFaultMessage
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.isDate
-import no.nav.altinn.admin.common.toXmlGregorianCalendar
+import no.nav.altinn.admin.common.dateToXmlGregorianCalendar
 
 private val logger = KotlinLogging.logger { }
 class AltinnReceiptService(env: Environment, iReceiptAgencyExternalBasicFactory: () -> IReceiptAgencyExternalBasic) {
@@ -22,8 +22,8 @@ class AltinnReceiptService(env: Environment, iReceiptAgencyExternalBasicFactory:
             if (!isDate(dateFrom) || !isDate(dateTo))
                 throw IllegalArgumentException("Wrong date format")
 
-            val d1 = toXmlGregorianCalendar(dateFrom)
-            val d2 = toXmlGregorianCalendar(dateTo)
+            val d1 = dateToXmlGregorianCalendar(dateFrom)
+            val d2 = dateToXmlGregorianCalendar(dateTo)
             val receiptItems = iReceiptAgencyExternalBasic.getReceiptListBasicV2(altinnUsername, altinnUserPassword,
                 ReceiptType.FORM_TASK, d1, d2)
 
@@ -55,8 +55,8 @@ class AltinnReceiptService(env: Environment, iReceiptAgencyExternalBasicFactory:
         try {
             if (!isDate(dateFrom) || !isDate(dateTo))
                 throw IllegalArgumentException("Wrong date format")
-            val d1 = toXmlGregorianCalendar(dateFrom)
-            val d2 = toXmlGregorianCalendar(dateTo)
+            val d1 = dateToXmlGregorianCalendar(dateFrom)
+            val d2 = dateToXmlGregorianCalendar(dateTo)
             val receiptItems = iReceiptAgencyExternalBasic.getReceiptListBasicV2(altinnUsername, altinnUserPassword,
                 ReceiptType.CORRESPONDENCE, d1, d2).receipt
 
