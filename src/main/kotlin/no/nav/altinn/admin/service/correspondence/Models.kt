@@ -21,10 +21,8 @@ data class InsertCorrespondenceResponse(
 )
 
 data class PostCorrespondenceBody(
-    @JsonProperty("tjenesteKode")
-    val tjenesteKode: String,
-    @JsonProperty("utgaveKode")
-    val utgaveKode: String = "1",
+    @JsonProperty("tjeneste")
+    val tjeneste: CorrespondenceType,
     @JsonProperty("orgnr")
     val orgnr: String,
     @JsonProperty("melding")

@@ -29,9 +29,9 @@ object AltinnCorrespondenceServiceSpek : Spek({
                 engine.application.mainModule(testEnvironment, applicationState = applicationState)
             }
             with(engine) {
-                context("Route /api/v1/altinn/meldinger/hent/{tjenesteKode}") {
+                context("Route /api/v1/altinn/meldinger/hent/{tjeneste}") {
                     it("Hent meldingsstatuser fra en meldingstjeneste med ugyldig tjenestekode") {
-                        val params = "4826"
+                        val params = "Faktura"
                         val req = handleRequest(HttpMethod.Get, "/api/v1/altinn/meldinger/hent/$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -42,9 +42,9 @@ object AltinnCorrespondenceServiceSpek : Spek({
                         req.response.status() shouldEqual HttpStatusCode.BadRequest
                     }
                 }
-                context("Route /api/v1/altinn/meldinger/hent/{tjenesteKode}/{fom}/{tom}") {
+                context("Route /api/v1/altinn/meldinger/hent/{tjeneste}/{fom}/{tom}") {
                     it("Hent meldingsstatuser fra en meldingstjeneste med gyldig tjenestekode, men feil tom dato") {
-                        val sc = "4626"
+                        val sc = "K27"
                         val req = handleRequest(HttpMethod.Get, "/api/v1/altinn/meldinger/hent/$sc/2020-01-01/2020-0706") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -57,7 +57,7 @@ object AltinnCorrespondenceServiceSpek : Spek({
                 }
                 context("Route /api/v1/altinn/meldinger/hent/{tjenesteKode}/{fom}/{tom}/{mottaker}") {
                     it("Hent meldingsstatuser fra en meldingstjeneste med gyldig tjenestekode, feil fom dato") {
-                        val sc = "4626"
+                        val sc = "K27"
                         val req = handleRequest(HttpMethod.Get, "/api/v1/altinn/meldinger/hent/$sc/01-01-2020/2020-07-06/1") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -68,9 +68,9 @@ object AltinnCorrespondenceServiceSpek : Spek({
                         req.response.status() shouldEqual HttpStatusCode.BadRequest
                     }
                 }
-                context("Route /api/v1/altinn/meldinger/hent/{tjenesteKode}/{fom}/{tom}/{mottaker}") {
+                context("Route /api/v1/altinn/meldinger/hent/{tjeneste}/{fom}/{tom}/{mottaker}") {
                     it("Hent meldingsstatuser fra en meldingstjeneste med gyldig tjenestekode, feil mottaker id") {
-                        val sc = "4626"
+                        val sc = "K27"
                         val req = handleRequest(HttpMethod.Get, "/api/v1/altinn/meldinger/hent/$sc/2020-01-01/2020-07-06/1") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")

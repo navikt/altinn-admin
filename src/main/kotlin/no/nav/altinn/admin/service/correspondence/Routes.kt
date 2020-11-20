@@ -65,8 +65,8 @@ private val logger = KotlinLogging.logger { }
 
 @KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
-@Location("$API_V1/altinn/meldinger/hent/{tjenesteKode}/{fraDato}/{tilDato}/{mottaker}")
-data class MeldingsFilter(val tjenesteKode: String, val fraDato: String, val tilDato: String, val mottaker: String)
+@Location("$API_V1/altinn/meldinger/hent/{tjeneste}/{fraDato}/{tilDato}/{mottaker}")
+data class MeldingsFilter(val tjeneste: CorrespondenceType, val fraDato: String, val tilDato: String, val mottaker: String)
 
 @KtorExperimentalLocationsAPI
 fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
@@ -74,7 +74,7 @@ fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorresp
         ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
 
-        if (notValidServiceCode(param.tjenesteKode, environment)) return@get
+        if (notValidServiceCode(param.tjeneste.servicecode, environment)) return@get
 
         if (param.mottaker.isNullOrEmpty() || param.mottaker.length < 9) {
             call.respond(HttpStatusCode.BadRequest, AnError("Mottaker id is empty or wrong"))
@@ -98,7 +98,7 @@ fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorresp
         try {
             val fraDato = dateToXmlGregorianCalendar(fromDate)
             val tilDato = dateToXmlGregorianCalendar(toDate)
-            val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, 1, fraDato, tilDato, param.mottaker)
+            val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjeneste.servicecode, 1, fraDato, tilDato, param.mottaker)
 
             if (correspondenceResponse.status == "Ok")
                 call.respond(correspondenceResponse.correspondenceDetails)
@@ -177,8 +177,8 @@ fun Routing.getCorrespondenceFiltered3(altinnCorrespondenceService: AltinnCorres
 
 @KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
-@Location("$API_V1/altinn/meldinger/hent/{tjenesteKode}/{fraDato}/{tilDato}")
-data class MeldingsFilter2(val tjenesteKode: String, val fraDato: String, val tilDato: String)
+@Location("$API_V1/altinn/meldinger/hent/{tjeneste}/{fraDato}/{tilDato}")
+data class MeldingsFilter2(val tjeneste: CorrespondenceType, val fraDato: String, val tilDato: String)
 
 @KtorExperimentalLocationsAPI
 fun Routing.getCorrespondenceFiltered2(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
@@ -186,7 +186,7 @@ fun Routing.getCorrespondenceFiltered2(altinnCorrespondenceService: AltinnCorres
         ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
 
-        if (notValidServiceCode(param.tjenesteKode, environment)) return@get
+        if (notValidServiceCode(param.tjeneste.servicecode, environment)) return@get
 
         val fromDate = param.fraDato
         val toDate = param.tilDato
@@ -205,7 +205,7 @@ fun Routing.getCorrespondenceFiltered2(altinnCorrespondenceService: AltinnCorres
         try {
             val fraDato = dateToXmlGregorianCalendar(fromDate)
             val tilDato = dateToXmlGregorianCalendar(toDate)
-            val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, 1, fraDato, tilDato)
+            val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjeneste.servicecode, 1, fraDato, tilDato)
 
             if (correspondenceResponse.status == "Ok")
                 call.respond(correspondenceResponse.correspondenceDetails)
@@ -279,8 +279,8 @@ fun Routing.getCorrespondenceFiltered4(altinnCorrespondenceService: AltinnCorres
 
 @KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
-@Location("$API_V1/altinn/meldinger/hent/{tjenesteKode}")
-data class TjenesteKode(val tjenesteKode: String)
+@Location("$API_V1/altinn/meldinger/hent/{tjeneste}")
+data class TjenesteKode(val tjeneste: CorrespondenceType)
 
 @KtorExperimentalLocationsAPI
 fun Routing.getCorrespondence(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
@@ -288,9 +288,9 @@ fun Routing.getCorrespondence(altinnCorrespondenceService: AltinnCorrespondenceS
         ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
 
-        if (notValidServiceCode(param.tjenesteKode, environment)) return@get
+        if (notValidServiceCode(param.tjeneste.servicecode, environment)) return@get
         try {
-            val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjenesteKode, 1)
+            val correspondenceResponse = altinnCorrespondenceService.getCorrespondenceDetails(param.tjeneste.servicecode, 1)
 
             if (correspondenceResponse.status == "Ok")
                 call.respond(correspondenceResponse.correspondenceDetails)
@@ -367,7 +367,7 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
             return@post
         }
 
-        if (notValidServiceCode(body.tjenesteKode, environment)) return@post
+        if (notValidServiceCode(body.tjeneste.servicecode, environment)) return@post
 
         val content = getContentMessage(body)
         var notifications: NotificationBEList? = null
@@ -375,7 +375,7 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
             notifications = getNotification(body.varsel)
         }
 
-        val meldingResponse = altinnCorrespondenceService.insertCorrespondence(body.tjenesteKode, body.utgaveKode,
+        val meldingResponse = altinnCorrespondenceService.insertCorrespondence(body.tjeneste.servicecode, body.tjeneste.serviceeditioncode,
             body.orgnr, content, notifications = notifications)
         if (meldingResponse.status != "OK") {
             call.respond(HttpStatusCode.BadRequest, AnError(meldingResponse.message))
