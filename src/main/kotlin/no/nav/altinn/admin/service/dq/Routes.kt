@@ -163,7 +163,7 @@ fun Routing.purgeItem(altinnDqService: AltinnDQService, environment: Environment
     }
 
 private fun filterOutServiceCode(environment: Environment, tjenesteKode: String): MutableList<Pair<String, String>> {
-    val scSecList = environment.srrService.serviceCodes.split(",")
+    val scSecList = environment.dqService.serviceCodes.split(",")
     val scList = mutableListOf<Pair<String, String>>()
     scSecList.forEach {
         val sc = it.split(":")
