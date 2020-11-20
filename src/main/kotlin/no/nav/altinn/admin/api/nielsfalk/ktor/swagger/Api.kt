@@ -10,6 +10,7 @@ import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.ServiceUnavailable
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
+import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.locations.delete
 import io.ktor.locations.get
@@ -52,6 +53,7 @@ data class Metadata(
     }
 }
 
+@KtorExperimentalLocationsAPI
 inline fun <reified LOCATION : Any, reified ENTITY_TYPE : Any> Metadata.apply(method: HttpMethod) {
     val clazz = LOCATION::class.java
     val location = clazz.getAnnotation(Location::class.java)
@@ -63,6 +65,7 @@ inline fun <reified LOCATION : Any, reified ENTITY_TYPE : Any> Metadata.apply(me
 fun Metadata.applyResponseDefinitions() =
         responses.values.forEach { addDefinition(it) }
 
+@KtorExperimentalLocationsAPI
 fun <LOCATION : Any, BODY_TYPE : Any> Metadata.applyOperations(
     location: Location,
     group: Group?,
@@ -88,6 +91,7 @@ inline fun <reified T> serviceUnavailable(): Pair<HttpStatusCode, KClass<*>> = S
 inline fun <reified T> badRequest(): Pair<HttpStatusCode, KClass<*>> = BadRequest to T::class
 inline fun <reified T> unAuthorized(): Pair<HttpStatusCode, KClass<*>> = Unauthorized to T::class
 
+@KtorExperimentalLocationsAPI
 inline fun <reified LOCATION : Any, reified ENTITY : Any> Route.post(
     metadata: Metadata,
     noinline body: suspend PipelineContext<Unit, ApplicationCall>.(LOCATION, ENTITY) -> Unit
@@ -102,6 +106,7 @@ inline fun <reified LOCATION : Any, reified ENTITY : Any> Route.post(
     }
 }
 
+@KtorExperimentalLocationsAPI
 inline fun <reified LOCATION : Any, reified ENTITY : Any> Route.put(
     metadata: Metadata,
     noinline body: suspend PipelineContext<Unit, ApplicationCall>.(LOCATION, ENTITY) -> Unit
@@ -116,6 +121,7 @@ inline fun <reified LOCATION : Any, reified ENTITY : Any> Route.put(
     }
 }
 
+@KtorExperimentalLocationsAPI
 inline fun <reified LOCATION : Any> Route.get(
     metadata: Metadata,
     noinline body: suspend PipelineContext<Unit, ApplicationCall>.(LOCATION) -> Unit
@@ -130,6 +136,7 @@ inline fun <reified LOCATION : Any> Route.get(
     }
 }
 
+@KtorExperimentalLocationsAPI
 inline fun <reified LOCATION : Any> Route.delete(
     metadata: Metadata,
     noinline body: suspend PipelineContext<Unit, ApplicationCall>.(LOCATION) -> Unit

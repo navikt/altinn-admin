@@ -12,6 +12,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.JacksonConverter
+import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Locations
 import io.ktor.request.path
 import io.ktor.response.respond
@@ -20,6 +21,7 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.error
 import io.prometheus.client.hotspot.DefaultExports
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -66,8 +68,12 @@ private val logger = KotlinLogging.logger { }
 
 internal const val SWAGGER_URL_V1 = "$API_V1/apidocs/index.html?url=swagger.json"
 
+@KtorExperimentalAPI
+@KtorExperimentalLocationsAPI
 fun main() = bootstrap(ApplicationState(), Environment())
 
+@KtorExperimentalAPI
+@KtorExperimentalLocationsAPI
 fun bootstrap(applicationState: ApplicationState, environment: Environment) {
     val applicationServer = embeddedServer(
         Netty, environment.application.port, module = { mainModule(environment, applicationState) }
@@ -85,6 +91,8 @@ fun bootstrap(applicationState: ApplicationState, environment: Environment) {
     applicationServer.start(wait = true)
 }
 
+@KtorExperimentalAPI
+@KtorExperimentalLocationsAPI
 fun Application.mainModule(environment: Environment, applicationState: ApplicationState) {
     logger.info { "Starting server" }
     System.setProperty("javax.xml.soap.SAAJMetaFactory", "com.sun.xml.messaging.saaj.soap.SAAJMetaFactoryImpl")

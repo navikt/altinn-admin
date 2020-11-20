@@ -3,6 +3,7 @@
 package no.nav.altinn.admin.api.nielsfalk.ktor.swagger
 
 import io.ktor.http.HttpStatusCode
+import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import mu.KotlinLogging
 import no.nav.altinn.admin.swagger
@@ -57,7 +58,7 @@ data class Tag(
     val name: String
 )
 
-class Operation(
+class Operation @KtorExperimentalLocationsAPI constructor(
     metadata: Metadata,
     location: Location,
     group: Group?,
@@ -66,6 +67,7 @@ class Operation(
 ) {
     val tags = group?.toList()
     val summary = metadata.summary
+    @KtorExperimentalLocationsAPI
     val parameters = mutableListOf<Parameter>().apply {
         if (entityType != Unit::class) {
             addDefinition(entityType)

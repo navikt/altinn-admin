@@ -4,11 +4,13 @@ package no.nav.altinn.admin.service.srr
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.createTestEnvironment
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
+import io.ktor.util.KtorExperimentalAPI
 import no.altinn.schemas.services.register.srr._2015._06.AddRightResponse
 import no.altinn.schemas.services.register.srr._2015._06.AddRightResponseList
 import no.altinn.schemas.services.register.srr._2015._06.DeleteRightResponse
@@ -24,6 +26,8 @@ import org.amshove.kluent.shouldEqual
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
+@KtorExperimentalLocationsAPI
+@KtorExperimentalAPI
 object AltinnSRRServiceSpek : Spek({
     val applicationState = ApplicationState(running = true, initialized = true)
 
