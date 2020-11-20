@@ -41,13 +41,13 @@ internal const val GROUP_NAME = "Rettighetsregister"
 private val logger = KotlinLogging.logger { }
 
 @Group(GROUP_NAME)
-@Location("$API_V1/altinn/rettighetsregister/hent/{tjenesteKode}")
-data class Rettighetsregister(val tjenesteKode: String)
+@Location("$API_V1/altinn/rettighetsregister/hent/tjenester/{tjenesteKode}")
+data class Rettighetsregister(val tjenesteKode: SrrType)
 
 fun Routing.getRightsList(altinnSrrService: AltinnSRRService, environment: Environment) =
     get<Rettighetsregister>("hent rettigheter for alle virksomheter".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
-        val scList = filterOutServiceCode(environment, param.tjenesteKode)
+        val scList = filterOutServiceCode(environment, param.tjenesteKode.servicecode)
         if (scList.size == 0) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
             return@get
@@ -86,25 +86,25 @@ fun Routing.getRightsList(altinnSrrService: AltinnSRRService, environment: Envir
     }
 
 @Group(GROUP_NAME)
-@Location("$API_V1/altinn/rettighetsregister/hent/{tjenesteKode}/{utgaveKode}")
-data class RettighetsregisterUtgave(val tjenesteKode: String, val utgaveKode: String)
+@Location("$API_V1/altinn/rettighetsregister/hent/tjeneste/{tjeneste}")
+data class RettighetsregisterUtgave(val tjeneste: SrrType)
 
 fun Routing.getRightsListServiceEdition(altinnSrrService: AltinnSRRService, environment: Environment) =
     get<RettighetsregisterUtgave>("hent rettigheter på tjenesteutgave for alle virksomheter".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
-        val scList = filterOutServiceCode(environment, param.tjenesteKode)
+        val scList = filterOutServiceCode(environment, param.tjeneste.servicecode)
         if (scList.size == 0) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
             return@get
         }
 
-        if (!scList.contains(Pair(param.tjenesteKode, param.utgaveKode))) {
+        if (!scList.contains(Pair(param.tjeneste.servicecode, param.tjeneste.serviceeditioncode))) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste utgave kode oppgitt"))
             return@get
         }
 
         try {
-            val rightsResponse = altinnSrrService.getRightsForAllBusinesses(param.tjenesteKode, param.utgaveKode)
+            val rightsResponse = altinnSrrService.getRightsForAllBusinesses(param.tjeneste.servicecode, param.tjeneste.serviceeditioncode)
             if (rightsResponse.status == "Ok")
                 call.respond(rightsResponse.register)
             else
@@ -131,14 +131,14 @@ fun Routing.getRightsListServiceEdition(altinnSrrService: AltinnSRRService, envi
     }
 
 @Group(GROUP_NAME)
-@Location("$API_V1/altinn/rettighetsregister/hent/org/{tjenesteKode}/{orgnr}")
-data class FirmaRettigheter(val tjenesteKode: String, val orgnr: String)
+@Location("$API_V1/altinn/rettighetsregister/hent/tjenester/org/{tjeneste}/{orgnr}")
+data class FirmaRettigheter(val tjeneste: SrrType, val orgnr: String)
 
 fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
     get<FirmaRettigheter>("hent rettigheter for en virksomhet".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
         val virksomhetsnummer: String? = param.orgnr
-        val scList = filterOutServiceCode(environment, param.tjenesteKode)
+        val scList = filterOutServiceCode(environment, param.tjeneste.servicecode)
         if (scList.size == 0) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
             return@get
@@ -146,7 +146,7 @@ fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService, environment
 
         try {
             if (!virksomhetsnummer.isNullOrBlank() && virksomhetsnummer.length == 9) {
-                val rightsResponse = altinnSrrService.getRightsForABusiness(param.tjenesteKode, virksomhetsnummer)
+                val rightsResponse = altinnSrrService.getRightsForABusiness(param.tjeneste.servicecode, virksomhetsnummer)
                 if (rightsResponse.status == "Ok")
                     call.respond(rightsResponse.register)
                 else
@@ -176,15 +176,15 @@ fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService, environment
     }
 
 @Group(GROUP_NAME)
-@Location("$API_V1/altinn/rettighetsregister/hent/{tjenesteKode}/{utgaveKode}/{orgnr}")
-data class FirmaRettigheterUtgave(val tjenesteKode: String, val utgaveKode: String, val orgnr: String)
+@Location("$API_V1/altinn/rettighetsregister/hent/tjeneste/org/{tjeneste}/{orgnr}")
+data class FirmaRettigheterUtgave(val tjeneste: SrrType, val orgnr: String)
 
 fun Routing.getRightsForReporteeServiceEdition(altinnSrrService: AltinnSRRService, environment: Environment) =
-    get<FirmaRettigheterUtgave>("hent rettigheter for en virksomhet".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+    get<FirmaRettigheterUtgave>("hent rettigheter på en tjenesteutgave for en virksomhet".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
         val virksomhetsnummer: String? = param.orgnr
 
-        val scList = filterOutServiceCode(environment, param.tjenesteKode)
+        val scList = filterOutServiceCode(environment, param.tjeneste.servicecode)
         if (scList.size == 0) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
             return@get
@@ -192,7 +192,7 @@ fun Routing.getRightsForReporteeServiceEdition(altinnSrrService: AltinnSRRServic
 
         try {
             if (!virksomhetsnummer.isNullOrBlank() && virksomhetsnummer.length == 9) {
-                val rightsResponse = altinnSrrService.getRightsForABusiness(param.tjenesteKode, virksomhetsnummer, param.utgaveKode)
+                val rightsResponse = altinnSrrService.getRightsForABusiness(param.tjeneste.servicecode, virksomhetsnummer, param.tjeneste.serviceeditioncode)
                 if (rightsResponse.status == "Ok")
                     call.respond(rightsResponse.register)
                 else
@@ -260,11 +260,11 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment
                 }
 
                 var srrType = RegisterSRRRightsType.READ
-                if ("skriv" != body.lesEllerSkriv && "les" != body.lesEllerSkriv) {
+                if ("skriv" != body.lesEllerSkriv.type && "les" != body.lesEllerSkriv.type) {
                     call.respond(HttpStatusCode.BadRequest, AnError("lesEllerSkriv verdien må være enten 'les' eller 'skriv'"))
                     return@post
                 }
-                if (body.lesEllerSkriv.equals("skriv", true)) {
+                if (body.lesEllerSkriv.type.equals("skriv", true)) {
                     srrType = RegisterSRRRightsType.WRITE
                 }
 
@@ -283,7 +283,7 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment
 
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/rettighetsregister/slett/{tjenesteKode}/{utgaveKode}/{orgnr}/{lesEllerSkriv}/{domene}")
-data class DeleteRettighet(val tjenesteKode: String, val utgaveKode: String, val orgnr: String, val lesEllerSkriv: String, val domene: String)
+data class DeleteRettighet(val tjenesteKode: String, val utgaveKode: String, val orgnr: String, val lesEllerSkriv: RettighetType, val domene: String)
 
 fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
         delete<DeleteRettighet> ("Slett rettighet for en virksomhet"
@@ -320,12 +320,12 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
             }
 
             var srrType = RegisterSRRRightsType.READ
-            if ("skriv" != param.lesEllerSkriv && "les" != param.lesEllerSkriv) {
+            if ("skriv" != param.lesEllerSkriv.type && "les" != param.lesEllerSkriv.type) {
                 call.respond(HttpStatusCode.BadRequest, AnError("lesEllerSkriv verdien må være enten 'les' eller 'skriv'"))
                 return@delete
             }
 
-            if (param.lesEllerSkriv.equals("skriv", true)) {
+            if (param.lesEllerSkriv.type.equals("skriv", true)) {
                 srrType = RegisterSRRRightsType.WRITE
             }
 

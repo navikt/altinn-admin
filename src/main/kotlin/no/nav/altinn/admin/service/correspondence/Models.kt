@@ -121,3 +121,22 @@ data class Notification(
     @JsonProperty("sentDate")
     val sentDate: XMLGregorianCalendar? = null
 )
+
+enum class CorrespondenceType(val servicecode: String, val serviceeditioncode: String) {
+    Faktura("FMALT", "1"),
+    K27("NAVK27", "1"),
+    Sykemelding("4503", "2"),
+    // Informasjon_Fra_Nav("4609"),
+    Søknad_Sykepenger("4751", "1"),
+    Oppfølgingsplan("5062", "1"),
+    // Kvittering_Sykepenger("5559"),
+    // Purring_Nav_Kontroll("5235"),
+    Påminnelse_Inntektsmelding("5534", "1"),
+    // Refusjonsoversikt_Arbeidsgiver("5507"),
+    T09("2401", "1"),
+    T12("5312", "1"),
+    T14("2452", "1"),
+    Tilskuddsbrev("5278", "1"),
+    Kvittering_A1_Melosys("5644", "1")
+    // Refusjon_Permittering("5562")
+}
