@@ -2,6 +2,7 @@ package no.nav.altinn.admin.service.dq
 
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
+import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.response.respond
 import io.ktor.routing.Routing
@@ -17,6 +18,7 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndReponds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.common.API_V1
 
+@KtorExperimentalLocationsAPI
 fun Routing.dqAPI(altinnDqService: AltinnDQService, environment: Environment) {
     getFormMessage(altinnDqService, environment)
     getDqItems(altinnDqService, environment)
@@ -32,10 +34,12 @@ internal const val GROUP_NAME = "DownloadQueue"
 
 private val logger = KotlinLogging.logger { }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/dq/hent/{arNummer}")
 data class ArkivReferanse(val arNummer: String)
 
+@KtorExperimentalLocationsAPI
 fun Routing.getFormMessage(altinnDqService: AltinnDQService, environment: Environment) =
     get<ArkivReferanse>("Hent melding fra en Arkiv Referanse via DQ".securityAndReponds(BasicAuthSecurity(),
         ok<ArData>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
@@ -63,29 +67,25 @@ fun Routing.getFormMessage(altinnDqService: AltinnDQService, environment: Enviro
         }
     }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
-@Location("$API_V1/altinn/dq/elementer/{tjenesteKode}")
-data class TjenesteKode(val tjenesteKode: String)
+@Location("$API_V1/altinn/dq/elementer/tjenester/{tjeneste}")
+data class TjenesteKode(val tjeneste: DqType)
 
+@KtorExperimentalLocationsAPI
 fun Routing.getDqItems(altinnDqService: AltinnDQService, environment: Environment) =
     get<TjenesteKode>("Hent elementer som ligger på download queue".securityAndReponds(
         BasicAuthSecurity(), ok<DqItems>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
 
-        val tjenesteKode = param.tjenesteKode.trim()
-        if (tjenesteKode.isNullOrEmpty()) {
-            call.respond(HttpStatusCode.BadRequest, AnError("Blank tjeneste kode oppgitt"))
-            return@get
-        }
-
-        val dqList = environment.dqService.serviceCodes.split(",")
-        if (!dqList.contains(tjenesteKode)) {
+        val scList = filterOutServiceCode(environment, param.tjeneste.servicecode)
+        if (scList.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
             return@get
         }
 
         try {
-            val dqResponse = altinnDqService.getDownloadQueueItems(tjenesteKode, "")
+            val dqResponse = altinnDqService.getDownloadQueueItems(param.tjeneste.servicecode, "")
             call.respond(dqResponse)
         } catch (ee: Exception) {
             logger.error {
@@ -97,35 +97,30 @@ fun Routing.getDqItems(altinnDqService: AltinnDQService, environment: Environmen
         }
     }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
-@Location("$API_V1/altinn/dq/elementer/{tjenesteKode}/{utgaveKode}")
-data class TjenesteOgUtgaveKode(val tjenesteKode: String, val utgaveKode: String)
+@Location("$API_V1/altinn/dq/elementer/tjeneste/{tjeneste}")
+data class TjenesteOgUtgaveKode(val tjeneste: DqType)
 
+@KtorExperimentalLocationsAPI
 fun Routing.getDqItemsSec(altinnDqService: AltinnDQService, environment: Environment) =
     get<TjenesteOgUtgaveKode>("Hent elementer som ligger på download queue filtrert med utgave kode".securityAndReponds(
         BasicAuthSecurity(), ok<DqItems>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
 
-        val tjenesteKode = param.tjenesteKode.trim()
-        if (tjenesteKode.isNullOrEmpty()) {
-            call.respond(HttpStatusCode.BadRequest, AnError("Blank tjeneste kode oppgitt"))
-            return@get
-        }
-
-        val utgaveKode = param.utgaveKode.trim()
-        if (utgaveKode.isNullOrEmpty()) {
-            call.respond(HttpStatusCode.BadRequest, AnError("Blank utgave kode oppgitt"))
-            return@get
-        }
-
-        val dqList = environment.dqService.serviceCodes.split(",")
-        if (!dqList.contains(tjenesteKode)) {
+        val scList = filterOutServiceCode(environment, param.tjeneste.servicecode)
+        if (scList.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
             return@get
         }
 
+        if (!scList.contains(Pair(param.tjeneste.servicecode, param.tjeneste.serviceeditioncode))) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste utgave oppgitt"))
+            return@get
+        }
+
         try {
-            val dqResponse = altinnDqService.getDownloadQueueItems(tjenesteKode, utgaveKode)
+            val dqResponse = altinnDqService.getDownloadQueueItems(param.tjeneste.servicecode, param.tjeneste.serviceeditioncode)
             call.respond(dqResponse)
         } catch (ee: Exception) {
             logger.error {
@@ -137,10 +132,12 @@ fun Routing.getDqItemsSec(altinnDqService: AltinnDQService, environment: Environ
         }
     }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/dq/slett/{arNummer}")
 data class DeleteArkivReferanse(val arNummer: String)
 
+@KtorExperimentalLocationsAPI
 fun Routing.purgeItem(altinnDqService: AltinnDQService, environment: Environment) =
     delete<DeleteArkivReferanse>("Slett AR fra download queue".securityAndReponds(
         BasicAuthSecurity(), ok<DqPurge>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
@@ -164,3 +161,14 @@ fun Routing.purgeItem(altinnDqService: AltinnDQService, environment: Environment
             call.respond(HttpStatusCode.InternalServerError, AnError("IDownloadQueueExternalBasic.GetArchivedFormTaskBasicDQ feilet: ${ee.message}"))
         }
     }
+
+private fun filterOutServiceCode(environment: Environment, tjenesteKode: String): MutableList<Pair<String, String>> {
+    val scSecList = environment.srrService.serviceCodes.split(",")
+    val scList = mutableListOf<Pair<String, String>>()
+    scSecList.forEach {
+        val sc = it.split(":")
+        if (sc[0] == tjenesteKode)
+            scList.add(Pair(sc[0], if (sc.size > 1) sc[1] else "1"))
+    }
+    return scList
+}

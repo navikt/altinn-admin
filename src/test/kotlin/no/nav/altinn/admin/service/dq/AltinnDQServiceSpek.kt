@@ -29,32 +29,21 @@ object AltinnDQServiceSpek : Spek({
                 engine.application.mainModule(testEnvironment, applicationState = applicationState)
             }
             with(engine) {
-                context("Route /api/v1/altinn/dq/elementer/{tjenesteKode}") {
-                    it("Hent elementer i DownloadQueue med ugyldig tjenestekode") {
-                        val params = "2234"
-                        val req = handleRequest(HttpMethod.Get, "/api/v1/altinn/dq/elementer/$params") {
+                context("Route /api/v1/altinn/dq/elementer/tjeneste/{tjeneste}") {
+                    it("Hent elementer i DownloadQueue med ugyldig tjeneste") {
+                        val params = "Samtykke_UFOR"
+                        val req = handleRequest(HttpMethod.Get, "/api/v1/altinn/dq/elementer/tjeneste/$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
 
                         req.requestHandled shouldEqual true
-                        req.response.status() shouldEqual HttpStatusCode.BadRequest
+                        req.response.status() shouldEqual HttpStatusCode.InternalServerError
                     }
-                    it("Hent elementer fra DownloadQueue med tomt utgave kode") {
-                        val params = "1234/ "
-                        val req = handleRequest(HttpMethod.Get, "/api/v1/altinn/dq/elementer/$params") {
-                            addHeader(HttpHeaders.Accept, "application/json")
-                            addHeader("Content-Type", "application/json")
-                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
-                        }
-
-                        req.requestHandled shouldEqual true
-                        req.response.status() shouldEqual HttpStatusCode.BadRequest
-                    }
-                    it("Hent elementer fra DownloadQueue med tomt tjeneste kode, men gyldig utgave kode") {
-                        val params = " /1"
-                        val req = handleRequest(HttpMethod.Get, "/api/v1/altinn/dq/elementer/$params") {
+                    it("Hent elementer fra DownloadQueue med ugyldig utgave kode") {
+                        val params = "Peek_Mentor"
+                        val req = handleRequest(HttpMethod.Get, "/api/v1/altinn/dq/elementer/tjeneste/$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")

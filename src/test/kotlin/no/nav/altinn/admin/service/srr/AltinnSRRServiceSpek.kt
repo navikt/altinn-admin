@@ -210,29 +210,13 @@ object AltinnSRRServiceSpek : Spek({
                 engine.application.mainModule(testEnvironment, applicationState = applicationState)
             }
             with(engine) {
-                context("Route /api/v1/altinn/rettighetsregister/slett/{tjenesteKode}/{orgnr}/{lesEllerSkriv}/{domene}") {
-                    it("Slett rettighet med ugyldig tjenestekode skal feile med 'bad request'") {
-                        val tjenesteKode = "4252"
-                        val utgaveKode = "3"
+                context("Route /api/v1/altinn/rettighetsregister/slett/{tjeneste}/{orgnr}/{lesEllerSkriv}/{domene}") {
+                    it("Slett rettighet med ugyldig tjeneste skal feile med 'bad request'") {
+                        val tjeneste = "Samtykke_UFORE"
                         val orgnr = "123123123"
                         val lesEllerSkriv = RettighetType.Les
                         val domene = "*.nav.no"
-                        val params = "/$tjenesteKode/$utgaveKode/$orgnr/$lesEllerSkriv/$domene"
-                        val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
-                            addHeader(HttpHeaders.Accept, "application/json")
-                            addHeader("Content-Type", "application/json")
-                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
-                        }
-                        req.requestHandled shouldEqual true
-                        req.response.status() shouldEqual HttpStatusCode.BadRequest
-                    }
-                    it("Slett rettighet med ugyldig utgavekode skal feile med 'bad request'") {
-                        val tjenesteKode = "1234"
-                        val utgaveKode = "T"
-                        val orgnr = "123123123"
-                        val lesEllerSkriv = RettighetType.Les
-                        val domene = "*.nav.no"
-                        val params = "/$tjenesteKode/$utgaveKode/$orgnr/$lesEllerSkriv/$domene"
+                        val params = "/$tjeneste/$orgnr/$lesEllerSkriv/$domene"
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -242,12 +226,11 @@ object AltinnSRRServiceSpek : Spek({
                         req.response.status() shouldEqual HttpStatusCode.BadRequest
                     }
                     it("Slett rettighet med ugyldig virksomhetsnummer skal feile med 'bad request'") {
-                        val tjenesteKode = "1234"
-                        val utgaveKode = "1"
+                        val tjeneste = "Samtykke_AAP"
                         val orgnr = "123"
                         val lesEllerSkriv = RettighetType.Les
                         val domene = "*.nav.no"
-                        val params = "/$tjenesteKode/$utgaveKode/$orgnr/$lesEllerSkriv/$domene"
+                        val params = "/$tjeneste/$orgnr/$lesEllerSkriv/$domene"
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -257,12 +240,11 @@ object AltinnSRRServiceSpek : Spek({
                         req.response.status() shouldEqual HttpStatusCode.BadRequest
                     }
                     it("Slett rettighet med ugyldig lesEllerSkriv skal feile med 'bad request'") {
-                        val tjenesteKode = "1234"
-                        val utgaveKode = "1"
+                        val tjeneste = "Samtykke_AAP"
                         val orgnr = "123123123"
                         val lesEllerSkriv = "dust"
                         val domene = "*.nav.no"
-                        val params = "/$tjenesteKode/$utgaveKode/$orgnr/$lesEllerSkriv/$domene"
+                        val params = "/$tjeneste/$orgnr/$lesEllerSkriv/$domene"
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -272,12 +254,11 @@ object AltinnSRRServiceSpek : Spek({
                         req.response.status() shouldEqual HttpStatusCode.InternalServerError
                     }
                     it("Slett rettighet med tomt domene skal feile med 'bad request'") {
-                        val tjenesteKode = "1234"
-                        val utgaveKode = "1"
+                        val tjeneste = "Samtykke_AAP"
                         val orgnr = "123123123"
                         val lesEllerSkriv = RettighetType.Les
                         val domene = " "
-                        val params = "/$tjenesteKode/$utgaveKode/$orgnr/$lesEllerSkriv/$domene"
+                        val params = "/$tjeneste/$orgnr/$lesEllerSkriv/$domene"
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -287,12 +268,11 @@ object AltinnSRRServiceSpek : Spek({
                         req.response.status() shouldEqual HttpStatusCode.BadRequest
                     }
                     it("Slett rettighet med alle param gyldig skal gi ok respons") {
-                        val tjenesteKode = "1234"
-                        val utgaveKode = "1"
+                        val tjeneste = "Samtykke_AAP"
                         val orgnr = "123123123"
                         val lesEllerSkriv = RettighetType.Les
                         val domene = "*.nav.no"
-                        val params = "/$tjenesteKode/$utgaveKode/$orgnr/$lesEllerSkriv/$domene"
+                        val params = "/$tjeneste/$orgnr/$lesEllerSkriv/$domene"
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -311,12 +291,11 @@ object AltinnSRRServiceSpek : Spek({
                                             "    <OperationResult>Rule_Not_Found</OperationResult>\n" +
                                             "    </DeleteRightResponse>", DeleteRightResponse::class.java))
                         }
-                        val tjenesteKode = "1234"
-                        val utgaveKode = "1"
+                        val tjeneste = "Samtykke_AAP"
                         val orgnr = "123123123"
                         val lesEllerSkriv = RettighetType.Les
                         val domene = "*.nav.no"
-                        val params = "/$tjenesteKode/$utgaveKode/$orgnr/$lesEllerSkriv/$domene"
+                        val params = "/$tjeneste/$orgnr/$lesEllerSkriv/$domene"
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -326,12 +305,11 @@ object AltinnSRRServiceSpek : Spek({
                         req.response.status() shouldEqual HttpStatusCode.BadRequest
                     }
                     it("ServiceAccounts har aksess til slett rettighet med alle param gyldig skal feile 'bad request'") {
-                        val tjenesteKode = "1234"
-                        val utgaveKode = "1"
+                        val tjeneste = "Samtykke_AAP"
                         val orgnr = "123123123"
                         val lesEllerSkriv = RettighetType.Les
                         val domene = "*.nav.no"
-                        val params = "/$tjenesteKode/$utgaveKode/$orgnr/$lesEllerSkriv/$domene"
+                        val params = "/$tjeneste/$orgnr/$lesEllerSkriv/$domene"
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
@@ -352,7 +330,7 @@ object AltinnSRRServiceSpek : Spek({
     // Hent rettigheter for virksomhetsnummer
     withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
         describe("GET Hent rettigheter for et virksomhetsnummer.") {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/tjenester/org/Livforsikring_AAP_samtykke/123")) {
+            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/tjenester/org/Samtykke_AAP/123")) {
                 it("Hent rettigheter for et virksomhetsnummer 123, skal feile med 'bad request'") {
                     response.status() shouldEqual HttpStatusCode.BadRequest
                 }
@@ -361,7 +339,7 @@ object AltinnSRRServiceSpek : Spek({
     }
     withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
         describe("GET Hent rettigheter for en virksomhet.") {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/tjenester/org/Livforsikring_AAP_samtykke/123123123")) {
+            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/tjenester/org/Samtykke_AAP/123123123")) {
                 it("Hent rettigheter for en virksomhet, skal være ok") {
                     response.status() shouldEqual HttpStatusCode.OK
                 }
@@ -372,7 +350,7 @@ object AltinnSRRServiceSpek : Spek({
     // Hent rettigheter på tjeneste eller tjenesteutgaver
     withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
         describe("GET Hent rettigheter for alle virksomheter.") {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/tjenester/Livforsikring_AAP_samtykke")) {
+            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/tjenester/Samtykke_AAP")) {
                 it("Hent rettigheter på tjeneste for alle virksomheter, skal være ok") {
                     response.status() shouldEqual HttpStatusCode.OK
                 }
@@ -381,7 +359,7 @@ object AltinnSRRServiceSpek : Spek({
     }
     withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
         describe("GET Hent rettigheter på tjenesteutgave for alle virksomheter.") {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/tjeneste/Livforsikring_UFORE_samtykke")) {
+            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/tjeneste/Samtykke_UFORE")) {
                 it("Hent rettigheter på tjenesteutgave for alle virksomheter, skal feile") {
                     response.status() shouldEqual HttpStatusCode.BadRequest
                 }
@@ -390,7 +368,7 @@ object AltinnSRRServiceSpek : Spek({
     }
     withTestApplication(moduleFunction = { mainModule(Environment(), applicationState) }) {
         describe("GET Hent rettigheter på tjenesteutgave for alle virksomheter.") {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/tjeneste/Livforsikring_AAP_samtykke")) {
+            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/tjeneste/Samtykke_AAP")) {
                 it("Hent rettigheter på tjenesteutgave for alle virksomheter, skal være ok") {
                     response.status() shouldEqual HttpStatusCode.OK
                 }

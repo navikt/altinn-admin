@@ -54,6 +54,6 @@ enum class RettighetType(val type: String) {
 }
 
 enum class SrrType(val servicecode: String, val serviceeditioncode: String) {
-    Livforsikring_AAP_samtykke("5252", "1"),
-    Livforsikring_UFORE_samtykke("5252", "2")
+    Samtykke_AAP("5252", "1"),
+    Samtykke_UFORE("5252", "2")
 }

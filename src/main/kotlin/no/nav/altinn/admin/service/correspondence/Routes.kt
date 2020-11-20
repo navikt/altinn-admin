@@ -7,6 +7,7 @@ import io.ktor.auth.UserIdPrincipal
 import io.ktor.auth.principal
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.request.ApplicationRequest
 import io.ktor.request.contentType
@@ -45,6 +46,7 @@ import no.nav.altinn.admin.common.isDate
 import no.nav.altinn.admin.common.dateToXmlGregorianCalendar
 import no.nav.altinn.admin.common.isDateTime
 
+@KtorExperimentalLocationsAPI
 fun Routing.correspondenceAPI(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) {
     getCorrespondence(altinnCorrespondenceService, environment)
     getCorrespondenceFiltered(altinnCorrespondenceService, environment)
@@ -61,10 +63,12 @@ internal const val GROUP_NAME = "Correspondence"
 
 private val logger = KotlinLogging.logger { }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/meldinger/hent/{tjenesteKode}/{fraDato}/{tilDato}/{mottaker}")
 data class MeldingsFilter(val tjenesteKode: String, val fraDato: String, val tilDato: String, val mottaker: String)
 
+@KtorExperimentalLocationsAPI
 fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     get<MeldingsFilter>("Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
         ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
@@ -110,10 +114,12 @@ fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorresp
         }
     }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
 @Location("$API_V2/altinn/meldinger/hent/{tjenesteKode}/{utgaveKode}/{fraDato}/{tilDato}/{mottaker}")
 data class MeldingsFilter3(val tjenesteKode: String, val utgaveKode: String, val fraDato: String, val tilDato: String, val mottaker: String)
 
+@KtorExperimentalLocationsAPI
 fun Routing.getCorrespondenceFiltered3(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     get<MeldingsFilter3>("Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
         ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
@@ -169,10 +175,12 @@ fun Routing.getCorrespondenceFiltered3(altinnCorrespondenceService: AltinnCorres
         }
     }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/meldinger/hent/{tjenesteKode}/{fraDato}/{tilDato}")
 data class MeldingsFilter2(val tjenesteKode: String, val fraDato: String, val tilDato: String)
 
+@KtorExperimentalLocationsAPI
 fun Routing.getCorrespondenceFiltered2(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     get<MeldingsFilter2>("Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
         ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
@@ -213,10 +221,12 @@ fun Routing.getCorrespondenceFiltered2(altinnCorrespondenceService: AltinnCorres
         }
     }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
 @Location("$API_V2/altinn/meldinger/hent/{tjenesteKode}/{utgaveKode}/{fraDato}/{tilDato}")
 data class MeldingsFilter4(val tjenesteKode: String, val utgaveKode: String, val fraDato: String, val tilDato: String)
 
+@KtorExperimentalLocationsAPI
 fun Routing.getCorrespondenceFiltered4(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     get<MeldingsFilter4>("Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
         ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
@@ -267,10 +277,12 @@ fun Routing.getCorrespondenceFiltered4(altinnCorrespondenceService: AltinnCorres
         }
     }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/meldinger/hent/{tjenesteKode}")
 data class TjenesteKode(val tjenesteKode: String)
 
+@KtorExperimentalLocationsAPI
 fun Routing.getCorrespondence(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     get<TjenesteKode>("Hent status meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
         ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
@@ -294,10 +306,12 @@ fun Routing.getCorrespondence(altinnCorrespondenceService: AltinnCorrespondenceS
         }
     }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
 @Location("$API_V2/altinn/meldinger/hent/{tjenesteKode}/{utgaveKode}")
 data class TjenesteKode2(val tjenesteKode: String, val utgaveKode: String)
 
+@KtorExperimentalLocationsAPI
 fun Routing.getCorrespondence2(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     get<TjenesteKode2>("Hent status meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
         ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
@@ -332,10 +346,12 @@ fun Routing.getCorrespondence2(altinnCorrespondenceService: AltinnCorrespondence
         }
     }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/meldinger/send")
 class SendMelding
 
+@KtorExperimentalLocationsAPI
 fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     post<SendMelding, PostCorrespondenceBody> ("Send melding til virksomhet"
         .securityAndReponds(BasicAuthSecurity(), ok<CorrespondenceResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())

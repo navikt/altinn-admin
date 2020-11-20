@@ -5,6 +5,7 @@ import io.ktor.application.call
 import io.ktor.auth.UserIdPrincipal
 import io.ktor.auth.principal
 import io.ktor.http.HttpStatusCode
+import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.response.respond
 import io.ktor.routing.*
@@ -26,6 +27,7 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.common.API_V1
 
+@KtorExperimentalLocationsAPI
 fun Routing.ssrAPI(altinnSrrService: AltinnSRRService, environment: Environment) {
     getRightsList(altinnSrrService, environment)
     getRightsListServiceEdition(altinnSrrService, environment)
@@ -40,14 +42,16 @@ internal const val GROUP_NAME = "Rettighetsregister"
 
 private val logger = KotlinLogging.logger { }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
-@Location("$API_V1/altinn/rettighetsregister/hent/tjenester/{tjenesteKode}")
-data class Rettighetsregister(val tjenesteKode: SrrType)
+@Location("$API_V1/altinn/rettighetsregister/hent/tjenester/{tjeneste}")
+data class Rettighetsregister(val tjeneste: SrrType)
 
+@KtorExperimentalLocationsAPI
 fun Routing.getRightsList(altinnSrrService: AltinnSRRService, environment: Environment) =
     get<Rettighetsregister>("hent rettigheter for alle virksomheter".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
-        val scList = filterOutServiceCode(environment, param.tjenesteKode.servicecode)
+        val scList = filterOutServiceCode(environment, param.tjeneste.servicecode)
         if (scList.size == 0) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
             return@get
@@ -85,10 +89,12 @@ fun Routing.getRightsList(altinnSrrService: AltinnSRRService, environment: Envir
         }
     }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/rettighetsregister/hent/tjeneste/{tjeneste}")
 data class RettighetsregisterUtgave(val tjeneste: SrrType)
 
+@KtorExperimentalLocationsAPI
 fun Routing.getRightsListServiceEdition(altinnSrrService: AltinnSRRService, environment: Environment) =
     get<RettighetsregisterUtgave>("hent rettigheter på tjenesteutgave for alle virksomheter".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
@@ -130,10 +136,12 @@ fun Routing.getRightsListServiceEdition(altinnSrrService: AltinnSRRService, envi
         }
     }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/rettighetsregister/hent/tjenester/org/{tjeneste}/{orgnr}")
 data class FirmaRettigheter(val tjeneste: SrrType, val orgnr: String)
 
+@KtorExperimentalLocationsAPI
 fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
     get<FirmaRettigheter>("hent rettigheter for en virksomhet".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
@@ -175,10 +183,12 @@ fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService, environment
         }
     }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/rettighetsregister/hent/tjeneste/org/{tjeneste}/{orgnr}")
 data class FirmaRettigheterUtgave(val tjeneste: SrrType, val orgnr: String)
 
+@KtorExperimentalLocationsAPI
 fun Routing.getRightsForReporteeServiceEdition(altinnSrrService: AltinnSRRService, environment: Environment) =
     get<FirmaRettigheterUtgave>("hent rettigheter på en tjenesteutgave for en virksomhet".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
         param ->
@@ -221,10 +231,12 @@ fun Routing.getRightsForReporteeServiceEdition(altinnSrrService: AltinnSRRServic
         }
     }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
 @Location("$API_V1/altinn/rettighetsregister/leggtil")
 class PostLeggTilRettighet
 
+@KtorExperimentalLocationsAPI
 fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) = post<PostLeggTilRettighet, PostLeggTilRettighetBody> ("Legg til rettighet for en virksomhet"
                     .securityAndReponds(BasicAuthSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
             ) { _, body ->
@@ -281,10 +293,12 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment
                 call.respond(HttpStatusCode.OK, rightResponse)
             }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
-@Location("$API_V1/altinn/rettighetsregister/slett/{tjenesteKode}/{utgaveKode}/{orgnr}/{lesEllerSkriv}/{domene}")
-data class DeleteRettighet(val tjenesteKode: String, val utgaveKode: String, val orgnr: String, val lesEllerSkriv: RettighetType, val domene: String)
+@Location("$API_V1/altinn/rettighetsregister/slett/{tjeneste}/{orgnr}/{lesEllerSkriv}/{domene}")
+data class DeleteRettighet(val tjeneste: SrrType, val orgnr: String, val lesEllerSkriv: RettighetType, val domene: String)
 
+@KtorExperimentalLocationsAPI
 fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
         delete<DeleteRettighet> ("Slett rettighet for en virksomhet"
                 .securityAndReponds(BasicAuthSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
@@ -302,13 +316,13 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
             val logEntry = "Forsøker å slette en rettighet for en virksomhet $currentUser - $param"
             application.environment.log.info(logEntry)
 
-            val scList = filterOutServiceCode(environment, param.tjenesteKode)
+            val scList = filterOutServiceCode(environment, param.tjeneste.servicecode)
             if (scList.size == 0) {
                 call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
                 return@delete
             }
 
-            if (param.utgaveKode.trim().isEmpty() || param.utgaveKode.toIntOrNull() == null) {
+            if (!scList.contains(Pair(param.tjeneste.servicecode, param.tjeneste.serviceeditioncode))) {
                 call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig utgaveKode"))
                 return@delete
             }
@@ -334,7 +348,7 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
                 return@delete
             }
 
-            val rightResponse = altinnSrrService.deleteRights(param.tjenesteKode, param.utgaveKode, virksomhetsnummer, param.domene, srrType)
+            val rightResponse = altinnSrrService.deleteRights(param.tjeneste.servicecode, param.tjeneste.serviceeditioncode, virksomhetsnummer, param.domene, srrType)
             if (rightResponse.status == "Failed") {
                 call.respond(HttpStatusCode.BadRequest, AnError(rightResponse.message))
                 return@delete
