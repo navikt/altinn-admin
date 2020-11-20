@@ -35,7 +35,6 @@ object AltinnSRRServiceSpek : Spek({
                 InMemoryLDAPServer.start()
                 engine.start(wait = false)
                 engine.application.mainModule(testEnvironment, applicationState = applicationState)
-
             }
             with(engine) {
                 context("Route /api/v1/altinn/rettighetsregister/leggtil") {
