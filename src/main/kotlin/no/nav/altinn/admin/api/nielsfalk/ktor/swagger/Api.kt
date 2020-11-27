@@ -16,12 +16,12 @@ import io.ktor.locations.delete
 import io.ktor.locations.get
 import io.ktor.locations.post
 import io.ktor.locations.put
-import io.ktor.util.pipeline.PipelineContext
 import io.ktor.request.receive
 import io.ktor.routing.Route
+import io.ktor.util.pipeline.PipelineContext
+import kotlin.reflect.KClass
 import no.nav.altinn.admin.AUTHENTICATION_BASIC
 import no.nav.altinn.admin.swagger
-import kotlin.reflect.KClass
 
 /**
  * @author Niels Falk, changed by Torstein Nesby
@@ -62,8 +62,7 @@ inline fun <reified LOCATION : Any, reified ENTITY_TYPE : Any> Metadata.apply(me
     applyOperations(location, tags, method, LOCATION::class, ENTITY_TYPE::class)
 }
 
-fun Metadata.applyResponseDefinitions() =
-        responses.values.forEach { addDefinition(it) }
+fun Metadata.applyResponseDefinitions() = responses.values.forEach { addDefinition(it) }
 
 @KtorExperimentalLocationsAPI
 fun <LOCATION : Any, BODY_TYPE : Any> Metadata.applyOperations(
@@ -73,17 +72,18 @@ fun <LOCATION : Any, BODY_TYPE : Any> Metadata.applyOperations(
     locationType: KClass<LOCATION>,
     entityType: KClass<BODY_TYPE>
 ) {
-    swagger.paths
-            .getOrPut(location.path) { mutableMapOf() }
-            .put(method.value.toLowerCase(),
-                    Operation(this, location, group, locationType, entityType))
+    swagger.paths.getOrPut(location.path) { mutableMapOf() }
+        .put(
+            method.value.toLowerCase(),
+            Operation(this, location, group, locationType, entityType)
+        )
 }
 
 fun String.responds(vararg pairs: Pair<HttpStatusCode, KClass<*>>): Metadata =
-        Metadata(responses = mapOf(*pairs), summary = this)
+    Metadata(responses = mapOf(*pairs), summary = this)
 
 fun String.securityAndReponds(security: Security, vararg pairs: Pair<HttpStatusCode, KClass<*>>): Metadata =
-        Metadata(responses = mapOf(*pairs), summary = this, security = security)
+    Metadata(responses = mapOf(*pairs), summary = this, security = security)
 
 inline fun <reified T> ok(): Pair<HttpStatusCode, KClass<*>> = OK to T::class
 inline fun <reified T> failed(): Pair<HttpStatusCode, KClass<*>> = InternalServerError to T::class

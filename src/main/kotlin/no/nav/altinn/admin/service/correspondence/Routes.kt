@@ -40,11 +40,11 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.common.API_V1
 import no.nav.altinn.admin.common.API_V2
 import no.nav.altinn.admin.common.dateTimeToXmlGregorianCalendar
-import no.nav.altinn.admin.common.toXmlGregorianCalendar
+import no.nav.altinn.admin.common.dateToXmlGregorianCalendar
 import no.nav.altinn.admin.common.decodeBase64
 import no.nav.altinn.admin.common.isDate
-import no.nav.altinn.admin.common.dateToXmlGregorianCalendar
 import no.nav.altinn.admin.common.isDateTime
+import no.nav.altinn.admin.common.toXmlGregorianCalendar
 
 @KtorExperimentalLocationsAPI
 fun Routing.correspondenceAPI(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) {
@@ -70,8 +70,12 @@ data class MeldingsFilter(val tjeneste: CorrespondenceType, val fraDato: String,
 
 @KtorExperimentalLocationsAPI
 fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
-    get<MeldingsFilter>("Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
-        ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+    get<MeldingsFilter>(
+        "Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(
+            BasicAuthSecurity(), ok<CorrespondenceDetails>(),
+            serviceUnavailable<AnError>(), badRequest<AnError>()
+        )
+    ) {
         param ->
 
         if (notValidServiceCode(param.tjeneste.servicecode, environment)) return@get
@@ -121,8 +125,12 @@ data class MeldingsFilter3(val tjenesteKode: String, val utgaveKode: String, val
 
 @KtorExperimentalLocationsAPI
 fun Routing.getCorrespondenceFiltered3(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
-    get<MeldingsFilter3>("Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
-        ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+    get<MeldingsFilter3>(
+        "Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(
+            BasicAuthSecurity(), ok<CorrespondenceDetails>(),
+            serviceUnavailable<AnError>(), badRequest<AnError>()
+        )
+    ) {
         param ->
 
         val scList = filterOutServiceCode(environment, param.tjenesteKode)
@@ -182,8 +190,12 @@ data class MeldingsFilter2(val tjeneste: CorrespondenceType, val fraDato: String
 
 @KtorExperimentalLocationsAPI
 fun Routing.getCorrespondenceFiltered2(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
-    get<MeldingsFilter2>("Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
-        ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+    get<MeldingsFilter2>(
+        "Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(
+            BasicAuthSecurity(), ok<CorrespondenceDetails>(),
+            serviceUnavailable<AnError>(), badRequest<AnError>()
+        )
+    ) {
         param ->
 
         if (notValidServiceCode(param.tjeneste.servicecode, environment)) return@get
@@ -228,8 +240,12 @@ data class MeldingsFilter4(val tjenesteKode: String, val utgaveKode: String, val
 
 @KtorExperimentalLocationsAPI
 fun Routing.getCorrespondenceFiltered4(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
-    get<MeldingsFilter4>("Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
-        ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+    get<MeldingsFilter4>(
+        "Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(
+            BasicAuthSecurity(), ok<CorrespondenceDetails>(),
+            serviceUnavailable<AnError>(), badRequest<AnError>()
+        )
+    ) {
         param ->
 
         val scList = filterOutServiceCode(environment, param.tjenesteKode)
@@ -284,8 +300,12 @@ data class TjenesteKode(val tjeneste: CorrespondenceType)
 
 @KtorExperimentalLocationsAPI
 fun Routing.getCorrespondence(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
-    get<TjenesteKode>("Hent status meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
-        ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+    get<TjenesteKode>(
+        "Hent status meldinger fra en meldingstjeneste".securityAndReponds(
+            BasicAuthSecurity(), ok<CorrespondenceDetails>(),
+            serviceUnavailable<AnError>(), badRequest<AnError>()
+        )
+    ) {
         param ->
 
         if (notValidServiceCode(param.tjeneste.servicecode, environment)) return@get
@@ -313,8 +333,12 @@ data class TjenesteKode2(val tjenesteKode: String, val utgaveKode: String)
 
 @KtorExperimentalLocationsAPI
 fun Routing.getCorrespondence2(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
-    get<TjenesteKode2>("Hent status meldinger fra en meldingstjeneste".securityAndReponds(BasicAuthSecurity(),
-        ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+    get<TjenesteKode2>(
+        "Hent status meldinger fra en meldingstjeneste".securityAndReponds(
+            BasicAuthSecurity(), ok<CorrespondenceDetails>(),
+            serviceUnavailable<AnError>(), badRequest<AnError>()
+        )
+    ) {
         param ->
 
         val scList = filterOutServiceCode(environment, param.tjenesteKode)
@@ -353,9 +377,13 @@ class SendMelding
 
 @KtorExperimentalLocationsAPI
 fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
-    post<SendMelding, PostCorrespondenceBody> ("Send melding til virksomhet"
-        .securityAndReponds(BasicAuthSecurity(), ok<CorrespondenceResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
-    ) { _, body ->
+    post<SendMelding, PostCorrespondenceBody> (
+        "Send melding til virksomhet".securityAndReponds(
+            BasicAuthSecurity(), ok<CorrespondenceResponse>(),
+            serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>()
+        )
+    ) {
+        _, body ->
         val currentUser = call.principal<UserIdPrincipal>()!!.name
 
         val approvedUsers = environment.application.users.split(",")
@@ -375,8 +403,10 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
             notifications = getNotification(body.varsel)
         }
 
-        val meldingResponse = altinnCorrespondenceService.insertCorrespondence(body.tjeneste.servicecode, body.tjeneste.serviceeditioncode,
-            body.orgnr, content, notifications = notifications)
+        val meldingResponse = altinnCorrespondenceService.insertCorrespondence(
+            body.tjeneste.servicecode, body.tjeneste.serviceeditioncode,
+            body.orgnr, content, notifications = notifications
+        )
         if (meldingResponse.status != "OK") {
             call.respond(HttpStatusCode.BadRequest, AnError(meldingResponse.message))
             return@post
@@ -384,31 +414,30 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
         call.respond(HttpStatusCode.OK, meldingResponse.message)
     }
 
-fun getNotification(varsel: List<Varsel>): NotificationBEList? {
+fun getNotification(varsel: List<Varsel>): NotificationBEList {
     val notificationBEList = NotificationBEList()
-    varsel.forEach { varsel ->
+    varsel.forEach {
+        v ->
         val notification = Notification()
         notification.textTokens = TextTokenSubstitutionBEList()
-        notification.fromAddress = varsel.fraAdresse
+        notification.fromAddress = v.fraAdresse
         notification.languageCode = "1044"
-        notification.shipmentDateTime = toXmlGregorianCalendar(varsel.forsendelseDatoTid)
-        notification.notificationType = varsel.varselType.toString()
+        notification.shipmentDateTime = toXmlGregorianCalendar(v.forsendelseDatoTid)
+        notification.notificationType = v.varselType.toString()
         val tittelToken = TextToken()
         tittelToken.tokenNum = 0
-        tittelToken.tokenValue = if (varsel.varselType == VarselType.TokenTextOnly) varsel.tittel else varsel.melding
+        tittelToken.tokenValue = if (v.varselType == VarselType.TokenTextOnly) v.tittel else v.melding
         notification.textTokens.textToken.add(tittelToken)
         val meldingToken = TextToken()
         meldingToken.tokenNum = 1
-        meldingToken.tokenValue = if (varsel.varselType == VarselType.TokenTextOnly) varsel.melding else ""
+        meldingToken.tokenValue = if (v.varselType == VarselType.TokenTextOnly) v.melding else ""
         notification.textTokens.textToken.add(meldingToken)
-        if (varsel.ekstraMottakere != null) {
-            notification.receiverEndPoints = ReceiverEndPointBEList()
-            varsel.ekstraMottakere.forEach {
-                val receiverEndPoint = ReceiverEndPoint()
-                receiverEndPoint.receiverAddress = it.mottakerAdresse
-                receiverEndPoint.transportType = TransportType.fromValue(it.forsendelseType.toString())
-                notification.receiverEndPoints.receiverEndPoint.add(receiverEndPoint)
-            }
+        notification.receiverEndPoints = ReceiverEndPointBEList()
+        v.ekstraMottakere.forEach {
+            val receiverEndPoint = ReceiverEndPoint()
+            receiverEndPoint.receiverAddress = it.mottakerAdresse
+            receiverEndPoint.transportType = TransportType.fromValue(it.forsendelseType.toString())
+            notification.receiverEndPoints.receiverEndPoint.add(receiverEndPoint)
         }
         notificationBEList.notification.add(notification)
     }
@@ -502,17 +531,17 @@ private fun addAttachments(contentV2: ExternalContentV2, body: PostCorrespondenc
 }
 
 private suspend fun PipelineContext<Unit, ApplicationCall>.notValidServiceCode(tjenesteKode: String, environment: Environment): Boolean {
-        if (tjenesteKode.isEmpty()) {
-            call.respond(HttpStatusCode.BadRequest, AnError("Tjeneste kode kan ikke være tom"))
-            return true
-        }
-        val corrList = environment.correspondeceService.serviceCodes.split(",")
-        if (!corrList.contains(tjenesteKode)) {
-            call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
-            return true
-        }
-        return false
+    if (tjenesteKode.isEmpty()) {
+        call.respond(HttpStatusCode.BadRequest, AnError("Tjeneste kode kan ikke være tom"))
+        return true
     }
+    val corrList = environment.correspondeceService.serviceCodes.split(",")
+    if (!corrList.contains(tjenesteKode)) {
+        call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
+        return true
+    }
+    return false
+}
 
 private fun ApplicationRequest.isFormMultipart(): Boolean {
     return contentType().withoutParameters().match(ContentType.MultiPart.FormData)

@@ -1,9 +1,9 @@
 package no.nav.altinn.admin.service.alerts
 
-import org.amshove.kluent.shouldEqual
+import java.util.Calendar
+import org.amshove.kluent.shouldBeEqualTo
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
-import java.util.*
 
 object ExpireAlertsSpek : Spek({
 
@@ -14,14 +14,14 @@ object ExpireAlertsSpek : Spek({
             expectedDate.add(Calendar.MONTH, 3)
 
             val actualDate = getRelativeExpireDate("0y3m0d")
-            expectedDate.get(Calendar.DATE) shouldEqual actualDate.get(Calendar.DATE)
-            expectedDate.get(Calendar.MONTH) shouldEqual actualDate.get(Calendar.MONTH)
-            expectedDate.get(Calendar.YEAR) shouldEqual actualDate.get(Calendar.YEAR)
+            expectedDate.get(Calendar.DATE) shouldBeEqualTo actualDate.get(Calendar.DATE)
+            expectedDate.get(Calendar.MONTH) shouldBeEqualTo actualDate.get(Calendar.MONTH)
+            expectedDate.get(Calendar.YEAR) shouldBeEqualTo actualDate.get(Calendar.YEAR)
 
             val actualDate2 = getRelativeExpireDate("0y3M0d")
-            expectedDate.get(Calendar.DATE) shouldEqual actualDate2.get(Calendar.DATE)
-            expectedDate.get(Calendar.MONTH) shouldEqual actualDate2.get(Calendar.MONTH)
-            expectedDate.get(Calendar.YEAR) shouldEqual actualDate2.get(Calendar.YEAR)
+            expectedDate.get(Calendar.DATE) shouldBeEqualTo actualDate2.get(Calendar.DATE)
+            expectedDate.get(Calendar.MONTH) shouldBeEqualTo actualDate2.get(Calendar.MONTH)
+            expectedDate.get(Calendar.YEAR) shouldBeEqualTo actualDate2.get(Calendar.YEAR)
         }
 
         it("Test 13 month and 20 days expire date") {
@@ -31,9 +31,9 @@ object ExpireAlertsSpek : Spek({
             expectedDate.add(Calendar.DATE, 20)
 
             val actualDate = getRelativeExpireDate("0y13m20d")
-            expectedDate.get(Calendar.DATE) shouldEqual actualDate.get(Calendar.DATE)
-            expectedDate.get(Calendar.MONTH) shouldEqual actualDate.get(Calendar.MONTH)
-            expectedDate.get(Calendar.YEAR) shouldEqual actualDate.get(Calendar.YEAR)
+            expectedDate.get(Calendar.DATE) shouldBeEqualTo actualDate.get(Calendar.DATE)
+            expectedDate.get(Calendar.MONTH) shouldBeEqualTo actualDate.get(Calendar.MONTH)
+            expectedDate.get(Calendar.YEAR) shouldBeEqualTo actualDate.get(Calendar.YEAR)
         }
 
         it("Wrong expire date format, goes to default of 2 months.") {
@@ -42,9 +42,9 @@ object ExpireAlertsSpek : Spek({
             expectedDate.add(Calendar.MONTH, 2)
 
             val actualDate = getRelativeExpireDate("0y13F20d")
-            expectedDate.get(Calendar.DATE) shouldEqual actualDate.get(Calendar.DATE)
-            expectedDate.get(Calendar.MONTH) shouldEqual actualDate.get(Calendar.MONTH)
-            expectedDate.get(Calendar.YEAR) shouldEqual actualDate.get(Calendar.YEAR)
+            expectedDate.get(Calendar.DATE) shouldBeEqualTo actualDate.get(Calendar.DATE)
+            expectedDate.get(Calendar.MONTH) shouldBeEqualTo actualDate.get(Calendar.MONTH)
+            expectedDate.get(Calendar.YEAR) shouldBeEqualTo actualDate.get(Calendar.YEAR)
         }
     }
 })

@@ -9,12 +9,14 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 
-val xmlMapper: XmlMapper = XmlMapper(JacksonXmlModule().apply {
-    setDefaultUseWrapper(false)
-}).registerKotlinModule()
-        .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
-        .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) as XmlMapper
+val xmlMapper: XmlMapper = XmlMapper(
+    JacksonXmlModule().apply {
+        setDefaultUseWrapper(false)
+    }
+).registerKotlinModule()
+    .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+    .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS, true)
+    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) as XmlMapper
 
 val objectMapper: ObjectMapper = ObjectMapper()
     .registerKotlinModule()

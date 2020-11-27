@@ -6,13 +6,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "no.nav"
 version = "1.0.2-SNAPSHOT"
 
-val kotlinVersion = "1.3.50"
-val ktorVersion = "1.2.1"
-val jacksonVersion = "2.9.8"
+val kotlinVersion = "1.4.20"
+val ktorVersion = "1.4.2"
+val jacksonVersion = "2.10.0"
 
-val prometheusVersion = "0.6.0"
-val kotlinloggingVersion = "1.6.22"
-val logstashEncoderVersion = "5.3"
+val prometheusVersion = "0.9.0"
+val kotlinloggingVersion = "2.0.3"
+val logstashEncoderVersion = "6.4"
 val logbackVersion = "1.2.3"
 
 val konfigVersion = "1.6.10.0"
@@ -21,26 +21,26 @@ val jaxwsVersion = "2.3.1"
 val jaxwsToolsVersion = "2.3.1"
 val javaxActivationVersion = "1.1.1"
 val cxfVersion = "3.3.1"
-val unboundidVersion = "4.0.8"
+val unboundidVersion = "5.1.1"
 val tjenestespesifikasjonerVersion = "1.2019.07.10-12.21-b55f47790a9d"
-val wiremockVersion = "2.23.2"
+val wiremockVersion = "2.27.2"
 
 val swaggerVersion = "3.1.7"
 
 // test dependencies
-val kluentVersion = "1.47"
-val spekVersion = "2.0.0"
+val kluentVersion = "1.64"
+val spekVersion = "2.0.14"
 
-val mainClass = "no.nav.altinn.admin.BootstrapKt"
+val appMainClassName = "no.nav.altinn.admin.BootstrapKt"
 
 plugins {
     application
     java
-    kotlin("jvm") version "1.3.31"
+    kotlin("jvm") version "1.4.20"
     id("no.nils.wsdl2java") version "0.10"
-    id("org.jmailen.kotlinter") version "1.26.0"
+    id("org.jmailen.kotlinter") version "3.2.0"
     id("com.github.ben-manes.versions") version "0.20.0"
-    id("com.github.johnrengelman.shadow") version "4.0.4"
+    id("com.github.johnrengelman.shadow") version "5.2.0"
     id("org.unbroken-dome.xjc") version "1.4.1"
 }
 
@@ -56,39 +56,42 @@ buildscript {
 }
 
 application {
-    mainClassName = mainClass
+    mainClassName = "$appMainClassName"
 }
+//application {
+//    mainClass.set(appMainClassName)
+//}
 
 repositories {
     maven(url="https://dl.bintray.com/kotlin/ktor")
     maven(url="https://kotlin.bintray.com/kotlinx")
-    maven(url="http://packages.confluent.io/maven/")
+    maven(url="https://packages.confluent.io/maven/")
     mavenCentral()
     jcenter()
 }
 
 dependencies {
-    compile(kotlin("stdlib"))
-    compile("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
-    compile("com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion")
-    compile("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
-    compile("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion")
-    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
-    compile("io.ktor:ktor-server-netty:$ktorVersion")
-    compile("io.ktor:ktor-auth:$ktorVersion")
-    compile("io.ktor:ktor-jackson:$ktorVersion")
-    compile("io.ktor:ktor-client-core:$ktorVersion")
-    compile("io.ktor:ktor-client-apache:$ktorVersion")
-    compile( "io.ktor:ktor-locations:$ktorVersion")
-    compile("io.prometheus:simpleclient_common:$prometheusVersion")
-    compile("io.prometheus:simpleclient_hotspot:$prometheusVersion")
-    compile("io.github.microutils:kotlin-logging:$kotlinloggingVersion")
-    compile("net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion")
-    compile("com.natpryce:konfig:$konfigVersion")
-    compile("javax.xml.ws:jaxws-api:$jaxwsVersion")
-    compile("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.1.1")
-    compile("no.nav.tjenestespesifikasjoner:altinn-download-queue-external:$tjenestespesifikasjonerVersion")
-    compile("no.nav.tjenestespesifikasjoner:altinn-correspondence-agency-external-basic:$tjenestespesifikasjonerVersion")
+    implementation(kotlin("stdlib"))
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion")
+    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
+    implementation("io.ktor:ktor-auth:$ktorVersion")
+    implementation("io.ktor:ktor-jackson:$ktorVersion")
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-apache:$ktorVersion")
+    implementation( "io.ktor:ktor-locations:$ktorVersion")
+    implementation("io.prometheus:simpleclient_common:$prometheusVersion")
+    implementation("io.prometheus:simpleclient_hotspot:$prometheusVersion")
+    implementation("io.github.microutils:kotlin-logging:$kotlinloggingVersion")
+    implementation("net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion")
+    implementation("com.natpryce:konfig:$konfigVersion")
+    implementation("javax.xml.ws:jaxws-api:$jaxwsVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.1.1")
+    implementation("no.nav.tjenestespesifikasjoner:altinn-download-queue-external:$tjenestespesifikasjonerVersion")
+    implementation("no.nav.tjenestespesifikasjoner:altinn-correspondence-agency-external-basic:$tjenestespesifikasjonerVersion")
 
     implementation("org.apache.cxf:cxf-rt-frontend-jaxws:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")
@@ -104,7 +107,7 @@ dependencies {
     implementation("com.unboundid:unboundid-ldapsdk:$unboundidVersion")
 
     runtimeOnly("ch.qos.logback:logback-classic:$logbackVersion")
-    runtime("com.papertrailapp:logback-syslog4j:1.0.0")
+    runtimeOnly("com.papertrailapp:logback-syslog4j:1.0.0")
 
     testImplementation("org.spekframework.spek2:spek-dsl-jvm:$spekVersion") {
         exclude(group = "org.jetbrains.kotlin")
@@ -118,7 +121,7 @@ dependencies {
     testImplementation("org.amshove.kluent:kluent:$kluentVersion")
     testImplementation("org.junit.platform:junit-platform-runner:1.3.2")
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
-    testCompile("com.github.tomakehurst:wiremock:$wiremockVersion")
+    testImplementation("com.github.tomakehurst:wiremock:$wiremockVersion")
 }
 
 val generatedSourcesDir = "$buildDir/generated-sources"
@@ -141,10 +144,17 @@ tasks {
         generatedWsdlDir = file(generatedSourcesDir)
     }
     withType<ShadowJar> {
-        classifier = ""
+        archiveClassifier.set("")
         transform(ServiceFileTransformer::class.java) {
             setPath("META-INF/cxf")
             include("bus-extensions.txt")
+        }
+        manifest {
+            attributes(
+                mapOf(
+                    "Main-Class" to appMainClassName
+                )
+            )
         }
     }
     withType<Test> {
@@ -153,10 +163,10 @@ tasks {
         }
         testLogging.events("passed", "skipped", "failed")
     }
-    withType<Wrapper> {
-        gradleVersion = "5.1"
-        distributionType = Wrapper.DistributionType.BIN
-    }
+//    withType<Wrapper> {
+//        gradleVersion = "6.7.1"
+//        distributionType = Wrapper.DistributionType.BIN
+//    }
     xjcGenerate {
         source = fileTree("$projectDir/src/main/resources/xsd") { include("*.xsd") }
         outputDirectory = File(generatedSourcesDir)

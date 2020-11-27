@@ -5,8 +5,6 @@ package no.nav.altinn.admin.api.nielsfalk.ktor.swagger
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
-import mu.KotlinLogging
-import no.nav.altinn.admin.swagger
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -16,6 +14,8 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
+import mu.KotlinLogging
+import no.nav.altinn.admin.swagger
 
 /**
  * @author Niels Falk, changed by Torstein Nesby
@@ -101,24 +101,26 @@ private fun Group.toList(): List<Tag> {
 fun <T, R> KProperty1<T, R>.toParameter(
     path: String,
     inputType: ParameterInputType =
-            if (path.contains("{$name}"))
-                ParameterInputType.path
-            else
-                ParameterInputType.query
+        if (path.contains("{$name}"))
+            ParameterInputType.path
+        else
+            ParameterInputType.query
 ): Parameter {
     return Parameter(
-            toModelProperty(),
-            name,
-            inputType,
-            required = !returnType.isMarkedNullable)
+        toModelProperty(),
+        name,
+        inputType,
+        required = !returnType.isMarkedNullable
+    )
 }
 
 private fun KClass<*>.bodyParameter() =
-        Parameter(referenceProperty(),
-                name = "body",
-                description = modelName(),
-                `in` = ParameterInputType.body
-        )
+    Parameter(
+        referenceProperty(),
+        name = "body",
+        description = modelName(),
+        `in` = ParameterInputType.body
+    )
 
 class Response(httpStatusCode: HttpStatusCode, kClass: KClass<*>) {
     val description = if (kClass == Unit::class) httpStatusCode.description else kClass.responseDescription()
@@ -148,47 +150,49 @@ enum class ParameterInputType {
 
 class ModelData(kClass: KClass<*>) {
     val properties: Map<PropertyName, Property> =
-            kClass.memberProperties
-                    .map { it.name to it.toModelProperty() }
-                    .toMap()
+        kClass.memberProperties
+            .map { it.name to it.toModelProperty() }
+            .toMap()
 }
 
 val propertyTypes = mapOf(
-        Int::class to Property("integer", "int32"),
-        Long::class to Property("integer", "int64"),
-        String::class to Property("string"),
-        Double::class to Property("number", "double"),
-        Instant::class to Property("string", "date-time"),
-        Date::class to Property("string", "date-time"),
-        LocalDateTime::class to Property("string", "date-time"),
-        LocalDate::class to Property("string", "date")
+    Int::class to Property("integer", "int32"),
+    Long::class to Property("integer", "int64"),
+    String::class to Property("string"),
+    Double::class to Property("number", "double"),
+    Instant::class to Property("string", "date-time"),
+    Date::class to Property("string", "date-time"),
+    LocalDateTime::class to Property("string", "date-time"),
+    LocalDate::class to Property("string", "date")
 ).mapKeys { it.key.qualifiedName }
 
 fun <T, R> KProperty1<T, R>.toModelProperty(): Property =
-        (returnType.classifier as KClass<*>)
-                .toModelProperty(returnType)
+    (returnType.classifier as KClass<*>)
+        .toModelProperty(returnType)
 
 private fun KClass<*>.toModelProperty(returnType: KType? = null): Property =
-        propertyTypes[qualifiedName?.removeSuffix("?")]
-                ?: if (returnType != null && (isSubclassOf(Collection::class) || this.isSubclassOf(Set::class))) {
-                    val kClass: KClass<*> = returnType.arguments.first().type?.classifier as KClass<*>
-                    Property(items = kClass.toModelProperty(), type = "array")
-                } else if (returnType != null && this.isSubclassOf(Map::class)) {
-                    Property(type = "object")
-                } else if (returnType != null && this.isSubclassOf(String::class)) {
-                    Property(type = "string")
-                } else if (java.isEnum) {
-                    val enumConstants = (this).java.enumConstants
-                    Property(enum = enumConstants.map { (it as Enum<*>).name }, type = "string")
-                } else {
-                    addDefinition(this)
-                    referenceProperty()
-                }
+    propertyTypes[qualifiedName?.removeSuffix("?")]
+        ?: if (returnType != null && (isSubclassOf(Collection::class) || this.isSubclassOf(Set::class))) {
+            val kClass: KClass<*> = returnType.arguments.first().type?.classifier as KClass<*>
+            Property(items = kClass.toModelProperty(), type = "array")
+        } else if (returnType != null && this.isSubclassOf(Map::class)) {
+            Property(type = "object")
+        } else if (returnType != null && this.isSubclassOf(String::class)) {
+            Property(type = "string")
+        } else if (java.isEnum) {
+            val enumConstants = (this).java.enumConstants
+            Property(enum = enumConstants.map { (it as Enum<*>).name }, type = "string")
+        } else {
+            addDefinition(this)
+            referenceProperty()
+        }
 
 private fun KClass<*>.referenceProperty(): Property =
-        Property(`$ref` = "#/definitions/" + modelName(),
-                description = modelName(),
-                type = null)
+    Property(
+        `$ref` = "#/definitions/" + modelName(),
+        description = modelName(),
+        type = null
+    )
 
 open class Property(
     val type: String?,

@@ -7,10 +7,15 @@ import com.natpryce.konfig.Key
 import com.natpryce.konfig.intType
 import com.natpryce.konfig.overriding
 import com.natpryce.konfig.stringType
-import no.altinn.schemas.services.register.srr._2015._06.*
+import java.io.File
+import no.altinn.schemas.services.register.srr._2015._06.AddRightResponse
+import no.altinn.schemas.services.register.srr._2015._06.AddRightResponseList
+import no.altinn.schemas.services.register.srr._2015._06.DeleteRightResponse
+import no.altinn.schemas.services.register.srr._2015._06.DeleteRightResponseList
+import no.altinn.schemas.services.register.srr._2015._06.GetRightResponse
+import no.altinn.schemas.services.register.srr._2015._06.GetRightResponseList
 import no.nav.altinn.admin.common.xmlMapper
 import no.nav.altinn.admin.ldap.LDAPBase
-import java.io.File
 
 private const val vaultApplicationPropertiesPath = "/var/run/secrets/nais.io/vault/application.properties"
 
@@ -84,12 +89,33 @@ data class Environment(
         private val srrAddXmlResponse: String? = config[Key("mock.ssr.add.response", stringType)],
         private val srrDeleteXmlResponse: String? = config[Key("mock.ssr.delete.response", stringType)],
         private val srrGetXmlResponse: String? = config[Key("mock.ssr.get.response", stringType)],
-        var srrAddResponse: AddRightResponseList? = if (srrAddXmlResponse.isNullOrEmpty()) { null } else { AddRightResponseList().apply { addRightResponse.add(
-                xmlMapper.readValue(srrAddXmlResponse, AddRightResponse::class.java)) } },
-        var srrDeleteResponse: DeleteRightResponseList? = if (srrDeleteXmlResponse.isNullOrEmpty()) { null } else { DeleteRightResponseList().apply { deleteRightResponse.add(
-                xmlMapper.readValue(srrDeleteXmlResponse, DeleteRightResponse::class.java)) } },
-        var srrGetResponse: GetRightResponseList? = if (srrGetXmlResponse.isNullOrEmpty()) { null } else { GetRightResponseList().apply { getRightResponse.add(
-                xmlMapper.readValue(srrGetXmlResponse, GetRightResponse::class.java)) } }
+        var srrAddResponse: AddRightResponseList? = if (srrAddXmlResponse.isNullOrEmpty()) {
+            null
+        } else {
+            AddRightResponseList().apply {
+                addRightResponse.add(
+                    xmlMapper.readValue(srrAddXmlResponse, AddRightResponse::class.java)
+                )
+            }
+        },
+        var srrDeleteResponse: DeleteRightResponseList? = if (srrDeleteXmlResponse.isNullOrEmpty()) {
+            null
+        } else {
+            DeleteRightResponseList().apply {
+                deleteRightResponse.add(
+                    xmlMapper.readValue(srrDeleteXmlResponse, DeleteRightResponse::class.java)
+                )
+            }
+        },
+        var srrGetResponse: GetRightResponseList? = if (srrGetXmlResponse.isNullOrEmpty()) {
+            null
+        } else {
+            GetRightResponseList().apply {
+                getRightResponse.add(
+                    xmlMapper.readValue(srrGetXmlResponse, GetRightResponse::class.java)
+                )
+            }
+        }
         // AddRightResponseList().apply { addRightResponse.add(
         //        xmlMapper.readValue(config[Key("mock.ssr.add.response", stringType)], AddRightResponse::class.java))}
     )
@@ -99,14 +125,14 @@ data class Environment(
 enum class LdapConnectionType { AUTHENTICATION, GROUP }
 
 fun Environment.Application.getConnectionInfo(connType: LdapConnectionType) =
-        when (connType) {
-            LdapConnectionType.AUTHENTICATION -> LDAPBase.Companion.ConnectionInfo(
-                    ldapAuthHost, ldapAuthPort, ldapConnTimeout
-            )
-            LdapConnectionType.GROUP -> LDAPBase.Companion.ConnectionInfo(
-                    ldapHost, ldapPort, ldapConnTimeout
-            )
-        }
+    when (connType) {
+        LdapConnectionType.AUTHENTICATION -> LDAPBase.Companion.ConnectionInfo(
+            ldapAuthHost, ldapAuthPort, ldapConnTimeout
+        )
+        LdapConnectionType.GROUP -> LDAPBase.Companion.ConnectionInfo(
+            ldapHost, ldapPort, ldapConnTimeout
+        )
+    }
 
 // Return diverse distinguished name types
 fun Environment.Application.userDN(user: String) = "$ldapUserAttrName=$user,$ldapAuthUserBase"

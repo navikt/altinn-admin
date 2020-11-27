@@ -20,12 +20,12 @@ import no.nav.altinn.admin.common.API_V1
 
 @KtorExperimentalLocationsAPI
 fun Routing.dqAPI(altinnDqService: AltinnDQService, environment: Environment) {
-    getFormMessage(altinnDqService, environment)
+    getFormMessage(altinnDqService)
     getDqItems(altinnDqService, environment)
     getDqItemsSec(altinnDqService, environment)
     logger.info { "Local env ? ${environment.application.localEnv}" }
     if (environment.application.localEnv != "prod") {
-        purgeItem(altinnDqService, environment)
+        purgeItem(altinnDqService)
     }
 }
 
@@ -40,9 +40,12 @@ private val logger = KotlinLogging.logger { }
 data class ArkivReferanse(val arNummer: String)
 
 @KtorExperimentalLocationsAPI
-fun Routing.getFormMessage(altinnDqService: AltinnDQService, environment: Environment) =
-    get<ArkivReferanse>("Hent melding fra en Arkiv Referanse via DQ".securityAndReponds(BasicAuthSecurity(),
-        ok<ArData>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+fun Routing.getFormMessage(altinnDqService: AltinnDQService) =
+    get<ArkivReferanse>(
+        "Hent melding fra en Arkiv Referanse via DQ".securityAndReponds(
+            BasicAuthSecurity(), ok<ArData>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+        )
+    ) {
         param ->
 
         val arNummer = param.arNummer.trim()
@@ -74,8 +77,11 @@ data class TjenesteKode(val tjeneste: DqType)
 
 @KtorExperimentalLocationsAPI
 fun Routing.getDqItems(altinnDqService: AltinnDQService, environment: Environment) =
-    get<TjenesteKode>("Hent elementer som ligger på download queue".securityAndReponds(
-        BasicAuthSecurity(), ok<DqItems>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+    get<TjenesteKode>(
+        "Hent elementer som ligger på download queue".securityAndReponds(
+            BasicAuthSecurity(), ok<DqItems>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+        )
+    ) {
         param ->
 
         val scList = filterOutServiceCode(environment, param.tjeneste.servicecode)
@@ -104,8 +110,11 @@ data class TjenesteOgUtgaveKode(val tjeneste: DqType)
 
 @KtorExperimentalLocationsAPI
 fun Routing.getDqItemsSec(altinnDqService: AltinnDQService, environment: Environment) =
-    get<TjenesteOgUtgaveKode>("Hent elementer som ligger på download queue filtrert med utgave kode".securityAndReponds(
-        BasicAuthSecurity(), ok<DqItems>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+    get<TjenesteOgUtgaveKode>(
+        "Hent elementer som ligger på download queue filtrert med utgave kode".securityAndReponds(
+            BasicAuthSecurity(), ok<DqItems>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+        )
+    ) {
         param ->
 
         val scList = filterOutServiceCode(environment, param.tjeneste.servicecode)
@@ -138,9 +147,12 @@ fun Routing.getDqItemsSec(altinnDqService: AltinnDQService, environment: Environ
 data class DeleteArkivReferanse(val arNummer: String)
 
 @KtorExperimentalLocationsAPI
-fun Routing.purgeItem(altinnDqService: AltinnDQService, environment: Environment) =
-    delete<DeleteArkivReferanse>("Slett AR fra download queue".securityAndReponds(
-        BasicAuthSecurity(), ok<DqPurge>(), serviceUnavailable<AnError>(), badRequest<AnError>())) {
+fun Routing.purgeItem(altinnDqService: AltinnDQService) =
+    delete<DeleteArkivReferanse>(
+        "Slett AR fra download queue".securityAndReponds(
+            BasicAuthSecurity(), ok<DqPurge>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+        )
+    ) {
         param ->
 
         val arNummer = param.arNummer.trim()

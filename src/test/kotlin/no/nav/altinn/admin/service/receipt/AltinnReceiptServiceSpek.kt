@@ -9,7 +9,7 @@ import io.ktor.util.KtorExperimentalAPI
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.ApplicationState
 import no.nav.altinn.admin.mainModule
-import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldBeEqualTo
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
@@ -22,7 +22,7 @@ object AltinnReceiptServiceSpek : Spek({
         describe("GET Hent AR kvitteringer for periode.") {
             with(handleRequest(HttpMethod.Get, "/api/v1/altinn/arkvitteringer/hent/2020-02-1f/2020-02-18")) {
                 it("Hent AR kvitteringer for periode, skal feile med 'bad request'") {
-                    response.status() shouldEqual HttpStatusCode.BadRequest
+                    response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                 }
             }
         }
@@ -31,7 +31,7 @@ object AltinnReceiptServiceSpek : Spek({
         describe("GET Hent AR kvitteringer for periode.") {
             with(handleRequest(HttpMethod.Get, "/api/v1/altinn/arkvitteringer/hent/ /2020-02-18")) {
                 it("Hent AR kvitteringer for periode, skal feile med 'bad request'") {
-                    response.status() shouldEqual HttpStatusCode.BadRequest
+                    response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                 }
             }
         }
@@ -40,7 +40,7 @@ object AltinnReceiptServiceSpek : Spek({
         describe("GET Hent AR kvitteringer for periode.") {
             with(handleRequest(HttpMethod.Get, "/api/v1/altinn/arkvitteringer/hent/2020-02-18/2020-02-10")) {
                 it("Hent AR kvitteringer for periode, skal feile med 'bad request'") {
-                    response.status() shouldEqual HttpStatusCode.BadRequest
+                    response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                 }
             }
         }

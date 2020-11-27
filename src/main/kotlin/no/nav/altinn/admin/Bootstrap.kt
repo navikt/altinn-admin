@@ -7,7 +7,14 @@ import io.ktor.auth.Authentication
 import io.ktor.auth.UserIdPrincipal
 import io.ktor.auth.basic
 import io.ktor.client.utils.CacheControl
-import io.ktor.features.*
+import io.ktor.features.AutoHeadResponse
+import io.ktor.features.CallId
+import io.ktor.features.CallLogging
+import io.ktor.features.Compression
+import io.ktor.features.ConditionalHeaders
+import io.ktor.features.ContentNegotiation
+import io.ktor.features.DefaultHeaders
+import io.ktor.features.StatusPages
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
@@ -24,6 +31,7 @@ import io.ktor.server.netty.Netty
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.error
 import io.prometheus.client.hotspot.DefaultExports
+import java.util.concurrent.Executors
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.slf4j.MDCContext
@@ -33,7 +41,11 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Contact
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Information
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Swagger
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.SwaggerUi
-import no.nav.altinn.admin.common.*
+import no.nav.altinn.admin.common.API_V1
+import no.nav.altinn.admin.common.API_V2
+import no.nav.altinn.admin.common.ApplicationState
+import no.nav.altinn.admin.common.objectMapper
+import no.nav.altinn.admin.common.randomUuid
 import no.nav.altinn.admin.ldap.LDAPAuthenticate
 import no.nav.altinn.admin.service.alerts.ExpireAlerts
 import no.nav.altinn.admin.service.correspondence.AltinnCorrespondenceService
@@ -44,24 +56,26 @@ import no.nav.altinn.admin.service.receipt.AltinnReceiptService
 import no.nav.altinn.admin.service.receipt.receiptsAPI
 import no.nav.altinn.admin.service.srr.AltinnSRRService
 import no.nav.altinn.admin.service.srr.ssrAPI
-import no.nav.altinn.admin.ws.*
+import no.nav.altinn.admin.ws.Clients
+import no.nav.altinn.admin.ws.STS_SAML_POLICY_NO_TRANSPORT_BINDING
+import no.nav.altinn.admin.ws.configureFor
+import no.nav.altinn.admin.ws.stsClient
 import org.slf4j.event.Level
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 const val AUTHENTICATION_BASIC = "basicAuth"
 private val backgroundTasksContext = Executors.newFixedThreadPool(4).asCoroutineDispatcher() + MDCContext()
 
 val swagger = Swagger(
-        info = Information(
-                version = System.getenv("APP_VERSION")?.toString() ?: "",
-                title = "Altinn Admin API",
-                description = "[altinn-admin](https://github.com/navikt/altinn-admin)",
-                contact = Contact(
-                        name = "Mona Terning, Ole-Petter Pettersen, Hans Arild Runde, Richard Oseng",
-                        url = "https://github.com/navikt/altinn-admin",
-                        email = "nav.altinn.lokalforvaltning@nav.no")
+    info = Information(
+        version = System.getenv("APP_VERSION")?.toString() ?: "",
+        title = "Altinn Admin API",
+        description = "[altinn-admin](https://github.com/navikt/altinn-admin)",
+        contact = Contact(
+            name = "Mona Terning, Ole-Petter Pettersen, Hans Arild Runde, Richard Oseng",
+            url = "https://github.com/navikt/altinn-admin",
+            email = "nav.altinn.lokalforvaltning@nav.no"
         )
+    )
 )
 
 private val logger = KotlinLogging.logger { }
@@ -82,12 +96,14 @@ fun bootstrap(applicationState: ApplicationState, environment: Environment) {
     logger.info { "Application ready" }
 
     DefaultExports.initialize()
-    Runtime.getRuntime().addShutdownHook(Thread {
-        logger.info { "Shutdown hook called, shutting down gracefully" }
-        applicationState.initialized = false
-        applicationState.running = false
-        applicationServer.stop(1, 5, TimeUnit.SECONDS)
-    })
+    Runtime.getRuntime().addShutdownHook(
+        Thread {
+            logger.info { "Shutdown hook called, shutting down gracefully" }
+            applicationState.initialized = false
+            applicationState.running = false
+            applicationServer.stop(1000, 5000)
+        }
+    )
     applicationServer.start(wait = true)
 }
 
@@ -142,8 +158,8 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
 
     val stsClient by lazy {
         stsClient(
-                stsUrl = environment.stsUrl,
-                credentials = environment.application.username to environment.application.password
+            stsUrl = environment.stsUrl,
+            credentials = environment.application.username to environment.application.password
         )
     }
 
@@ -218,6 +234,6 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         correspondenceAPI(altinnCorrespondenceService = altinnCorrespondenceService, environment = environment)
         logger.info { "Installing altinn receipts api" }
         receiptsAPI(altinnReceiptService = altinnReceiptService, environment = environment)
-        nais(environment, readinessCheck = { applicationState.initialized }, livenessCheck = { applicationState.running })
+        nais(readinessCheck = { applicationState.initialized }, livenessCheck = { applicationState.running })
     }
 }

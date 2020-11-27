@@ -1,5 +1,6 @@
 package no.nav.altinn.admin.service.correspondence
 
+import javax.xml.datatype.XMLGregorianCalendar
 import mu.KotlinLogging
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.ExternalContentV2
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.InsertCorrespondenceV2
@@ -9,7 +10,6 @@ import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondence
 import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondenceAgencyExternalBasicGetCorrespondenceStatusDetailsBasicV3AltinnFaultFaultFaultMessage
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.randomUuid
-import javax.xml.datatype.XMLGregorianCalendar
 
 private val logger = KotlinLogging.logger { }
 
@@ -31,37 +31,44 @@ class AltinnCorrespondenceService(env: Environment, iCorrepsondenceExternalBasic
             corrFilter.reportee = reportee
 
         try {
-            val results = iCorrespondenceExternalBasic.getCorrespondenceStatusDetailsBasicV3(altinnUsername, altinnUserPassword,
-                corrFilter).correspondenceStatusInformation.correspondenceStatusDetailsList.statusV2
+            val results = iCorrespondenceExternalBasic.getCorrespondenceStatusDetailsBasicV3(
+                altinnUsername, altinnUserPassword,
+                corrFilter
+            ).correspondenceStatusInformation.correspondenceStatusDetailsList.statusV2
             val correspondenceDetails = mutableListOf<CorrespondenceDetails>()
             for (detail in results) {
                 val vList = mutableListOf<Notification>()
                 detail.notifications.notification.forEach {
-                    vList.add(Notification(
-                        it.transportType.name,
-                        it.recipient,
-                        it.sentDate
-                    ))
+                    vList.add(
+                        Notification(
+                            it.transportType.name,
+                            it.recipient,
+                            it.sentDate
+                        )
+                    )
                 }
-                correspondenceDetails.add(CorrespondenceDetails(
-                    detail.correspondenceID,
-                    detail.createdDate,
-                    detail.reportee,
-                    detail.sendersReference,
-                    vList,
-                    detail.statusChanges.statusChangeV2.last().statusDate,
-                    detail.statusChanges.statusChangeV2.last().statusType.toString()
-                ))
+                correspondenceDetails.add(
+                    CorrespondenceDetails(
+                        detail.correspondenceID,
+                        detail.createdDate,
+                        detail.reportee,
+                        detail.sendersReference,
+                        vList,
+                        detail.statusChanges.statusChangeV2.last().statusDate,
+                        detail.statusChanges.statusChangeV2.last().statusType.toString()
+                    )
+                )
             }
             return CorrespondenceResponse("Ok", "Found ${results.size} correspondences", correspondenceDetails)
         } catch (e: ICorrespondenceAgencyExternalBasicGetCorrespondenceStatusDetailsBasicV3AltinnFaultFaultFaultMessage) {
-            logger.error { "iCorrespondenceExternalBasic.getCorrespondenceDetails feilet \n" +
-                "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
-                "\n ExtendedErrorMessage  ${e.faultInfo.altinnExtendedErrorMessage}" +
-                "\n LocalizedErrorMessage  ${e.faultInfo.altinnLocalizedErrorMessage}" +
-                "\n ErrorGuid  ${e.faultInfo.errorGuid}" +
-                "\n UserGuid  ${e.faultInfo.userGuid}" +
-                "\n UserId  ${e.faultInfo.userId}"
+            logger.error {
+                "iCorrespondenceExternalBasic.getCorrespondenceDetails feilet \n" +
+                    "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
+                    "\n ExtendedErrorMessage  ${e.faultInfo.altinnExtendedErrorMessage}" +
+                    "\n LocalizedErrorMessage  ${e.faultInfo.altinnLocalizedErrorMessage}" +
+                    "\n ErrorGuid  ${e.faultInfo.errorGuid}" +
+                    "\n UserGuid  ${e.faultInfo.userGuid}" +
+                    "\n UserId  ${e.faultInfo.userId}"
             }
         }
         return CorrespondenceResponse("Failed", "Could not get any correspondence, check log.", emptyList())
@@ -78,16 +85,19 @@ class AltinnCorrespondenceService(env: Environment, iCorrepsondenceExternalBasic
         correspondence.notifications = notifications
         try {
             logger.debug { "try sending a message to ${correspondence.reportee}" }
-            val result = iCorrespondenceExternalBasic.insertCorrespondenceBasicV2(altinnUsername, altinnUserPassword, SYSTEM_CODE, randomUuid(), correspondence)
+            val result = iCorrespondenceExternalBasic.insertCorrespondenceBasicV2(
+                altinnUsername, altinnUserPassword, SYSTEM_CODE, randomUuid(), correspondence
+            )
             return InsertCorrespondenceResponse(result.receiptStatusCode.name, result.receiptText)
         } catch (e: ICorrespondenceAgencyExternalBasicGetCorrespondenceStatusDetailsBasicV3AltinnFaultFaultFaultMessage) {
-            logger.error { "iCorrespondenceExternalBasic.insertCorrespondenceBasicV2 feilet \n" +
-                "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
-                "\n ExtendedErrorMessage  ${e.faultInfo.altinnExtendedErrorMessage}" +
-                "\n LocalizedErrorMessage  ${e.faultInfo.altinnLocalizedErrorMessage}" +
-                "\n ErrorGuid  ${e.faultInfo.errorGuid}" +
-                "\n UserGuid  ${e.faultInfo.userGuid}" +
-                "\n UserId  ${e.faultInfo.userId}"
+            logger.error {
+                "iCorrespondenceExternalBasic.insertCorrespondenceBasicV2 feilet \n" +
+                    "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
+                    "\n ExtendedErrorMessage  ${e.faultInfo.altinnExtendedErrorMessage}" +
+                    "\n LocalizedErrorMessage  ${e.faultInfo.altinnLocalizedErrorMessage}" +
+                    "\n ErrorGuid  ${e.faultInfo.errorGuid}" +
+                    "\n UserGuid  ${e.faultInfo.userGuid}" +
+                    "\n UserId  ${e.faultInfo.userId}"
             }
         } catch (ee: Exception) {
             logger.error { ee.message }

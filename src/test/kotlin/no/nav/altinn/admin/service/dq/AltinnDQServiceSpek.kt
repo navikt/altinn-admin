@@ -13,7 +13,7 @@ import no.nav.altinn.admin.common.ApplicationState
 import no.nav.altinn.admin.common.InMemoryLDAPServer
 import no.nav.altinn.admin.common.encodeBase64
 import no.nav.altinn.admin.mainModule
-import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldBeEqualTo
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
@@ -42,8 +42,8 @@ object AltinnDQServiceSpek : Spek({
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
 
-                        req.requestHandled shouldEqual true
-                        req.response.status() shouldEqual HttpStatusCode.InternalServerError
+                        req.requestHandled shouldBeEqualTo true
+                        req.response.status() shouldBeEqualTo HttpStatusCode.InternalServerError
                     }
                     it("Hent elementer fra DownloadQueue med ugyldig utgave kode") {
                         val params = "Peek_Mentor"
@@ -53,8 +53,8 @@ object AltinnDQServiceSpek : Spek({
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
 
-                        req.requestHandled shouldEqual true
-                        req.response.status() shouldEqual HttpStatusCode.BadRequest
+                        req.requestHandled shouldBeEqualTo true
+                        req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                     it("Hent melding fra DownloadQueue med tomt AR nummer") {
                         val arNummer = " "
@@ -64,8 +64,8 @@ object AltinnDQServiceSpek : Spek({
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
 
-                        req.requestHandled shouldEqual true
-                        req.response.status() shouldEqual HttpStatusCode.BadRequest
+                        req.requestHandled shouldBeEqualTo true
+                        req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                 }
             }
@@ -91,8 +91,8 @@ object AltinnDQServiceSpek : Spek({
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000002:itest2".toByteArray())}")
                         }
 
-                        req.requestHandled shouldEqual true
-                        req.response.status() shouldEqual HttpStatusCode.BadRequest
+                        req.requestHandled shouldBeEqualTo true
+                        req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                 }
             }

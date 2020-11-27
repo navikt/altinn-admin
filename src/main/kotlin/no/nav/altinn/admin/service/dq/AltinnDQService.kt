@@ -19,8 +19,10 @@ class AltinnDQService(private val env: Environment, iDownloadQueueExternalBasicF
     fun getFormData(arNummer: String): DqResponseFormTask {
         try {
             logger.debug { "Tries to get AR message." }
-            val dq = iDownloadQueueExternalBasic.getArchivedFormTaskBasicDQ(altinnUsername, altinnUserPassword,
-                arNummer, null, false)
+            val dq = iDownloadQueueExternalBasic.getArchivedFormTaskBasicDQ(
+                altinnUsername, altinnUserPassword,
+                arNummer, null, false
+            )
             val dqList = env.dqService.serviceCodes.split(",")
             if (!dqList.contains(dq.serviceCode)) {
                 return DqResponseFormTask("Failed", "ServiceCode is not whitelisted: ${dq.serviceCode}", ArData())
@@ -34,17 +36,23 @@ class AltinnDQService(private val env: Environment, iDownloadQueueExternalBasicF
             val attachments = dq.attachments.archivedAttachmentDQBE
             logger.info { "DownloadQueue: processing '${attachments.size}' attachments for AR: '$arNummer'" }
             val atMents = mutableListOf<Attachment>()
-            attachments.forEachIndexed { index, attachment ->
-                atMents.add(Attachment(
-                    attachment.fileName,
-                    index,
-                    encodeBase64(attachment.attachmentData),
-                    attachment.attachmentData.size,
-                    attachment.isIsEncrypted,
-                    attachment.attachmentType))
+            attachments.forEachIndexed {
+                index, attachment ->
+                atMents.add(
+                    Attachment(
+                        attachment.fileName,
+                        index,
+                        encodeBase64(attachment.attachmentData),
+                        attachment.attachmentData.size,
+                        attachment.isIsEncrypted,
+                        attachment.attachmentType
+                    )
+                )
             }
-            return DqResponseFormTask("Ok", "Ok",
-                ArData(dq.archiveReference,
+            return DqResponseFormTask(
+                "Ok", "Ok",
+                ArData(
+                    dq.archiveReference,
                     dq.archiveTimeStamp.toString(),
                     dq.serviceCode,
                     dq.serviceEditionCode,
@@ -54,15 +62,18 @@ class AltinnDQService(private val env: Environment, iDownloadQueueExternalBasicF
                     dq.formsInResponse,
                     dq.attachmentsInResponse,
                     formData,
-                    Attachments(atMents)))
+                    Attachments(atMents)
+                )
+            )
         } catch (e: IDownloadQueueExternalBasicGetArchivedFormTaskBasicDQAltinnFaultFaultFaultMessage) {
-            logger.error { "iDownloadQueueExternalBasic.getArchivedFormTaskBasicDQ feilet \n" +
-                        "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
-                        "\n ExtendedErrorMessage  ${e.faultInfo.altinnExtendedErrorMessage}" +
-                        "\n LocalizedErrorMessage  ${e.faultInfo.altinnLocalizedErrorMessage}" +
-                        "\n ErrorGuid  ${e.faultInfo.errorGuid}" +
-                        "\n UserGuid  ${e.faultInfo.userGuid}" +
-                        "\n UserId  ${e.faultInfo.userId}"
+            logger.error {
+                "iDownloadQueueExternalBasic.getArchivedFormTaskBasicDQ feilet \n" +
+                    "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
+                    "\n ExtendedErrorMessage  ${e.faultInfo.altinnExtendedErrorMessage}" +
+                    "\n LocalizedErrorMessage  ${e.faultInfo.altinnLocalizedErrorMessage}" +
+                    "\n ErrorGuid  ${e.faultInfo.errorGuid}" +
+                    "\n UserGuid  ${e.faultInfo.userGuid}" +
+                    "\n UserId  ${e.faultInfo.userId}"
             }
         }
         return DqResponseFormTask("Failed", "Unknown error occurred when getting rights registry, check logger", ArData())
@@ -75,14 +86,18 @@ class AltinnDQService(private val env: Environment, iDownloadQueueExternalBasicF
             for (dqItem in dqItems) {
                 if (serviceEdtionCode.isNotEmpty() && serviceEdtionCode != dqItem.serviceEditionCode.toString())
                     continue
-                dqList.add(DqItem(dqItem.archiveReference,
-                    dqItem.serviceCode,
-                    dqItem.serviceEditionCode.toString()
-                ))
+                dqList.add(
+                    DqItem(
+                        dqItem.archiveReference,
+                        dqItem.serviceCode,
+                        dqItem.serviceEditionCode.toString()
+                    )
+                )
             }
             return DqItems("Ok", dqList.size, dqList)
         } catch (e: IDownloadQueueExternalBasicGetDownloadQueueItemsAltinnFaultFaultFaultMessage) {
-            logger.error { "Exception iDownloadQueueExternalBasic.getDownloadQueueItems\n" +
+            logger.error {
+                "Exception iDownloadQueueExternalBasic.getDownloadQueueItems\n" +
                     "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
                     "\n ExtendedErrorMessage  ${e.faultInfo.altinnExtendedErrorMessage}" +
                     "\n LocalizedErrorMessage  ${e.faultInfo.altinnLocalizedErrorMessage}" +
