@@ -8,11 +8,12 @@ version = "1.0.2-SNAPSHOT"
 
 val kotlinVersion = "1.4.20"
 val ktorVersion = "1.4.2"
-val jacksonVersion = "2.10.0"
+val kotlinxCoroutinesVersion = "1.4.2"
+val jacksonVersion = "2.12.0"
 
 val prometheusVersion = "0.9.0"
 val kotlinloggingVersion = "2.0.3"
-val logstashEncoderVersion = "6.4"
+val logstashEncoderVersion = "6.5"
 val logbackVersion = "1.2.3"
 
 val konfigVersion = "1.6.10.0"
@@ -22,7 +23,7 @@ val jaxwsToolsVersion = "2.3.1"
 val javaxActivationVersion = "1.1.1"
 val cxfVersion = "3.3.1"
 val unboundidVersion = "5.1.1"
-val tjenestespesifikasjonerVersion = "1.2019.07.10-12.21-b55f47790a9d"
+val tjenestespesifikasjonerVersion = "1.2019.09.25-00.21-49b69f0625e0"
 val wiremockVersion = "2.27.2"
 
 val swaggerVersion = "3.1.7"
@@ -30,6 +31,7 @@ val swaggerVersion = "3.1.7"
 // test dependencies
 val kluentVersion = "1.64"
 val spekVersion = "2.0.14"
+val junitPlatformVersion = "1.7.0"
 
 val appMainClassName = "no.nav.altinn.admin.BootstrapKt"
 
@@ -39,9 +41,9 @@ plugins {
     kotlin("jvm") version "1.4.20"
     id("no.nils.wsdl2java") version "0.10"
     id("org.jmailen.kotlinter") version "3.2.0"
-    id("com.github.ben-manes.versions") version "0.20.0"
-    id("com.github.johnrengelman.shadow") version "5.2.0"
-    id("org.unbroken-dome.xjc") version "1.4.1"
+    id("com.github.ben-manes.versions") version "0.36.0"
+    id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("org.unbroken-dome.xjc") version "2.0.0"
 }
 
 buildscript {
@@ -89,7 +91,7 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion")
     implementation("com.natpryce:konfig:$konfigVersion")
     implementation("javax.xml.ws:jaxws-api:$jaxwsVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.1.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:$kotlinxCoroutinesVersion")
     implementation("no.nav.tjenestespesifikasjoner:altinn-download-queue-external:$tjenestespesifikasjonerVersion")
     implementation("no.nav.tjenestespesifikasjoner:altinn-correspondence-agency-external-basic:$tjenestespesifikasjonerVersion")
 
@@ -119,7 +121,7 @@ dependencies {
         exclude(group = "org.eclipse.jetty") // conflicts with WireMock
     }
     testImplementation("org.amshove.kluent:kluent:$kluentVersion")
-    testImplementation("org.junit.platform:junit-platform-runner:1.3.2")
+    testImplementation("org.junit.platform:junit-platform-runner:$junitPlatformVersion")
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     testImplementation("com.github.tomakehurst:wiremock:$wiremockVersion")
 }
@@ -132,7 +134,7 @@ tasks {
     }
     withType<KotlinCompile> {
         dependsOn("wsdl2java")
-        dependsOn("xjcGenerate")
+        // dependsOn("xjcGenerate")
     }
     withType<Wsdl2JavaTask> {
         wsdlDir = file("$projectDir/src/main/resources/wsdl")
@@ -167,10 +169,10 @@ tasks {
 //        gradleVersion = "6.7.1"
 //        distributionType = Wrapper.DistributionType.BIN
 //    }
-    xjcGenerate {
-        source = fileTree("$projectDir/src/main/resources/xsd") { include("*.xsd") }
-        outputDirectory = File(generatedSourcesDir)
-    }
+//    xjcGenerate {
+//        source = fileTree("$projectDir/src/main/resources/xsd") { include("*.xsd") }
+//        outputDirectory = File(generatedSourcesDir)
+//    }
 }
 
 java {
