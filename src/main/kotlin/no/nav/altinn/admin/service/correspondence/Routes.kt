@@ -14,7 +14,6 @@ import io.ktor.request.contentType
 import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.util.pipeline.PipelineContext
-import kotlinx.coroutines.Dispatchers
 import mu.KotlinLogging
 import no.altinn.schemas.serviceengine.formsengine._2009._10.TransportType
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.AttachmentsV2
@@ -55,9 +54,7 @@ fun Routing.correspondenceAPI(altinnCorrespondenceService: AltinnCorrespondenceS
     getCorrespondence2(altinnCorrespondenceService, environment)
     getCorrespondenceFiltered3(altinnCorrespondenceService, environment)
     getCorrespondenceFiltered4(altinnCorrespondenceService, environment)
-    with(Dispatchers.IO) {
-        postCorrespondence(altinnCorrespondenceService, environment)
-    }
+    postCorrespondence(altinnCorrespondenceService, environment)
 //    postFile(altinnCorrespondenceService, environment)
 }
 
