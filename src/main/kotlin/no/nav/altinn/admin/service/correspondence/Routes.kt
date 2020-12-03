@@ -15,6 +15,7 @@ import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.util.pipeline.PipelineContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import mu.KotlinLogging
 import no.altinn.schemas.serviceengine.formsengine._2009._10.TransportType
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.AttachmentsV2
@@ -383,38 +384,37 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
             BasicAuthSecurity(), ok<CorrespondenceResponse>(),
             serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>()
         )
-    ) {
-        _, body ->
-        val currentUser = call.principal<UserIdPrincipal>()!!.name
+    ) { _, body ->
+        withContext(Dispatchers.IO) {
+            val currentUser = call.principal<UserIdPrincipal>()!!.name
 
-        val approvedUsers = environment.application.users.split(",")
-        val userExist = approvedUsers.contains(currentUser)
-        if (!userExist) {
-            val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
-            application.environment.log.warn(msg)
-            call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
-            return@post
-        }
+            val approvedUsers = environment.application.users.split(",")
+            val userExist = approvedUsers.contains(currentUser)
+            if (!userExist) {
+                val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
+                application.environment.log.warn(msg)
+                call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
+                return@withContext
+            }
 
-        if (notValidServiceCode(body.tjeneste.servicecode, environment)) return@post
+            if (notValidServiceCode(body.tjeneste.servicecode, environment)) return@withContext
 
-        val content = getContentMessage(body)
-        var notifications: NotificationBEList? = null
-        if (body.varsel != null) {
-            notifications = getNotification(body.varsel)
-        }
+            val content = getContentMessage(body)
+            var notifications: NotificationBEList? = null
+            if (body.varsel != null) {
+                notifications = getNotification(body.varsel)
+            }
 
-        val meldingResponse = with(Dispatchers.IO) {
-            altinnCorrespondenceService.insertCorrespondence(
+            val meldingResponse = altinnCorrespondenceService.insertCorrespondence(
                 body.tjeneste.servicecode, body.tjeneste.serviceeditioncode,
                 body.orgnr, content, notifications = notifications
             )
+            if (meldingResponse.status != "OK") {
+                call.respond(HttpStatusCode.BadRequest, AnError(meldingResponse.message))
+                return@withContext
+            }
+            call.respond(HttpStatusCode.OK, meldingResponse.message)
         }
-        if (meldingResponse.status != "OK") {
-            call.respond(HttpStatusCode.BadRequest, AnError(meldingResponse.message))
-            return@post
-        }
-        call.respond(HttpStatusCode.OK, meldingResponse.message)
     }
 
 fun getNotification(varsel: List<Varsel>): NotificationBEList {
