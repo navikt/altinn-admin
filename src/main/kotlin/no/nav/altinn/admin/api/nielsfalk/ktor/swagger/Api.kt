@@ -21,6 +21,7 @@ import io.ktor.routing.Route
 import io.ktor.util.pipeline.PipelineContext
 import kotlin.reflect.KClass
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import no.nav.altinn.admin.AUTHENTICATION_BASIC
 import no.nav.altinn.admin.swagger
 
@@ -102,8 +103,8 @@ inline fun <reified LOCATION : Any, reified ENTITY : Any> Route.post(
     metadata.apply<LOCATION, ENTITY>(HttpMethod.Post)
 
     return when (metadata.security) {
-        is NoSecurity -> post<LOCATION> { body(this, it, with(Dispatchers.IO) { call.receive() }) }
-        is BasicAuthSecurity -> authenticate(AUTHENTICATION_BASIC) { post<LOCATION> { body(this, it, with(Dispatchers.IO) { call.receive() }) } }
+        is NoSecurity -> post<LOCATION> { body(this, it, withContext(Dispatchers.IO) { call.receive() }) }
+        is BasicAuthSecurity -> authenticate(AUTHENTICATION_BASIC) { post<LOCATION> { body(this, it, withContext(Dispatchers.IO) { call.receive() }) } }
     }
 }
 
