@@ -15,7 +15,6 @@ import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.util.pipeline.PipelineContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import mu.KotlinLogging
 import no.altinn.schemas.serviceengine.formsengine._2009._10.TransportType
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.AttachmentsV2
@@ -61,6 +60,7 @@ fun Routing.correspondenceAPI(altinnCorrespondenceService: AltinnCorrespondenceS
 }
 
 internal data class AnError(val error: String)
+
 internal const val GROUP_NAME = "Correspondence"
 
 private val logger = KotlinLogging.logger { }
@@ -77,8 +77,7 @@ fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorresp
             BasicAuthSecurity(), ok<CorrespondenceDetails>(),
             serviceUnavailable<AnError>(), badRequest<AnError>()
         )
-    ) {
-        param ->
+    ) { param ->
 
         if (notValidServiceCode(param.tjeneste.servicecode, environment)) return@get
 
@@ -132,8 +131,7 @@ fun Routing.getCorrespondenceFiltered3(altinnCorrespondenceService: AltinnCorres
             BasicAuthSecurity(), ok<CorrespondenceDetails>(),
             serviceUnavailable<AnError>(), badRequest<AnError>()
         )
-    ) {
-        param ->
+    ) { param ->
 
         val scList = filterOutServiceCode(environment, param.tjenesteKode)
         if (scList.size == 0) {
@@ -197,8 +195,7 @@ fun Routing.getCorrespondenceFiltered2(altinnCorrespondenceService: AltinnCorres
             BasicAuthSecurity(), ok<CorrespondenceDetails>(),
             serviceUnavailable<AnError>(), badRequest<AnError>()
         )
-    ) {
-        param ->
+    ) { param ->
 
         if (notValidServiceCode(param.tjeneste.servicecode, environment)) return@get
 
@@ -247,8 +244,7 @@ fun Routing.getCorrespondenceFiltered4(altinnCorrespondenceService: AltinnCorres
             BasicAuthSecurity(), ok<CorrespondenceDetails>(),
             serviceUnavailable<AnError>(), badRequest<AnError>()
         )
-    ) {
-        param ->
+    ) { param ->
 
         val scList = filterOutServiceCode(environment, param.tjenesteKode)
         if (scList.size == 0) {
@@ -307,8 +303,7 @@ fun Routing.getCorrespondence(altinnCorrespondenceService: AltinnCorrespondenceS
             BasicAuthSecurity(), ok<CorrespondenceDetails>(),
             serviceUnavailable<AnError>(), badRequest<AnError>()
         )
-    ) {
-        param ->
+    ) { param ->
 
         if (notValidServiceCode(param.tjeneste.servicecode, environment)) return@get
         try {
@@ -340,8 +335,7 @@ fun Routing.getCorrespondence2(altinnCorrespondenceService: AltinnCorrespondence
             BasicAuthSecurity(), ok<CorrespondenceDetails>(),
             serviceUnavailable<AnError>(), badRequest<AnError>()
         )
-    ) {
-        param ->
+    ) { param ->
 
         val scList = filterOutServiceCode(environment, param.tjenesteKode)
         if (scList.size == 0) {
@@ -379,13 +373,14 @@ class SendMelding
 
 @KtorExperimentalLocationsAPI
 fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
-    post<SendMelding, PostCorrespondenceBody> (
-        "Send melding til virksomhet".securityAndReponds(
-            BasicAuthSecurity(), ok<CorrespondenceResponse>(),
-            serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>()
-        )
-    ) { _, body ->
-        withContext(Dispatchers.IO) {
+    with(Dispatchers.IO) {
+        post<SendMelding, PostCorrespondenceBody>(
+            "Send melding til virksomhet".securityAndReponds(
+                BasicAuthSecurity(), ok<CorrespondenceResponse>(),
+                serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>()
+            )
+        ) { _, body ->
+
             val currentUser = call.principal<UserIdPrincipal>()!!.name
 
             val approvedUsers = environment.application.users.split(",")
@@ -394,10 +389,10 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
                 val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
                 application.environment.log.warn(msg)
                 call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
-                return@withContext
+                return@post
             }
 
-            if (notValidServiceCode(body.tjeneste.servicecode, environment)) return@withContext
+            if (notValidServiceCode(body.tjeneste.servicecode, environment)) return@post
 
             val content = getContentMessage(body)
             var notifications: NotificationBEList? = null
@@ -411,7 +406,7 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
             )
             if (meldingResponse.status != "OK") {
                 call.respond(HttpStatusCode.BadRequest, AnError(meldingResponse.message))
-                return@withContext
+                return@post
             }
             call.respond(HttpStatusCode.OK, meldingResponse.message)
         }
@@ -419,8 +414,7 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
 
 fun getNotification(varsel: List<Varsel>): NotificationBEList {
     val notificationBEList = NotificationBEList()
-    varsel.forEach {
-        v ->
+    varsel.forEach { v ->
         val notification = Notification()
         notification.textTokens = TextTokenSubstitutionBEList()
         notification.fromAddress = v.fraAdresse
