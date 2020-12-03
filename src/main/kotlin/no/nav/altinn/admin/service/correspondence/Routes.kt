@@ -55,7 +55,9 @@ fun Routing.correspondenceAPI(altinnCorrespondenceService: AltinnCorrespondenceS
     getCorrespondence2(altinnCorrespondenceService, environment)
     getCorrespondenceFiltered3(altinnCorrespondenceService, environment)
     getCorrespondenceFiltered4(altinnCorrespondenceService, environment)
-    postCorrespondence(altinnCorrespondenceService, environment)
+    with(Dispatchers.IO) {
+        postCorrespondence(altinnCorrespondenceService, environment)
+    }
 //    postFile(altinnCorrespondenceService, environment)
 }
 
@@ -373,43 +375,41 @@ class SendMelding
 
 @KtorExperimentalLocationsAPI
 fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
-    with(Dispatchers.IO) {
-        post<SendMelding, PostCorrespondenceBody>(
-            "Send melding til virksomhet".securityAndReponds(
-                BasicAuthSecurity(), ok<CorrespondenceResponse>(),
-                serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>()
-            )
-        ) { _, body ->
+    post<SendMelding, PostCorrespondenceBody>(
+        "Send melding til virksomhet".securityAndReponds(
+            BasicAuthSecurity(), ok<CorrespondenceResponse>(),
+            serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>()
+        )
+    ) { _, body ->
 
-            val currentUser = call.principal<UserIdPrincipal>()!!.name
+        val currentUser = call.principal<UserIdPrincipal>()!!.name
 
-            val approvedUsers = environment.application.users.split(",")
-            val userExist = approvedUsers.contains(currentUser)
-            if (!userExist) {
-                val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
-                application.environment.log.warn(msg)
-                call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
-                return@post
-            }
-
-            if (notValidServiceCode(body.tjeneste.servicecode, environment)) return@post
-
-            val content = getContentMessage(body)
-            var notifications: NotificationBEList? = null
-            if (body.varsel != null) {
-                notifications = getNotification(body.varsel)
-            }
-
-            val meldingResponse = altinnCorrespondenceService.insertCorrespondence(
-                body.tjeneste.servicecode, body.tjeneste.serviceeditioncode,
-                body.orgnr, content, notifications = notifications
-            )
-            if (meldingResponse.status != "OK") {
-                call.respond(HttpStatusCode.BadRequest, AnError(meldingResponse.message))
-                return@post
-            }
-            call.respond(HttpStatusCode.OK, meldingResponse.message)
+        val approvedUsers = environment.application.users.split(",")
+        val userExist = approvedUsers.contains(currentUser)
+        if (!userExist) {
+            val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
+            application.environment.log.warn(msg)
+            call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
+            return@post
         }
+
+        if (notValidServiceCode(body.tjeneste.servicecode, environment)) return@post
+
+        val content = getContentMessage(body)
+        var notifications: NotificationBEList? = null
+        if (body.varsel != null) {
+            notifications = getNotification(body.varsel)
+        }
+
+        val meldingResponse = altinnCorrespondenceService.insertCorrespondence(
+            body.tjeneste.servicecode, body.tjeneste.serviceeditioncode,
+            body.orgnr, content, notifications = notifications
+        )
+        if (meldingResponse.status != "OK") {
+            call.respond(HttpStatusCode.BadRequest, AnError(meldingResponse.message))
+            return@post
+        }
+        call.respond(HttpStatusCode.OK, meldingResponse.message)
     }
 
 fun getNotification(varsel: List<Varsel>): NotificationBEList {
