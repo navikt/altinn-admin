@@ -14,6 +14,7 @@ import io.ktor.request.contentType
 import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.util.pipeline.PipelineContext
+import kotlinx.coroutines.Dispatchers
 import mu.KotlinLogging
 import no.altinn.schemas.serviceengine.formsengine._2009._10.TransportType
 import no.altinn.schemas.services.serviceengine.correspondence._2010._10.AttachmentsV2
@@ -403,10 +404,12 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
             notifications = getNotification(body.varsel)
         }
 
-        val meldingResponse = altinnCorrespondenceService.insertCorrespondence(
-            body.tjeneste.servicecode, body.tjeneste.serviceeditioncode,
-            body.orgnr, content, notifications = notifications
-        )
+        val meldingResponse = with(Dispatchers.IO) {
+            altinnCorrespondenceService.insertCorrespondence(
+                body.tjeneste.servicecode, body.tjeneste.serviceeditioncode,
+                body.orgnr, content, notifications = notifications
+            )
+        }
         if (meldingResponse.status != "OK") {
             call.respond(HttpStatusCode.BadRequest, AnError(meldingResponse.message))
             return@post
