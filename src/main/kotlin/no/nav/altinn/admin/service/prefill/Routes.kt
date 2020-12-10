@@ -58,7 +58,7 @@ class Prefill
 @KtorExperimentalLocationsAPI
 fun Routing.postPrefill(altinnPrefillService: AltinnPrefillService, environment: Environment) =
     post<Prefill, PostPrefillBody>(
-        "Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(
+        "Prefill skjema i altinn innboks til bedrift".securityAndReponds(
             BasicAuthSecurity(), ok<PrefillResponse>(),
             serviceUnavailable<AnError>(), badRequest<AnError>()
         )
@@ -87,7 +87,7 @@ fun Routing.postPrefill(altinnPrefillService: AltinnPrefillService, environment:
 
         val scList = filterOutServiceCode(environment, body.tjeneste.servicecode)
         if (scList.size == 0) {
-            call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
+            call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt ${body.tjeneste.servicecode}"))
             return@post
         }
 

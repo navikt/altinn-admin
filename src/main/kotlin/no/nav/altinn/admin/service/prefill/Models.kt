@@ -19,7 +19,7 @@ data class PostPrefillBody(
     val duedate: String,
     @JsonProperty("melding")
     val melding: String,
-    @JsonProperty("varseler")
+    @JsonProperty("varsel")
     val varsel: List<Varsel>? = null
 )
 
