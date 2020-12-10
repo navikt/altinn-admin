@@ -52,6 +52,8 @@ import no.nav.altinn.admin.service.correspondence.AltinnCorrespondenceService
 import no.nav.altinn.admin.service.correspondence.correspondenceAPI
 import no.nav.altinn.admin.service.dq.AltinnDQService
 import no.nav.altinn.admin.service.dq.dqAPI
+import no.nav.altinn.admin.service.prefill.AltinnPrefillService
+import no.nav.altinn.admin.service.prefill.prefillAPI
 import no.nav.altinn.admin.service.receipt.AltinnReceiptService
 import no.nav.altinn.admin.service.receipt.receiptsAPI
 import no.nav.altinn.admin.service.srr.AltinnSRRService
@@ -196,6 +198,17 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
             false -> Clients.iCorrespondenceExternalBasic(environment.altinn.altinnCorrespondenceUrl)
         }
     }
+    val altinnPrefillService = AltinnPrefillService(environment) {
+        when (environment.application.localEnv != "localWin") {
+            true -> Clients.iPrefillExternalBasic(environment.altinn.altinnPrefillUrl).apply {
+                when (environment.application.devProfile) {
+                    true -> stsClient.configureFor(this, STS_SAML_POLICY_NO_TRANSPORT_BINDING)
+                    false -> stsClient.configureFor(this)
+                }
+            }
+            false -> Clients.iPrefillExternalBasic(environment.altinn.altinnPrefillUrl)
+        }
+    }
     val altinnReceiptService = AltinnReceiptService(environment) {
         when (environment.application.localEnv != "localWin") {
             true -> Clients.iReceiptAgencyExternalBasic(environment.altinn.altinnReceiptUrl).apply {
@@ -233,6 +246,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         logger.info { "Installing altinn correspondence api" }
         correspondenceAPI(altinnCorrespondenceService = altinnCorrespondenceService, environment = environment)
         logger.info { "Installing altinn receipts api" }
+        prefillAPI(altinnPrefillService = altinnPrefillService, environment = environment)
         receiptsAPI(altinnReceiptService = altinnReceiptService, environment = environment)
         nais(readinessCheck = { applicationState.initialized }, livenessCheck = { applicationState.running })
     }

@@ -94,6 +94,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:$kotlinxCoroutinesVersion")
     implementation("no.nav.tjenestespesifikasjoner:altinn-download-queue-external:$tjenestespesifikasjonerVersion")
     implementation("no.nav.tjenestespesifikasjoner:altinn-correspondence-agency-external-basic:$tjenestespesifikasjonerVersion")
+    implementation("no.nav.tjenestespesifikasjoner:altinn-pre-fill:$tjenestespesifikasjonerVersion")
 
     implementation("org.apache.cxf:cxf-rt-frontend-jaxws:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")

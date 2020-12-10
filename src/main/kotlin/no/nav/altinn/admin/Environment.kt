@@ -37,6 +37,7 @@ data class Environment(
     val srrService: SrrService = SrrService(),
     val dqService: DqService = DqService(),
     val correspondeceService: CorrespondenceService = CorrespondenceService(),
+    val prefillService: PrefillService = PrefillService(),
 
     val mock: Mock = Mock()
 ) {
@@ -45,6 +46,7 @@ data class Environment(
         val altinnSrrUrl: String = config[Key("altinn.rettighetsregister.url", stringType)],
         val altinnDqUrl: String = config[Key("altinn.downloadqueue.url", stringType)],
         val altinnCorrespondenceUrl: String = config[Key("altinn.correspondence.url", stringType)],
+        val altinnPrefillUrl: String = config[Key("altinn.prefill.url", stringType)],
         val altinnReceiptUrl: String = config[Key("altinn.receipt.url", stringType)],
         val username: String = config[Key("altinn.username", stringType)],
         val password: String = config[Key("altinn.password", stringType)]
@@ -83,6 +85,10 @@ data class Environment(
 
     data class CorrespondenceService(
         val serviceCodes: String = config[Key("correspondence.servicecode.list", stringType)]
+    )
+
+    data class PrefillService(
+        val serviceCodes: String = config[Key("prefill.servicecode.list", stringType)]
     )
 
     data class Mock(
