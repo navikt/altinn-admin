@@ -136,6 +136,7 @@ enum class CorrespondenceType(val servicecode: String, val serviceeditioncode: S
     T12("5312", "1"),
     T14("2452", "1"),
     Tilskuddsbrev("5278", "1"),
-    Kvittering_A1_Melosys("5644", "1")
+    Kvittering_A1_Melosys("5644", "1"),
+    H_resept("5663", "1")
     // Refusjon_Permittering("5562")
 }
