@@ -121,6 +121,7 @@ data class Notification(
 )
 
 enum class CorrespondenceType(val servicecode: String, val serviceeditioncode: String) {
+    TT02TestMelding("4626", "1"),
     Faktura("FMALT", "1"),
     K27("NAVK27", "1"),
     Sykemelding("4503", "2"),
