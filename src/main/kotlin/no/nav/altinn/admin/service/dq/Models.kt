@@ -91,5 +91,6 @@ enum class DqType(val servicecode: String, val serviceeditioncode: String) {
     Peek_Inntektsmelding_LPS("4936", "2"),
     Peek_Inntektsmelding_Privat("4936", "3"),
     Peek_Mentor("5216", "1"),
-    Peek_Ekspertbistand("5384", "1")
+    Peek_Ekspertbistand("5384", "1"),
+    Peek_Forsendelse_Bedriftsundersokelse("5664", "1")
 }
