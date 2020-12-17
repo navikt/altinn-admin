@@ -1,11 +1,14 @@
 package no.nav.altinn.admin.service.prefill
 
 import javax.xml.datatype.XMLGregorianCalendar
+import mu.KotlinLogging
 import no.altinn.schemas.services.serviceengine.prefill._2009._10.PrefillFormTask
 import no.altinn.services.serviceengine.prefill._2009._10.IPreFillExternalBasic
 import no.altinn.services.serviceengine.prefill._2009._10.IPreFillExternalBasicSubmitAndInstantiatePrefilledFormTaskBasicAltinnFaultFaultFaultMessage
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.randomUuid
+
+private val logger = KotlinLogging.logger { }
 
 class AltinnPrefillService(env: Environment, iPrefillExternalBasicV2Factory: () -> IPreFillExternalBasic) {
     private val altinnUsername = env.altinn.username
@@ -25,6 +28,8 @@ class AltinnPrefillService(env: Environment, iPrefillExternalBasicV2Factory: () 
                 dueDate
             )
         } catch (e: IPreFillExternalBasicSubmitAndInstantiatePrefilledFormTaskBasicAltinnFaultFaultFaultMessage) {
+            logger.warn { "Exception when sending prefill ${e.faultInfo.altinnErrorMessage}" }
+            logger.warn { e.faultInfo.altinnExtendedErrorMessage }
             throw RuntimeException(
                 "SubmitAndInstantiatePrefilledFormTask feilet" +
                     "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
