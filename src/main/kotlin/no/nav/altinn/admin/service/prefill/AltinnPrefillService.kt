@@ -41,6 +41,7 @@ class AltinnPrefillService(env: Environment, iPrefillExternalBasicV2Factory: () 
                 e
             )
         } catch (e: Throwable) {
+            logger.warn { "RuntimeException ${e.printStackTrace()}" }
             throw RuntimeException("AltinnPrefillService - Opprettelse av Altinnskjema feilet", e)
         }
         return PrefillResponse(receiptExternal.receiptStatusCode.value(), receiptExternal.receiptText)
