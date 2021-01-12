@@ -125,7 +125,7 @@ enum class CorrespondenceType(val servicecode: String, val serviceeditioncode: S
     Faktura("FMALT", "1"),
     K27("NAVK27", "1"),
     Sykemelding("4503", "2"),
-    // Informasjon_Fra_Nav("4609"),
+    Informasjon_Fra_Nav("4609", "1"),
     Søknad_Sykepenger("4751", "1"),
     Oppfølgingsplan("5062", "1"),
     // Kvittering_Sykepenger("5559"),
