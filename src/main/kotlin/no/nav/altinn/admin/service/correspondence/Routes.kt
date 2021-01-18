@@ -392,15 +392,28 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
 
         if (notValidServiceCode(body.tjeneste.servicecode, environment)) return@post
 
+        if (body.synligdato != null && !isDate(body.synligdato)) {
+            call.respond(HttpStatusCode.BadRequest, AnError("synligdato er i feil format, må være yyyy-mm-dd"))
+            return@post
+        }
+
+        if (body.tidsfrist != null && !isDate(body.tidsfrist)) {
+            call.respond(HttpStatusCode.BadRequest, AnError("tidsfrist er i feil format, må være yyyy-mm-dd"))
+            return@post
+        }
+
         val content = getContentMessage(body)
         var notifications: NotificationBEList? = null
         if (body.varsel != null) {
             notifications = getNotification(body.varsel)
         }
 
+        val synligDato = if (body.synligdato != null) dateToXmlGregorianCalendar(body.synligdato) else null
+        val tidsfrist = if (body.tidsfrist != null) dateToXmlGregorianCalendar(body.tidsfrist) else null
+
         val meldingResponse = altinnCorrespondenceService.insertCorrespondence(
             body.tjeneste.servicecode, body.tjeneste.serviceeditioncode,
-            body.orgnr, content, notifications = notifications
+            body.orgnr, content, notifications = notifications, synligDato, tidsfrist
         )
         if (meldingResponse.status != "OK") {
             call.respond(HttpStatusCode.BadRequest, AnError(meldingResponse.message))
