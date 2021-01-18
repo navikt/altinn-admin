@@ -9,7 +9,6 @@ import no.altinn.schemas.services.serviceengine.notification._2009._10.Notificat
 import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondenceAgencyExternalBasic
 import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondenceAgencyExternalBasicGetCorrespondenceStatusDetailsBasicV3AltinnFaultFaultFaultMessage
 import no.nav.altinn.admin.Environment
-import no.nav.altinn.admin.common.randomUuid
 
 private val logger = KotlinLogging.logger { }
 

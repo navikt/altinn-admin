@@ -412,7 +412,7 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
 
         val synligDato = if (!body.synligdato.isNullOrEmpty()) dateToXmlGregorianCalendar(body.synligdato) else null
         val tidsfrist = if (!body.tidsfrist.isNullOrEmpty()) dateToXmlGregorianCalendar(body.tidsfrist) else null
-        val callid = if (call.callId.isNullOrEmpty()) randomUuid() else call.callId
+        val callid = if (call.callId.isNullOrEmpty()) randomUuid() else call.callId!!
 
         val meldingResponse = altinnCorrespondenceService.insertCorrespondence(
             body.tjeneste.servicecode, body.tjeneste.serviceeditioncode,
