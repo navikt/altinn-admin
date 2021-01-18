@@ -74,7 +74,7 @@ class AltinnCorrespondenceService(env: Environment, iCorrepsondenceExternalBasic
         return CorrespondenceResponse("Failed", "Could not get any correspondence, check log.", emptyList())
     }
 
-    fun insertCorrespondence(serviceCode: String, serviceEdition: String, reportee: String, content: ExternalContentV2, notifications: NotificationBEList? = null, visibleDate: XMLGregorianCalendar? = null, dueDate: XMLGregorianCalendar? = null): InsertCorrespondenceResponse {
+    fun insertCorrespondence(serviceCode: String, serviceEdition: String, reportee: String, content: ExternalContentV2, notifications: NotificationBEList? = null, visibleDate: XMLGregorianCalendar? = null, dueDate: XMLGregorianCalendar? = null, callId: String? = randomUuid()): InsertCorrespondenceResponse {
         val correspondence = InsertCorrespondenceV2()
         correspondence.serviceCode = serviceCode
         correspondence.serviceEdition = serviceEdition
@@ -86,7 +86,7 @@ class AltinnCorrespondenceService(env: Environment, iCorrepsondenceExternalBasic
         try {
             logger.debug { "try sending a message to ${correspondence.reportee}" }
             val result = iCorrespondenceExternalBasic.insertCorrespondenceBasicV2(
-                altinnUsername, altinnUserPassword, SYSTEM_CODE, randomUuid(), correspondence
+                altinnUsername, altinnUserPassword, SYSTEM_CODE, callId, correspondence
             )
             return InsertCorrespondenceResponse(result.receiptStatusCode.name, result.receiptText)
         } catch (e: ICorrespondenceAgencyExternalBasicGetCorrespondenceStatusDetailsBasicV3AltinnFaultFaultFaultMessage) {
