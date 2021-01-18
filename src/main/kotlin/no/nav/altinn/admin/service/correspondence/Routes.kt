@@ -45,6 +45,7 @@ import no.nav.altinn.admin.common.dateToXmlGregorianCalendar
 import no.nav.altinn.admin.common.decodeBase64
 import no.nav.altinn.admin.common.isDate
 import no.nav.altinn.admin.common.isDateTime
+import no.nav.altinn.admin.common.randomUuid
 import no.nav.altinn.admin.common.toXmlGregorianCalendar
 
 @KtorExperimentalLocationsAPI
@@ -411,10 +412,11 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
 
         val synligDato = if (!body.synligdato.isNullOrEmpty()) dateToXmlGregorianCalendar(body.synligdato) else null
         val tidsfrist = if (!body.tidsfrist.isNullOrEmpty()) dateToXmlGregorianCalendar(body.tidsfrist) else null
+        val callid = if (call.callId.isNullOrEmpty()) randomUuid() else call.callId
 
         val meldingResponse = altinnCorrespondenceService.insertCorrespondence(
             body.tjeneste.servicecode, body.tjeneste.serviceeditioncode,
-            body.orgnr, content, notifications = notifications, synligDato, tidsfrist, call.callId
+            body.orgnr, content, notifications = notifications, synligDato, tidsfrist, callid
         )
         if (meldingResponse.status != "OK") {
             call.respond(HttpStatusCode.BadRequest, AnError(meldingResponse.message))

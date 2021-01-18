@@ -74,7 +74,7 @@ class AltinnCorrespondenceService(env: Environment, iCorrepsondenceExternalBasic
         return CorrespondenceResponse("Failed", "Could not get any correspondence, check log.", emptyList())
     }
 
-    fun insertCorrespondence(serviceCode: String, serviceEdition: String, reportee: String, content: ExternalContentV2, notifications: NotificationBEList? = null, visibleDate: XMLGregorianCalendar? = null, dueDate: XMLGregorianCalendar? = null, callId: String? = randomUuid()): InsertCorrespondenceResponse {
+    fun insertCorrespondence(serviceCode: String, serviceEdition: String, reportee: String, content: ExternalContentV2, notifications: NotificationBEList? = null, visibleDate: XMLGregorianCalendar? = null, dueDate: XMLGregorianCalendar? = null, callId: String): InsertCorrespondenceResponse {
         val correspondence = InsertCorrespondenceV2()
         correspondence.serviceCode = serviceCode
         correspondence.serviceEdition = serviceEdition
