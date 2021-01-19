@@ -5,7 +5,6 @@ import io.ktor.application.application
 import io.ktor.application.call
 import io.ktor.auth.UserIdPrincipal
 import io.ktor.auth.principal
-import io.ktor.features.callId
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -412,11 +411,11 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
 
         val synligDato = if (!body.synligdato.isNullOrEmpty()) dateToXmlGregorianCalendar(body.synligdato) else null
         val tidsfrist = if (!body.tidsfrist.isNullOrEmpty()) dateToXmlGregorianCalendar(body.tidsfrist) else null
-        val callid = if (call.callId.isNullOrEmpty()) randomUuid() else call.callId!!
+        val sendersreferanse = if (body.sendersreferanse.isNullOrEmpty()) randomUuid() else body.sendersreferanse
 
         val meldingResponse = altinnCorrespondenceService.insertCorrespondence(
             body.tjeneste.servicecode, body.tjeneste.serviceeditioncode,
-            body.orgnr, content, notifications = notifications, synligDato, tidsfrist, callid
+            body.orgnr, content, notifications = notifications, synligDato, tidsfrist, sendersreferanse
         )
         if (meldingResponse.status != "OK") {
             call.respond(HttpStatusCode.BadRequest, AnError(meldingResponse.message))

@@ -31,6 +31,8 @@ data class PostCorrespondenceBody(
     val synligdato: String? = null,
     @JsonProperty("tidsfrist")
     val tidsfrist: String? = null,
+    @JsonProperty("sendersreferanse")
+    val sendersreferanse: String? = null,
     @JsonProperty("varseler")
     val varsel: List<Varsel>? = null,
     @JsonProperty("vedlegger")
