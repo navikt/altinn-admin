@@ -24,8 +24,9 @@ abstract class LDAPBase(private val connInfo: ConnectionInfo) : AutoCloseable {
 
     // NB! - TrustAllTrustManager is too trusty, but good enough when inside corporate inner zone
     protected val ldapConnection = LDAPConnection(
-            SSLUtil(TrustAllTrustManager()).createSSLSocketFactory(),
-            connectOptions)
+        SSLUtil(TrustAllTrustManager()).createSSLSocketFactory(),
+        connectOptions
+    )
 
     init {
         // initialize LDAP connection
@@ -35,8 +36,9 @@ abstract class LDAPBase(private val connInfo: ConnectionInfo) : AutoCloseable {
         } catch (e: LDAPException) {
             logger.error { "Exception occurred LDAP operations against $connInfo will fail - $e" }
             ldapConnection.setDisconnectInfo(
-                    DisconnectType.IO_ERROR,
-                    "Exception occurred when connecting to LDAPS $connInfo", e)
+                DisconnectType.IO_ERROR,
+                "Exception occurred when connecting to LDAPS $connInfo", e
+            )
         }
     }
 

@@ -10,10 +10,8 @@ import io.ktor.routing.get
 import io.ktor.routing.route
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.exporter.common.TextFormat
-import no.nav.altinn.admin.Environment
 
 fun Routing.nais(
-    environment: Environment,
     readinessCheck: () -> Boolean,
     livenessCheck: () -> Boolean = { true },
     collectorRegistry: CollectorRegistry = CollectorRegistry.defaultRegistry

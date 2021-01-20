@@ -7,8 +7,8 @@ import no.altinn.schemas.services.intermediary.shipment._2009._10.ReferenceType
 import no.altinn.services.intermediary.receipt._2009._10.IReceiptAgencyExternalBasic
 import no.altinn.services.intermediary.receipt._2009._10.IReceiptAgencyExternalBasicGetReceiptListBasicV2AltinnFaultFaultFaultMessage
 import no.nav.altinn.admin.Environment
-import no.nav.altinn.admin.common.isDate
 import no.nav.altinn.admin.common.dateToXmlGregorianCalendar
+import no.nav.altinn.admin.common.isDate
 
 private val logger = KotlinLogging.logger { }
 class AltinnReceiptService(env: Environment, iReceiptAgencyExternalBasicFactory: () -> IReceiptAgencyExternalBasic) {
@@ -24,8 +24,10 @@ class AltinnReceiptService(env: Environment, iReceiptAgencyExternalBasicFactory:
 
             val d1 = dateToXmlGregorianCalendar(dateFrom)
             val d2 = dateToXmlGregorianCalendar(dateTo)
-            val receiptItems = iReceiptAgencyExternalBasic.getReceiptListBasicV2(altinnUsername, altinnUserPassword,
-                ReceiptType.FORM_TASK, d1, d2)
+            val receiptItems = iReceiptAgencyExternalBasic.getReceiptListBasicV2(
+                altinnUsername, altinnUserPassword,
+                ReceiptType.FORM_TASK, d1, d2
+            )
 
             var arList = mutableListOf<String>()
             for (receipt in receiptItems.receipt) {
@@ -39,13 +41,14 @@ class AltinnReceiptService(env: Environment, iReceiptAgencyExternalBasicFactory:
             }
             return ReceiptItems("Ok", arList.size, arList)
         } catch (e: IReceiptAgencyExternalBasicGetReceiptListBasicV2AltinnFaultFaultFaultMessage) {
-            no.nav.altinn.admin.service.receipt.logger.error { "Exception IReceiptAgencyExternalBasic.getReceiptListBasicV2\n" +
-                "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
-                "\n ExtendedErrorMessage  ${e.faultInfo.altinnExtendedErrorMessage}" +
-                "\n LocalizedErrorMessage  ${e.faultInfo.altinnLocalizedErrorMessage}" +
-                "\n ErrorGuid  ${e.faultInfo.errorGuid}" +
-                "\n UserGuid  ${e.faultInfo.userGuid}" +
-                "\n UserId  ${e.faultInfo.userId}"
+            logger.error {
+                "Exception IReceiptAgencyExternalBasic.getReceiptListBasicV2\n" +
+                    "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
+                    "\n ExtendedErrorMessage  ${e.faultInfo.altinnExtendedErrorMessage}" +
+                    "\n LocalizedErrorMessage  ${e.faultInfo.altinnLocalizedErrorMessage}" +
+                    "\n ErrorGuid  ${e.faultInfo.errorGuid}" +
+                    "\n UserGuid  ${e.faultInfo.userGuid}" +
+                    "\n UserId  ${e.faultInfo.userId}"
             }
             return ReceiptItems("Failed", 0, emptyList())
         }
@@ -57,8 +60,10 @@ class AltinnReceiptService(env: Environment, iReceiptAgencyExternalBasicFactory:
                 throw IllegalArgumentException("Wrong date format")
             val d1 = dateToXmlGregorianCalendar(dateFrom)
             val d2 = dateToXmlGregorianCalendar(dateTo)
-            val receiptItems = iReceiptAgencyExternalBasic.getReceiptListBasicV2(altinnUsername, altinnUserPassword,
-                ReceiptType.CORRESPONDENCE, d1, d2).receipt
+            val receiptItems = iReceiptAgencyExternalBasic.getReceiptListBasicV2(
+                altinnUsername, altinnUserPassword,
+                ReceiptType.CORRESPONDENCE, d1, d2
+            ).receipt
 
             var receiptIdList = mutableListOf<CorrespondenceReceipt>()
             for (receipt in receiptItems) {
@@ -73,13 +78,14 @@ class AltinnReceiptService(env: Environment, iReceiptAgencyExternalBasicFactory:
             }
             return CorrespondenceReceiptItems("Ok", receiptIdList.size, receiptIdList)
         } catch (e: IReceiptAgencyExternalBasicGetReceiptListBasicV2AltinnFaultFaultFaultMessage) {
-            no.nav.altinn.admin.service.receipt.logger.error { "Exception IReceiptAgencyExternalBasic.getReceiptListBasicV2\n" +
-                "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
-                "\n ExtendedErrorMessage  ${e.faultInfo.altinnExtendedErrorMessage}" +
-                "\n LocalizedErrorMessage  ${e.faultInfo.altinnLocalizedErrorMessage}" +
-                "\n ErrorGuid  ${e.faultInfo.errorGuid}" +
-                "\n UserGuid  ${e.faultInfo.userGuid}" +
-                "\n UserId  ${e.faultInfo.userId}"
+            logger.error {
+                "Exception IReceiptAgencyExternalBasic.getReceiptListBasicV2\n" +
+                    "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
+                    "\n ExtendedErrorMessage  ${e.faultInfo.altinnExtendedErrorMessage}" +
+                    "\n LocalizedErrorMessage  ${e.faultInfo.altinnLocalizedErrorMessage}" +
+                    "\n ErrorGuid  ${e.faultInfo.errorGuid}" +
+                    "\n UserGuid  ${e.faultInfo.userGuid}" +
+                    "\n UserId  ${e.faultInfo.userId}"
             }
             return CorrespondenceReceiptItems("Failed", 0, emptyList())
         }

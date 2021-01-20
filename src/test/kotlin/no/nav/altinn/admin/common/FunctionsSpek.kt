@@ -1,9 +1,9 @@
 package no.nav.altinn.admin.common
 
-import org.spekframework.spek2.Spek
-import org.spekframework.spek2.style.specification.describe
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import org.spekframework.spek2.Spek
+import org.spekframework.spek2.style.specification.describe
 
 object FunctionsSpek : Spek({
     describe("Testing of date and dateTime regex") {

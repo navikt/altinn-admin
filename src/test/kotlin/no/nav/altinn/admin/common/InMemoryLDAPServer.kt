@@ -32,28 +32,31 @@ object InMemoryLDAPServer {
             val kStore = "src/test/resources/inmds.jks"
             val tlsCF = SSLUtil(TrustAllTrustManager()).createSSLSocketFactory()
             val tlsSF = SSLUtil(
-                    KeyStoreKeyManager(kStore, "password".toCharArray(), "JKS", "inmds"),
-                    TrustStoreTrustManager(kStore)
+                KeyStoreKeyManager(kStore, "password".toCharArray(), "JKS", "inmds"),
+                TrustStoreTrustManager(kStore)
             ).createSSLServerSocketFactory()
 
             setListenerConfigs(
-                    InMemoryListenerConfig.createLDAPSConfig(
-                            LNAME,
-                            null,
-                            LPORT, tlsSF, tlsCF)
+                InMemoryListenerConfig.createLDAPSConfig(
+                    LNAME,
+                    null,
+                    LPORT, tlsSF, tlsCF
+                )
             )
 
             // require authentication for most operations except bind
             setAuthenticationRequiredOperationTypes(
-                    OperationType.COMPARE,
-                    OperationType.SEARCH,
-                    OperationType.ADD,
-                    OperationType.MODIFY,
-                    OperationType.DELETE
+                OperationType.COMPARE,
+                OperationType.SEARCH,
+                OperationType.ADD,
+                OperationType.MODIFY,
+                OperationType.DELETE
             )
             // let the embedded server use identical schema as apache DS configured for AD support (group and sAMAcc..)
             schema = Schema.getSchema("src/test/resources/apacheDS.ldif")
-        } catch (e: Exception) { logger.error { "Exception occurred $e" } }
+        } catch (e: Exception) {
+            logger.error { "Exception occurred $e" }
+        }
     }
 
     private val imDS = InMemoryDirectoryServer(imConf).apply {

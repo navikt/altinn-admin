@@ -16,23 +16,23 @@ import no.nav.altinn.admin.userDN
  */
 
 class LDAPAuthenticate(private val config: Environment.Application) :
-        LDAPBase(config.getConnectionInfo(LdapConnectionType.AUTHENTICATION)) {
+    LDAPBase(config.getConnectionInfo(LdapConnectionType.AUTHENTICATION)) {
 
     fun canUserAuthenticate(user: String, pwd: String): Boolean =
-            if (!ldapConnection.isConnected) {
-                logger.error { "Cannot authenticate, connection to ldap is down" }
-                false
-            } else {
-                // fold over resolved DNs, NAV ident or service accounts (normal + Basta)
-                resolveDNs(user).fold(false) { acc, dn -> acc || authenticated(dn, pwd, acc) }.also {
+        if (!ldapConnection.isConnected) {
+            logger.error { "Cannot authenticate, connection to ldap is down" }
+            false
+        } else {
+            // fold over resolved DNs, NAV ident or service accounts (normal + Basta)
+            resolveDNs(user).fold(false) { acc, dn -> acc || authenticated(dn, pwd, acc) }.also {
 
-                    val connInfo = config.getConnectionInfo(LdapConnectionType.AUTHENTICATION)
-                    when (it) {
-                        true -> logger.info { "Successful bind of $user to $connInfo" }
-                        false -> logger.error { "Cannot bind $user to $connInfo" }
-                    }
+                val connInfo = config.getConnectionInfo(LdapConnectionType.AUTHENTICATION)
+                when (it) {
+                    true -> logger.info { "Successful bind of $user to $connInfo" }
+                    false -> logger.error { "Cannot bind $user to $connInfo" }
                 }
             }
+        }
 
     // resolve DNs for both service accounts, including those created in Basta. The order of DNs according to user name
     private fun resolveDNs(user: String): List<String> = config.userDN(user).let { userDn ->
@@ -45,18 +45,17 @@ class LDAPAuthenticate(private val config: Environment.Application) :
     }
 
     private fun authenticated(dn: String, pwd: String, alreadyAuthenticated: Boolean): Boolean =
-            if (alreadyAuthenticated) true
-            else {
-                logger.info { "DNs : $dn  " }
-                try {
-                    ldapConnection.bind(dn, pwd).resultCode == ResultCode.SUCCESS
-                } catch (e: LDAPException) {
-                    false
-                }
+        if (alreadyAuthenticated) true
+        else {
+            logger.info { "DNs : $dn  " }
+            try {
+                ldapConnection.bind(dn, pwd).resultCode == ResultCode.SUCCESS
+            } catch (e: LDAPException) {
+                false
             }
+        }
 
     companion object {
-
         val logger = KotlinLogging.logger { }
     }
 }

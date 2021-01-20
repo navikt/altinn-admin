@@ -80,3 +80,17 @@ data class ArData(
     @JsonProperty("attachments")
     val attachments: Attachments? = null
 )
+
+enum class DqType(val servicecode: String, val serviceeditioncode: String) {
+    Nærmeste_Leder("4596", "1"),
+    Melosys_A1("4826", "1"),
+    NAV_Kontroll("5279", "1"),
+    Peek_Endre_Bankkontonummer("2896", "87"),
+    Peek_Målekort("4711", "1"),
+    Peek_Inntektsmelding("4936", "1"),
+    Peek_Inntektsmelding_LPS("4936", "2"),
+    Peek_Inntektsmelding_Privat("4936", "3"),
+    Peek_Mentor("5216", "1"),
+    Peek_Ekspertbistand("5384", "1"),
+    Peek_Forsendelse_Bedriftsundersokelse("5664", "1")
+}

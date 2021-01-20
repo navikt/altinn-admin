@@ -10,7 +10,7 @@ data class PostLeggTilRettighetBody(
     @JsonProperty("orgnr")
     val orgnr: String,
     @JsonProperty("lesEllerSkriv")
-    val lesEllerSkriv: String,
+    val lesEllerSkriv: RettighetType,
     @JsonProperty("domene")
     val domene: String
 )
@@ -46,4 +46,14 @@ data class RegistryResponse(
         @JsonProperty("tilDato")
         val tilDato: String
     )
+}
+
+enum class RettighetType(val type: String) {
+    Les("les"),
+    Skriv("skriv")
+}
+
+enum class SrrType(val servicecode: String, val serviceeditioncode: String) {
+    Samtykke_AAP("5252", "1"),
+    Samtykke_UFORE("5252", "2")
 }

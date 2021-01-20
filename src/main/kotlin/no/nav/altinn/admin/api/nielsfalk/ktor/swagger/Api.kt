@@ -10,17 +10,20 @@ import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.http.HttpStatusCode.Companion.ServiceUnavailable
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
+import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.locations.delete
 import io.ktor.locations.get
 import io.ktor.locations.post
 import io.ktor.locations.put
-import io.ktor.util.pipeline.PipelineContext
 import io.ktor.request.receive
 import io.ktor.routing.Route
+import io.ktor.util.pipeline.PipelineContext
+import kotlin.reflect.KClass
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import no.nav.altinn.admin.AUTHENTICATION_BASIC
 import no.nav.altinn.admin.swagger
-import kotlin.reflect.KClass
 
 /**
  * @author Niels Falk, changed by Torstein Nesby
@@ -52,6 +55,7 @@ data class Metadata(
     }
 }
 
+@KtorExperimentalLocationsAPI
 inline fun <reified LOCATION : Any, reified ENTITY_TYPE : Any> Metadata.apply(method: HttpMethod) {
     val clazz = LOCATION::class.java
     val location = clazz.getAnnotation(Location::class.java)
@@ -60,9 +64,9 @@ inline fun <reified LOCATION : Any, reified ENTITY_TYPE : Any> Metadata.apply(me
     applyOperations(location, tags, method, LOCATION::class, ENTITY_TYPE::class)
 }
 
-fun Metadata.applyResponseDefinitions() =
-        responses.values.forEach { addDefinition(it) }
+fun Metadata.applyResponseDefinitions() = responses.values.forEach { addDefinition(it) }
 
+@KtorExperimentalLocationsAPI
 fun <LOCATION : Any, BODY_TYPE : Any> Metadata.applyOperations(
     location: Location,
     group: Group?,
@@ -70,17 +74,18 @@ fun <LOCATION : Any, BODY_TYPE : Any> Metadata.applyOperations(
     locationType: KClass<LOCATION>,
     entityType: KClass<BODY_TYPE>
 ) {
-    swagger.paths
-            .getOrPut(location.path) { mutableMapOf() }
-            .put(method.value.toLowerCase(),
-                    Operation(this, location, group, locationType, entityType))
+    swagger.paths.getOrPut(location.path) { mutableMapOf() }
+        .put(
+            method.value.toLowerCase(),
+            Operation(this, location, group, locationType, entityType)
+        )
 }
 
 fun String.responds(vararg pairs: Pair<HttpStatusCode, KClass<*>>): Metadata =
-        Metadata(responses = mapOf(*pairs), summary = this)
+    Metadata(responses = mapOf(*pairs), summary = this)
 
 fun String.securityAndReponds(security: Security, vararg pairs: Pair<HttpStatusCode, KClass<*>>): Metadata =
-        Metadata(responses = mapOf(*pairs), summary = this, security = security)
+    Metadata(responses = mapOf(*pairs), summary = this, security = security)
 
 inline fun <reified T> ok(): Pair<HttpStatusCode, KClass<*>> = OK to T::class
 inline fun <reified T> failed(): Pair<HttpStatusCode, KClass<*>> = InternalServerError to T::class
@@ -88,6 +93,7 @@ inline fun <reified T> serviceUnavailable(): Pair<HttpStatusCode, KClass<*>> = S
 inline fun <reified T> badRequest(): Pair<HttpStatusCode, KClass<*>> = BadRequest to T::class
 inline fun <reified T> unAuthorized(): Pair<HttpStatusCode, KClass<*>> = Unauthorized to T::class
 
+@KtorExperimentalLocationsAPI
 inline fun <reified LOCATION : Any, reified ENTITY : Any> Route.post(
     metadata: Metadata,
     noinline body: suspend PipelineContext<Unit, ApplicationCall>.(LOCATION, ENTITY) -> Unit
@@ -97,11 +103,12 @@ inline fun <reified LOCATION : Any, reified ENTITY : Any> Route.post(
     metadata.apply<LOCATION, ENTITY>(HttpMethod.Post)
 
     return when (metadata.security) {
-        is NoSecurity -> post<LOCATION> { body(this, it, call.receive()) }
-        is BasicAuthSecurity -> authenticate(AUTHENTICATION_BASIC) { post<LOCATION> { body(this, it, call.receive()) } }
+        is NoSecurity -> post<LOCATION> { body(this, it, withContext(Dispatchers.IO) { call.receive() }) }
+        is BasicAuthSecurity -> authenticate(AUTHENTICATION_BASIC) { post<LOCATION> { body(this, it, withContext(Dispatchers.IO) { call.receive() }) } }
     }
 }
 
+@KtorExperimentalLocationsAPI
 inline fun <reified LOCATION : Any, reified ENTITY : Any> Route.put(
     metadata: Metadata,
     noinline body: suspend PipelineContext<Unit, ApplicationCall>.(LOCATION, ENTITY) -> Unit
@@ -116,6 +123,7 @@ inline fun <reified LOCATION : Any, reified ENTITY : Any> Route.put(
     }
 }
 
+@KtorExperimentalLocationsAPI
 inline fun <reified LOCATION : Any> Route.get(
     metadata: Metadata,
     noinline body: suspend PipelineContext<Unit, ApplicationCall>.(LOCATION) -> Unit
@@ -130,6 +138,7 @@ inline fun <reified LOCATION : Any> Route.get(
     }
 }
 
+@KtorExperimentalLocationsAPI
 inline fun <reified LOCATION : Any> Route.delete(
     metadata: Metadata,
     noinline body: suspend PipelineContext<Unit, ApplicationCall>.(LOCATION) -> Unit

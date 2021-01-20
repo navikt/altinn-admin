@@ -4,6 +4,7 @@ import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternal
 import no.altinn.services.intermediary.receipt._2009._10.IReceiptAgencyExternalBasic
 import no.altinn.services.register.srr._2015._06.IRegisterSRRAgencyExternalBasic
 import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondenceAgencyExternalBasic
+import no.altinn.services.serviceengine.prefill._2009._10.IPreFillExternalBasic
 import org.apache.cxf.ext.logging.LoggingFeature
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean
 import org.apache.cxf.ws.addressing.WSAddressingFeature
@@ -25,6 +26,12 @@ object Clients {
         createServicePort(
             serviceUrl = serviceUrl,
             serviceClazz = ICorrespondenceAgencyExternalBasic::class.java
+        )
+
+    fun iPrefillExternalBasic(serviceUrl: String): IPreFillExternalBasic =
+        createServicePort(
+            serviceUrl = serviceUrl,
+            serviceClazz = IPreFillExternalBasic::class.java
         )
 
     fun iReceiptAgencyExternalBasic(serviceUrl: String): IReceiptAgencyExternalBasic =

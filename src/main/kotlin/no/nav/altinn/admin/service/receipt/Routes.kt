@@ -31,8 +31,11 @@ private val logger = KotlinLogging.logger { }
 data class ArPeriode(val fraDato: String, val tilDato: String)
 
 fun Routing.getInboundReceipts(altinnReceiptService: AltinnReceiptService, environment: Environment) =
-    get<ArPeriode>("Hent liste av mottatt Arkiv Referanser for periode".responds(ok<ReceiptItems>(),
-        serviceUnavailable<AnError>(), badRequest<AnError>())) {
+    get<ArPeriode>(
+        "Hent liste av mottatt Arkiv Referanser for periode".responds(
+            ok<ReceiptItems>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+        )
+    ) {
         param ->
 
         val fraDato = param.fraDato.trim()
@@ -71,8 +74,11 @@ fun Routing.getInboundReceipts(altinnReceiptService: AltinnReceiptService, envir
 data class MeldingsPeriode(val fraDato: String, val tilDato: String)
 
 fun Routing.getCorresondenceReceipts(altinnReceiptService: AltinnReceiptService, environment: Environment) =
-    get<MeldingsPeriode>("Hent liste av sendte meldingskvitteringer for periode".responds(ok<CorrespondenceReceiptItems>(),
-        serviceUnavailable<AnError>(), badRequest<AnError>())) {
+    get<MeldingsPeriode>(
+        "Hent liste av sendte meldingskvitteringer for periode".responds(
+            ok<CorrespondenceReceiptItems>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+        )
+    ) {
         param ->
 
         val fraDato = param.fraDato.trim()

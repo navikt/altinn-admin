@@ -3,7 +3,9 @@ package no.nav.altinn.admin.common
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.util.*
+import java.util.Base64
+import java.util.GregorianCalendar
+import java.util.UUID
 import javax.xml.datatype.DatatypeFactory
 import javax.xml.datatype.XMLGregorianCalendar
 
