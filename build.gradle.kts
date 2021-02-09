@@ -7,7 +7,7 @@ group = "no.nav"
 version = "1.0.2-SNAPSHOT"
 
 val kotlinVersion = "1.4.20"
-val ktorVersion = "1.4.2"
+val ktorVersion = "1.5.1"
 val kotlinxCoroutinesVersion = "1.4.2"
 val jacksonVersion = "2.12.0"
 
