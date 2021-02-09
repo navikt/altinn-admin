@@ -10,6 +10,9 @@ import io.ktor.routing.get
 import io.ktor.routing.route
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.exporter.common.TextFormat
+import mu.KotlinLogging
+
+private val logger = KotlinLogging.logger { }
 
 fun Routing.nais(
     readinessCheck: () -> Boolean,
@@ -18,6 +21,7 @@ fun Routing.nais(
 ) {
     route("/internal") {
         get("/is_alive") {
+            logger.info { "Is Alive is called!" }
             if (livenessCheck()) {
                 call.respondText("Alive")
             } else {
@@ -25,10 +29,7 @@ fun Routing.nais(
             }
         }
         get("/is_ready") {
-//            val ldapOk = LDAPAuthenticate(environment.application).use { ldapAuthenticate -> ldapAuthenticate.connectionOk }
-//            if (!ldapOk) {
-//                call.respondText("LDAP authenticate is not ready", status = HttpStatusCode.InternalServerError)
-//            }
+            logger.info { "Is Ready is called!" }
             if (readinessCheck()) {
                 call.respondText("Ready")
             } else {
