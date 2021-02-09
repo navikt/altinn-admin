@@ -25,10 +25,6 @@ fun Routing.nais(
             }
         }
         get("/is_ready") {
-//            val ldapOk = LDAPAuthenticate(environment.application).use { ldapAuthenticate -> ldapAuthenticate.connectionOk }
-//            if (!ldapOk) {
-//                call.respondText("LDAP authenticate is not ready", status = HttpStatusCode.InternalServerError)
-//            }
             if (readinessCheck()) {
                 call.respondText("Ready")
             } else {

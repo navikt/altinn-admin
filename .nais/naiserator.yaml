@@ -10,17 +10,17 @@ spec:
   team: alf
   replicas:
     min: 1
-    max: 1
+    max: 2
   port: 8080
   liveness:
     path: /internal/is_alive
-    initialDelay: 10
-    periodSeconds: 5
+    initialDelay: 30
+    periodSeconds: 20
     failureThreshold: 10
   readiness:
     path: /internal/is_ready
-    initialDelay: 10
-    periodSeconds: 5
+    initialDelay: 30
+    periodSeconds: 20
     failureThreshold: 10
   prometheus:
     enabled: true
