@@ -402,6 +402,11 @@ fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondence
             call.respond(HttpStatusCode.BadRequest, AnError("tidsfrist er i feil format, må være yyyy-mm-dd"))
             return@post
         }
+        val distinctVarseler = body.varsel?.distinctBy { it.tittel to it.melding to it.ekstraMottakere[0].forsendelseType to it.ekstraMottakere[0].mottakerAdresse }?.toList()
+        if (distinctVarseler != null && distinctVarseler.size != body.varsel.size) {
+            call.respond(HttpStatusCode.BadRequest, AnError("melding innholder lik varsel"))
+            return@post
+        }
 
         val content = getContentMessage(body)
         var notifications: NotificationBEList? = null
