@@ -358,7 +358,7 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
 
 @KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
-@Location("$API_V1/altinn/rettighetsregister/slett/{tjeneste}/{orgnr}/{lesEllerSkriv}/{domene}")
+@Location("$API_V1/altinn/rettighetsregister/slett2/{tjeneste}/{orgnr}/{lesEllerSkriv}/{domene}")
 data class DeleteRettighet2(val tjeneste: String = "sc:sec", val orgnr: String, val lesEllerSkriv: RettighetType, val domene: String)
 
 @KtorExperimentalLocationsAPI
