@@ -87,6 +87,7 @@ enum class DqType(val servicecode: String, val serviceeditioncode: String) {
     NAV_Kontroll("5279", "1"),
     Peek_Endre_Bankkontonummer("2896", "87"),
     Peek_Målekort("4711", "1"),
+    Peek_Barnehageliste("4795", "1"),
     Peek_Inntektsmelding("4936", "1"),
     Peek_Inntektsmelding_LPS("4936", "2"),
     Peek_Inntektsmelding_Privat("4936", "3"),

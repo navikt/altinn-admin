@@ -35,6 +35,7 @@ fun Routing.ssrAPI(altinnSrrService: AltinnSRRService, environment: Environment)
     getRightsForReporteeServiceEdition(altinnSrrService, environment)
     addRightsForReportee(altinnSrrService, environment)
     deleteRightsForReportee(altinnSrrService, environment)
+    deleteRightsForReportee2(altinnSrrService, environment)
 }
 
 internal data class AnError(val error: String)
@@ -348,6 +349,76 @@ fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environm
         }
 
         val rightResponse = altinnSrrService.deleteRights(param.tjeneste.servicecode, param.tjeneste.serviceeditioncode, virksomhetsnummer, param.domene, srrType)
+        if (rightResponse.status == "Failed") {
+            call.respond(HttpStatusCode.BadRequest, AnError(rightResponse.message))
+            return@delete
+        }
+        call.respond(HttpStatusCode.OK, rightResponse)
+    }
+
+@KtorExperimentalLocationsAPI
+@Group(GROUP_NAME)
+@Location("$API_V1/altinn/rettighetsregister/slett2/{tjeneste}/{orgnr}/{lesEllerSkriv}/{domene}")
+data class DeleteRettighet2(val tjeneste: String = "sc:sec", val orgnr: String, val lesEllerSkriv: RettighetType, val domene: String)
+
+@KtorExperimentalLocationsAPI
+fun Routing.deleteRightsForReportee2(altinnSrrService: AltinnSRRService, environment: Environment) =
+    delete<DeleteRettighet2>(
+        "Slett rettighet for en virksomhet"
+            .securityAndReponds(BasicAuthSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
+    ) { param ->
+        val currentUser = call.principal<UserIdPrincipal>()!!.name
+        val approvedUsers = environment.application.users.split(",")
+        val userExist = approvedUsers.contains(currentUser)
+        if (!userExist) {
+            val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
+            application.environment.log.warn(msg)
+            call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
+            return@delete
+        }
+
+        val logEntry = "Forsøker å slette en rettighet for en virksomhet $currentUser - $param"
+        application.environment.log.info(logEntry)
+
+        val scSec = param.tjeneste.split(":")
+        if (scSec.size != 2) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste format oppgitt"))
+            return@delete
+        }
+
+        val scList = filterOutServiceCode(environment, scSec.first())
+        if (scList.size == 0) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
+            return@delete
+        }
+
+        if (!scList.contains(Pair(scSec.first(), scSec.last()))) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig utgaveKode"))
+            return@delete
+        }
+
+        val virksomhetsnummer = param.orgnr
+        if (virksomhetsnummer.isBlank() || virksomhetsnummer.length != 9) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig virksomhetsnummer"))
+            return@delete
+        }
+
+        var srrType = RegisterSRRRightsType.READ
+        if ("skriv" != param.lesEllerSkriv.type && "les" != param.lesEllerSkriv.type) {
+            call.respond(HttpStatusCode.BadRequest, AnError("lesEllerSkriv verdien må være enten 'les' eller 'skriv'"))
+            return@delete
+        }
+
+        if (param.lesEllerSkriv.type.equals("skriv", true)) {
+            srrType = RegisterSRRRightsType.WRITE
+        }
+
+        if (param.domene.trim().isEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Ikke gyldig domene"))
+            return@delete
+        }
+
+        val rightResponse = altinnSrrService.deleteRights(scSec.first(), scSec.last(), virksomhetsnummer, param.domene, srrType)
         if (rightResponse.status == "Failed") {
             call.respond(HttpStatusCode.BadRequest, AnError(rightResponse.message))
             return@delete
