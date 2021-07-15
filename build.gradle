@@ -1,0 +1,169 @@
+import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
+
+buildscript {
+    ext.kotlinVersion = "1.4.20"
+    ext.ktorVersion = "1.5.1"
+    ext.kotlinxCoroutinesVersion = "1.4.2"
+    ext.jacksonVersion = "2.12.0"
+
+    ext.prometheusVersion = "0.9.0"
+    ext.kotlinloggingVersion = "2.0.3"
+    ext.logstashEncoderVersion = "6.5"
+    ext.logbackVersion = "1.2.3"
+
+    ext.konfigVersion = "1.6.10.0"
+
+    ext.jaxwsVersion = "2.3.1"
+    ext.jaxwsToolsVersion = "2.3.1"
+    ext.javaxActivationVersion = "1.1.1"
+    ext.cxfVersion = "3.4.1"
+    ext.unboundidVersion = "5.1.1"
+    ext.tjenestespesifikasjonerVersion = "1.2019.09.25-00.21-49b69f0625e0"
+    ext.wiremockVersion = "2.27.2"
+
+    ext.swaggerVersion = "3.1.7"
+
+// test dependencies
+    ext.kluentVersion = "1.64"
+    ext.spekVersion = "2.0.14"
+    ext.junitPlatformVersion = "1.7.0"
+
+    ext.generatedSourcesDir = "$buildDir/generated/wsdl"
+    ext.bootStrapClass = "no.nav.altinn.admin.BootstrapKt"
+    dependencies {
+        classpath 'no.nils:wsdl2java:0.12'
+        classpath 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
+        classpath 'org.glassfish.jaxb:jaxb-runtime:2.4.0-b180830.0438'
+        classpath 'com.sun.activation:javax.activation:1.2.0'
+        classpath("com.sun.xml.ws:jaxws-tools:2.3.1") {
+            exclude group: "com.sun.xml.ws", module: "policy"
+        }
+    }
+}
+
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.20'
+    id 'no.nils.wsdl2java' version '0.12'
+    id 'org.jmailen.kotlinter' version '3.2.0'
+    id 'com.github.ben-manes.versions' version '0.36.0'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'org.unbroken-dome.xjc' version '2.0.0'
+}
+
+group = "no.nav"
+version = "1.0.2-SNAPSHOT"
+mainClassName = "no.nav.altinn.admin.BootstrapKt"
+
+application {
+    mainClass.set("$bootStrapClass")
+}
+
+compileKotlin {
+    dependsOn 'wsdl2java'
+}
+
+lintKotlinMain {
+    dependsOn 'wsdl2java'
+}
+
+wsdl2java {
+    wsdlDir = file("src/main/resources")
+    wsdlsToGenerate = [
+            ["-xjc", "-b", "$projectDir/src/main/xjb/binding.xml", "$projectDir/src/main/resources/wsdl/RegisterSRRAgencyExternalBasic.wsdl"],
+            ["-xjc", "-b", "$projectDir/src/main/xjb/binding.xml", "$projectDir/src/main/resources/wsdl/ReceiptAgencyExternalBasic.wsdl"],
+            ["-xjc", "-b", "$projectDir/src/main/xjb/binding.xml", "$projectDir/src/main/resources/wsdl/ServiceOwnerArchiveExternalBasic.wsdl"]
+    ]
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
+
+shadowJar {
+    dependsOn 'distTar'
+    dependsOn 'distZip'
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+    transform(ServiceFileTransformer) {
+        path = 'META-INF/cxf'
+        include 'bus-extensions.txt'
+    }
+    archiveClassifier.set('')
+}
+
+test {
+    testLogging.events("passed", "skipped", "failed")
+    useJUnitPlatform {
+        includeEngines 'spek2'
+    }
+}
+
+repositories {
+    maven { url "https://dl.bintray.com/kotlin/ktor" }
+    maven { url "https://kotlin.bintray.com/kotlinx" }
+    maven { url "https://packages.confluent.io/maven/" }
+    mavenCentral()
+}
+
+dependencies {
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion",
+            "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion",
+            "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
+            "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion",
+            "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion",
+            "io.ktor:ktor-server-netty:$ktorVersion",
+            "io.ktor:ktor-auth:$ktorVersion",
+            "io.ktor:ktor-jackson:$ktorVersion",
+            "io.ktor:ktor-client-core:$ktorVersion",
+            "io.ktor:ktor-client-apache:$ktorVersion",
+             "io.ktor:ktor-locations:$ktorVersion",
+            "io.prometheus:simpleclient_common:$prometheusVersion",
+            "io.prometheus:simpleclient_hotspot:$prometheusVersion",
+            "io.github.microutils:kotlin-logging:$kotlinloggingVersion",
+            "net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion",
+            "com.natpryce:konfig:$konfigVersion",
+            "javax.xml.ws:jaxws-api:$jaxwsVersion",
+            "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:$kotlinxCoroutinesVersion",
+            "no.nav.tjenestespesifikasjoner:altinn-download-queue-external:$tjenestespesifikasjonerVersion",
+            "no.nav.tjenestespesifikasjoner:altinn-correspondence-agency-external-basic:$tjenestespesifikasjonerVersion",
+            "no.nav.tjenestespesifikasjoner:altinn-pre-fill:$tjenestespesifikasjonerVersion",
+            "org.apache.cxf:cxf-rt-frontend-jaxws:$cxfVersion",
+            "org.apache.cxf:cxf-rt-features-logging:$cxfVersion",
+            "org.apache.cxf:cxf-rt-transports-http:$cxfVersion",
+            "org.apache.cxf:cxf-rt-ws-security:$cxfVersion",
+            "org.apache.ws.xmlschema:xmlschema-core:2.2.4" // Force newer version of XMLSchema to fix illegal reflective access warning
+
+    implementation("com.sun.xml.ws:jaxws-tools:$jaxwsToolsVersion") {
+        exclude group: 'com.sun.xml.ws', module: 'policy'
+    }
+    
+    implementation("javax.activation:activation:$javaxActivationVersion")
+    implementation("org.webjars:swagger-ui:$swaggerVersion")
+    implementation("com.unboundid:unboundid-ldapsdk:$unboundidVersion")
+
+    runtimeOnly("ch.qos.logback:logback-classic:$logbackVersion")
+    runtimeOnly("com.papertrailapp:logback-syslog4j:1.0.0")
+
+    testImplementation("org.spekframework.spek2:spek-dsl-jvm:$spekVersion") {
+        exclude group: 'org.jetbrains.kotlin'
+    }
+    testRuntimeOnly ("org.spekframework.spek2:spek-runner-junit5:$spekVersion") {
+        exclude group: 'org.jetbrains.kotlin'
+    }
+    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") {
+        exclude group: "org.eclipse.jetty" // conflicts with WireMock
+    }
+    testImplementation("org.amshove.kluent:kluent:$kluentVersion")
+    testImplementation("org.junit.platform:junit-platform-runner:$junitPlatformVersion")
+    testRuntimeOnly("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+    testImplementation("com.github.tomakehurst:wiremock:$wiremockVersion")
+}
+
+java {
+    sourceSets["main"].java.srcDirs("$generatedSourcesDir")
+}
