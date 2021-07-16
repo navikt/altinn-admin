@@ -28,7 +28,6 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.error
 import io.prometheus.client.hotspot.DefaultExports
 import java.util.concurrent.Executors
@@ -84,11 +83,9 @@ private val logger = KotlinLogging.logger { }
 
 internal const val SWAGGER_URL_V1 = "$API_V1/apidocs/index.html?url=swagger.json"
 
-@KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
 fun main() = bootstrap(ApplicationState(), Environment())
 
-@KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
 fun bootstrap(applicationState: ApplicationState, environment: Environment) {
     val applicationServer = embeddedServer(
@@ -109,7 +106,6 @@ fun bootstrap(applicationState: ApplicationState, environment: Environment) {
     applicationServer.start(wait = true)
 }
 
-@KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
 fun Application.mainModule(environment: Environment, applicationState: ApplicationState) {
     logger.info { "Starting server" }

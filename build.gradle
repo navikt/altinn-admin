@@ -1,10 +1,10 @@
 import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 
 buildscript {
-    ext.kotlinVersion = "1.4.20"
-    ext.ktorVersion = "1.5.1"
+    ext.kotlinVersion = "1.5.21"
+    ext.ktorVersion = "1.6.1"
     ext.kotlinxCoroutinesVersion = "1.4.2"
-    ext.jacksonVersion = "2.12.0"
+    ext.jacksonVersion = "2.13.0-rc1"
 
     ext.prometheusVersion = "0.9.0"
     ext.kotlinloggingVersion = "2.0.3"
@@ -12,6 +12,10 @@ buildscript {
     ext.logbackVersion = "1.2.3"
 
     ext.konfigVersion = "1.6.10.0"
+    ext.benManesVersion = '0.39.0'
+    ext.shadowVersion = '7.0.0'
+    ext.kotlinterVersion = '3.2.0'
+    ext.wsdl2javaVersion = '2.0'
 
     ext.jaxwsVersion = "2.3.1"
     ext.jaxwsToolsVersion = "2.3.1"
@@ -31,7 +35,6 @@ buildscript {
     ext.generatedSourcesDir = "$buildDir/generated/wsdl"
     ext.bootStrapClass = "no.nav.altinn.admin.BootstrapKt"
     dependencies {
-        classpath 'no.nils:wsdl2java:0.12'
         classpath 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
         classpath 'org.glassfish.jaxb:jaxb-runtime:2.4.0-b180830.0438'
         classpath 'com.sun.activation:javax.activation:1.2.0'
@@ -44,23 +47,28 @@ buildscript {
 plugins {
     id 'java'
     id 'application'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.20'
-    id 'no.nils.wsdl2java' version '0.12'
-    id 'org.jmailen.kotlinter' version '3.2.0'
-    id 'com.github.ben-manes.versions' version '0.36.0'
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion"
+    id 'com.yupzip.wsdl2java' version "$wsdl2javaVersion"
+    id 'org.jmailen.kotlinter' version "$kotlinterVersion"
+    id 'com.github.ben-manes.versions' version "$benManesVersion"
+    id 'com.github.johnrengelman.shadow' version "$shadowVersion"
 }
 
 group = "no.nav"
 version = "1.0.2-SNAPSHOT"
-mainClassName = "no.nav.altinn.admin.BootstrapKt"
 
 application {
     mainClass.set("$bootStrapClass")
 }
 
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
 compileKotlin {
     dependsOn 'wsdl2java'
+    kotlinOptions {
+        jvmTarget=1.8
+    }
 }
 
 lintKotlinMain {
@@ -76,18 +84,9 @@ wsdl2java {
     ]
 }
 
-jar {
-    manifest {
-        attributes 'Main-Class': mainClassName
-    }
-}
-
 shadowJar {
     dependsOn 'distTar'
     dependsOn 'distZip'
-    manifest {
-        attributes 'Main-Class': mainClassName
-    }
     transform(ServiceFileTransformer) {
         path = 'META-INF/cxf'
         include 'bus-extensions.txt'
@@ -103,9 +102,9 @@ test {
 }
 
 repositories {
-    maven { url "https://dl.bintray.com/kotlin/ktor" }
     maven { url "https://kotlin.bintray.com/kotlinx" }
     maven { url "https://packages.confluent.io/maven/" }
+    maven { url "https://plugins.gradle.org/m2/" }
     mavenCentral()
 }
 
@@ -120,7 +119,7 @@ dependencies {
             "io.ktor:ktor-jackson:$ktorVersion",
             "io.ktor:ktor-client-core:$ktorVersion",
             "io.ktor:ktor-client-apache:$ktorVersion",
-             "io.ktor:ktor-locations:$ktorVersion",
+            "io.ktor:ktor-locations:$ktorVersion",
             "io.prometheus:simpleclient_common:$prometheusVersion",
             "io.prometheus:simpleclient_hotspot:$prometheusVersion",
             "io.github.microutils:kotlin-logging:$kotlinloggingVersion",
@@ -154,6 +153,7 @@ dependencies {
     testRuntimeOnly ("org.spekframework.spek2:spek-runner-junit5:$spekVersion") {
         exclude group: 'org.jetbrains.kotlin'
     }
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") {
         exclude group: "org.eclipse.jetty" // conflicts with WireMock
     }

@@ -3,7 +3,6 @@ package no.nav.altinn.admin.api.nielsfalk.ktor.swagger
 import io.ktor.application.ApplicationCall
 import io.ktor.http.content.URIFileContent
 import io.ktor.response.respond
-import io.ktor.util.KtorExperimentalAPI
 
 /**
  * @author Niels Falk, changed by Torstein Nesby
@@ -11,10 +10,8 @@ import io.ktor.util.KtorExperimentalAPI
 class SwaggerUi {
 
     private val notFound = mutableListOf<String>()
-    @KtorExperimentalAPI
     private val content = mutableMapOf<String, URIFileContent>()
 
-    @KtorExperimentalAPI
     suspend fun serve(filename: String?, call: ApplicationCall) {
         when (filename) {
             in notFound -> return

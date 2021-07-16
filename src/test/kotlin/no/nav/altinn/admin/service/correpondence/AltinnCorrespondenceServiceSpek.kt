@@ -7,7 +7,6 @@ import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.createTestEnvironment
 import io.ktor.server.testing.handleRequest
-import io.ktor.util.KtorExperimentalAPI
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.ApplicationState
 import no.nav.altinn.admin.common.InMemoryLDAPServer
@@ -18,7 +17,6 @@ import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
 @KtorExperimentalLocationsAPI
-@KtorExperimentalAPI
 object AltinnCorrespondenceServiceSpek : Spek({
     val applicationState = ApplicationState(running = true, initialized = true)
 
@@ -42,7 +40,6 @@ object AltinnCorrespondenceServiceSpek : Spek({
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
 
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                 }
@@ -55,7 +52,6 @@ object AltinnCorrespondenceServiceSpek : Spek({
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
 
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                 }
@@ -68,7 +64,6 @@ object AltinnCorrespondenceServiceSpek : Spek({
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
 
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                 }
@@ -81,7 +76,6 @@ object AltinnCorrespondenceServiceSpek : Spek({
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
 
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                 }
@@ -94,7 +88,6 @@ object AltinnCorrespondenceServiceSpek : Spek({
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000002:itest2".toByteArray())}")
                         }
 
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                 }
@@ -107,7 +100,6 @@ object AltinnCorrespondenceServiceSpek : Spek({
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
 
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                 }
@@ -120,7 +112,6 @@ object AltinnCorrespondenceServiceSpek : Spek({
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
 
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                 }
