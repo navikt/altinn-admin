@@ -34,7 +34,7 @@ typealias Methods = MutableMap<MethodName, Operation>
 data class SecurityType(val type: String)
 
 data class Swagger(
-    val swagger: String = "2.0",
+    val swagger: String = "3.0",
     val info: Information,
     val paths: Paths = mutableMapOf(),
     val definitions: Definitions = mutableMapOf(),
