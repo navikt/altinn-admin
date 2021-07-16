@@ -29,7 +29,7 @@ buildscript {
 
 // test dependencies
     ext.kluentVersion = "1.68"
-    ext.spekVersion = "2.0.14"
+    ext.spekVersion = "2.0.15"
     ext.junitPlatformVersion = "1.7.0"
 
     ext.generatedSourcesDir = "$buildDir/generated/wsdl"
