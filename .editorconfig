@@ -1,2 +1,2 @@
 [*.{kt,kts}]
-kotlin_imports_layout=ascii
+ij_kotlin_imports_layout=*
