@@ -25,7 +25,7 @@ buildscript {
     ext.tjenestespesifikasjonerVersion = "1.2019.09.25-00.21-49b69f0625e0"
     ext.wiremockVersion = "2.27.2"
 
-    ext.swaggerVersion = "3.51.1"
+    ext.swaggerVersion = "3.6.1"
 
 // test dependencies
     ext.kluentVersion = "1.68"
