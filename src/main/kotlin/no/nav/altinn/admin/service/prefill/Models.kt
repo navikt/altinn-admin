@@ -50,5 +50,7 @@ enum class ForsendelseType { SMS, Email, Both }
 enum class VarselType { TokenTextOnly, VarselDPVUtenRevarsel, VarselDPVMedRevarsel }
 
 enum class PrefillType(val servicecode: String, val serviceeditioncode: String, val dataformatid: String, val dataformatversion: Int) {
-    Test_IM("4765", "2", "5696", 42510);
+    Test_1("4765", "1", "5696", 42510),
+    Test_2("4765", "2", "5696", 42510),
+    Test_3("4765", "3", "5696", 42510)
 }

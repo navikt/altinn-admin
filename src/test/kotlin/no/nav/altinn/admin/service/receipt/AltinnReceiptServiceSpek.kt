@@ -5,7 +5,6 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
-import io.ktor.util.KtorExperimentalAPI
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.ApplicationState
 import no.nav.altinn.admin.mainModule
@@ -14,7 +13,6 @@ import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
 @KtorExperimentalLocationsAPI
-@KtorExperimentalAPI
 object AltinnReceiptServiceSpek : Spek({
     val applicationState = ApplicationState(running = true, initialized = true)
 

@@ -9,7 +9,6 @@ import io.ktor.server.testing.createTestEnvironment
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
-import io.ktor.util.KtorExperimentalAPI
 import no.altinn.schemas.services.register.srr._2015._06.AddRightResponse
 import no.altinn.schemas.services.register.srr._2015._06.AddRightResponseList
 import no.altinn.schemas.services.register.srr._2015._06.DeleteRightResponse
@@ -26,7 +25,6 @@ import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
 @KtorExperimentalLocationsAPI
-@KtorExperimentalAPI
 object AltinnSRRServiceSpek : Spek({
     val applicationState = ApplicationState(running = true, initialized = true)
 
@@ -50,7 +48,6 @@ object AltinnSRRServiceSpek : Spek({
                             setBody(test)
                         }
 
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                     it("Legg til rettighet med ugyldig tjenesteKode skal feile med 'bad request'") {
@@ -62,7 +59,6 @@ object AltinnSRRServiceSpek : Spek({
                             setBody(test)
                         }
 
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                     it("Legg til rettighet med ugyldig utgaveKode skal feile med 'bad request'") {
@@ -74,7 +70,6 @@ object AltinnSRRServiceSpek : Spek({
                             setBody(test)
                         }
 
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
 //                    it("Legg til rettighet med feil lesEllerSkriv skal feile med 'bad request'") {
@@ -98,7 +93,6 @@ object AltinnSRRServiceSpek : Spek({
                             setBody(test)
                         }
 
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                     it("Legg til rettighet som er gyldig, skal gi ok respons") {
@@ -109,7 +103,6 @@ object AltinnSRRServiceSpek : Spek({
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                             setBody(test)
                         }
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.OK
                     }
                     it("Legg til rettighet som allerede eksisterer, skal feile med 'bad request'") {
@@ -134,7 +127,6 @@ object AltinnSRRServiceSpek : Spek({
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                             setBody(test)
                         }
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                     it("Legg til rettighet for virksomhet som ikke finnes i ER, skal feile med 'bad request'") {
@@ -159,7 +151,6 @@ object AltinnSRRServiceSpek : Spek({
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                             setBody(test)
                         }
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                     it("** Ekstra, hvis og når vi åpner for dato ** Legg til rettighet for virksomhet med en dato tilbake i tid, skal feile med 'bad request'") {
@@ -184,7 +175,6 @@ object AltinnSRRServiceSpek : Spek({
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                             setBody(test)
                         }
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                     it("Legg til rettighet feiler pga ukjent årsak, skal feile med 'bad request'") {
@@ -209,7 +199,6 @@ object AltinnSRRServiceSpek : Spek({
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                             setBody(test)
                         }
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                 }
@@ -241,7 +230,6 @@ object AltinnSRRServiceSpek : Spek({
                             addHeader("Content-Type", "application/json")
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                     it("Slett rettighet med ugyldig virksomhetsnummer skal feile med 'bad request'") {
@@ -255,7 +243,6 @@ object AltinnSRRServiceSpek : Spek({
                             addHeader("Content-Type", "application/json")
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                     it("Slett rettighet med ugyldig lesEllerSkriv skal feile med 'bad request'") {
@@ -269,7 +256,6 @@ object AltinnSRRServiceSpek : Spek({
                             addHeader("Content-Type", "application/json")
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.InternalServerError
                     }
                     it("Slett rettighet med tomt domene skal feile med 'bad request'") {
@@ -283,7 +269,6 @@ object AltinnSRRServiceSpek : Spek({
                             addHeader("Content-Type", "application/json")
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                     it("Slett rettighet med alle param gyldig skal gi ok respons") {
@@ -297,7 +282,6 @@ object AltinnSRRServiceSpek : Spek({
                             addHeader("Content-Type", "application/json")
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.OK
                     }
                     it("Slett rettighet med ukjent regel skal feile med 'bad request'") {
@@ -324,7 +308,6 @@ object AltinnSRRServiceSpek : Spek({
                             addHeader("Content-Type", "application/json")
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                     it("ServiceAccounts har aksess til slett rettighet med alle param gyldig skal feile 'bad request'") {
@@ -338,7 +321,6 @@ object AltinnSRRServiceSpek : Spek({
                             addHeader("Content-Type", "application/json")
                             addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("srvp01:dummy".toByteArray())}")
                         }
-                        req.requestHandled shouldBeEqualTo true
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                 }

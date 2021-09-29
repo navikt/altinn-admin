@@ -56,5 +56,6 @@ enum class RettighetType(val type: String) {
 enum class SrrType(val servicecode: String, val serviceeditioncode: String) {
     Samtykke_AAP("5252", "1"),
     Samtykke_UFORE("5252", "2"),
-    Aareg_tilgang("5723", "1")
+    Aareg_tilgang("5723", "1"),
+    Dolly_tilgang("5748", "1")
 }

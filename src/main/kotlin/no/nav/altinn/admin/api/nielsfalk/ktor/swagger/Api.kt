@@ -76,7 +76,7 @@ fun <LOCATION : Any, BODY_TYPE : Any> Metadata.applyOperations(
 ) {
     swagger.paths.getOrPut(location.path) { mutableMapOf() }
         .put(
-            method.value.toLowerCase(),
+            method.value.lowercase(),
             Operation(this, location, group, locationType, entityType)
         )
 }
