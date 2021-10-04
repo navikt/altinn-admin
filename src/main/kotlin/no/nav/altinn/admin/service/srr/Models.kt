@@ -40,7 +40,7 @@ data class RegistryResponse(
         @JsonProperty("virksomhetsnummer")
         val organisasjonsnummer: String,
         @JsonProperty("domene")
-        val domene: String,
+        val domene: String?,
         @JsonProperty("rettighet")
         val rettighet: String,
         @JsonProperty("tilDato")
