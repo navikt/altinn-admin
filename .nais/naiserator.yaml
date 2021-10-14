@@ -35,7 +35,7 @@ spec:
     enabled: true
   env:
     - name: USE_VAULT_ENV
-      value: true
+      value: "true"
   resources:
     limits:
       cpu: 1000m
