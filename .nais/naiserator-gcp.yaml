@@ -22,6 +22,12 @@ spec:
     initialDelay: 30
     periodSeconds: 20
     failureThreshold: 10
+  accessPolicy:
+    outbound:
+      external:
+      {{#each outbound-host}}
+         - host: "{{this}}"
+      {{/each}}
   prometheus:
     enabled: true
     path: /internal/prometheus
@@ -31,11 +37,11 @@ spec:
     - "{{this}}"
     {{/each}}
   {{/if}}
-  vault:
-    enabled: true
+  envFrom:
+    - secret: altinn-admin
   env:
     - name: USE_VAULT_ENV
-      value: true
+      value: false
   resources:
     limits:
       cpu: 1000m

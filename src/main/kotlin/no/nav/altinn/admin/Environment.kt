@@ -19,7 +19,7 @@ import no.nav.altinn.admin.ldap.LDAPBase
 
 private const val vaultApplicationPropertiesPath = "/var/run/secrets/nais.io/vault/application.properties"
 
-private val config = if (System.getenv("APPLICATION_PROFILE") == "remote") {
+private val config = if (System.getenv("APPLICATION_PROFILE") == "remote" && System.getenv("USE_VAULT_ENV") == "true") {
     systemProperties() overriding
         EnvironmentVariables() overriding
         ConfigurationProperties.fromFile(File(vaultApplicationPropertiesPath)) overriding
