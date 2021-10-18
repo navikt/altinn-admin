@@ -19,7 +19,7 @@ import no.nav.altinn.admin.ldap.LDAPBase
 
 private const val vaultApplicationPropertiesPath = "/var/run/secrets/nais.io/vault/application.properties"
 
-private val config = if (System.getenv("APPLICATION_PROFILE") == "remote") {
+private val config = if (System.getenv("APPLICATION_PROFILE") == "remote" && System.getenv("USE_VAULT_ENV") == "true") {
     systemProperties() overriding
         EnvironmentVariables() overriding
         ConfigurationProperties.fromFile(File(vaultApplicationPropertiesPath)) overriding
@@ -67,11 +67,7 @@ data class Environment(
         // ldap authentication details - production LDAP
         val ldapAuthHost: String = config[Key("ldap.auth.host", stringType)],
         val ldapAuthPort: Int = config[Key("ldap.auth.port", intType)],
-        val ldapAuthUserBase: String = config[Key("ldap.auth.userbase", stringType)],
-
-        // ldap details for managing ldap groups - different LDAP servers (test, preprod, production)
-        val ldapHost: String = config[Key("ldap.host", stringType)],
-        val ldapPort: Int = config[Key("ldap.port", intType)]
+        val ldapAuthUserBase: String = config[Key("ldap.auth.userbase", stringType)]
     )
 
     data class SrrService(
@@ -127,18 +123,7 @@ data class Environment(
     )
 }
 
-// Connection factory for which ldap in matter
-enum class LdapConnectionType { AUTHENTICATION, GROUP }
-
-fun Environment.Application.getConnectionInfo(connType: LdapConnectionType) =
-    when (connType) {
-        LdapConnectionType.AUTHENTICATION -> LDAPBase.Companion.ConnectionInfo(
-            ldapAuthHost, ldapAuthPort, ldapConnTimeout
-        )
-        LdapConnectionType.GROUP -> LDAPBase.Companion.ConnectionInfo(
-            ldapHost, ldapPort, ldapConnTimeout
-        )
-    }
+fun Environment.Application.getConnectionInfo() = LDAPBase.Companion.ConnectionInfo(ldapAuthHost, ldapAuthPort, ldapConnTimeout)
 
 // Return diverse distinguished name types
 fun Environment.Application.userDN(user: String) = "$ldapUserAttrName=$user,$ldapAuthUserBase"

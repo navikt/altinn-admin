@@ -5,7 +5,6 @@ import com.unboundid.ldap.sdk.LDAPException
 import com.unboundid.ldap.sdk.ResultCode
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
-import no.nav.altinn.admin.LdapConnectionType
 import no.nav.altinn.admin.getConnectionInfo
 import no.nav.altinn.admin.userDN
 
@@ -16,7 +15,7 @@ import no.nav.altinn.admin.userDN
  */
 
 class LDAPAuthenticate(private val config: Environment.Application) :
-    LDAPBase(config.getConnectionInfo(LdapConnectionType.AUTHENTICATION)) {
+    LDAPBase(config.getConnectionInfo()) {
 
     fun canUserAuthenticate(user: String, pwd: String): Boolean =
         if (!ldapConnection.isConnected) {
@@ -26,7 +25,7 @@ class LDAPAuthenticate(private val config: Environment.Application) :
             // fold over resolved DNs, NAV ident or service accounts (normal + Basta)
             resolveDNs(user).fold(false) { acc, dn -> acc || authenticated(dn, pwd, acc) }.also {
 
-                val connInfo = config.getConnectionInfo(LdapConnectionType.AUTHENTICATION)
+                val connInfo = config.getConnectionInfo()
                 when (it) {
                     true -> logger.info { "Successful bind of $user to $connInfo" }
                     false -> logger.error { "Cannot bind $user to $connInfo" }

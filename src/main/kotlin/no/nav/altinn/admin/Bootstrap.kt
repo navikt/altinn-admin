@@ -72,7 +72,7 @@ val swagger = Swagger(
         title = "Altinn Admin API",
         description = "[altinn-admin](https://github.com/navikt/altinn-admin)",
         contact = Contact(
-            name = "Mona Terning, Ole-Petter Pettersen, Hans Arild Runde, Richard Oseng",
+            name = "Slack #Team_Altinn",
             url = "https://github.com/navikt/altinn-admin",
             email = "nav.altinn.lokalforvaltning@nav.no"
         )
