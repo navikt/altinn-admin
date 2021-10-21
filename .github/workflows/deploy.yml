@@ -1,6 +1,14 @@
 name: Build, push, and deploy
 
-on: [push, pull_request]
+on:
+  push:
+    paths-ignore:
+      - 'alerts.yaml'
+      - '.github/workflows/alerts.yml'
+  pull_request:
+    paths-ignore:
+      - 'alerts.yaml'
+      - '.github/workflows/alerts.yml'
 
 env:
   IMAGE: ghcr.io/${{ github.repository }}/altinn-admin:${{ github.sha }}
