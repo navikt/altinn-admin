@@ -26,6 +26,7 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndReponds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.common.API_V1
+import no.nav.altinn.admin.common.isDate
 
 @KtorExperimentalLocationsAPI
 fun Routing.ssrAPI(altinnSrrService: AltinnSRRService, environment: Environment) {
@@ -284,7 +285,12 @@ fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment
         return@post
     }
 
-    val rightResponse = altinnSrrService.addRights(body.tjenesteKode, body.utgaveKode, virksomhetsnummer, body.domene, srrType)
+    if (body.gyldigdato != null && !isDate(body.gyldigdato)) {
+        call.respond(HttpStatusCode.BadRequest, AnError("gyldigdato er i feil format, må være yyyy-mm-dd"))
+        return@post
+    }
+
+    val rightResponse = altinnSrrService.addRights(body.tjenesteKode, body.utgaveKode, virksomhetsnummer, body.domene, srrType, body.gyldigdato)
     if (rightResponse.status == "Failed") {
         call.respond(HttpStatusCode.BadRequest, AnError(rightResponse.message))
         return@post
@@ -364,7 +370,7 @@ data class DeleteRettighet2(val tjeneste: String = "sc:sec", val orgnr: String, 
 @KtorExperimentalLocationsAPI
 fun Routing.deleteRightsForReportee2(altinnSrrService: AltinnSRRService, environment: Environment) =
     delete<DeleteRettighet2>(
-        "Slett rettighet for en virksomhet"
+        "Slett rettighet for en virksomhet (ingen preutfyll av domene)"
             .securityAndReponds(BasicAuthSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
     ) { param ->
         val currentUser = call.principal<UserIdPrincipal>()!!.name
@@ -418,7 +424,7 @@ fun Routing.deleteRightsForReportee2(altinnSrrService: AltinnSRRService, environ
             return@delete
         }
 
-        val rightResponse = altinnSrrService.deleteRights(scSec.first(), scSec.last(), virksomhetsnummer, param.domene, srrType)
+        val rightResponse = altinnSrrService.deleteRights2(scSec.first(), scSec.last(), virksomhetsnummer, param.domene, srrType)
         if (rightResponse.status == "Failed") {
             call.respond(HttpStatusCode.BadRequest, AnError(rightResponse.message))
             return@delete
