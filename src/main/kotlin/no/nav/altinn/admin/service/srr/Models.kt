@@ -12,7 +12,9 @@ data class PostLeggTilRettighetBody(
     @JsonProperty("lesEllerSkriv")
     val lesEllerSkriv: RettighetType,
     @JsonProperty("domene")
-    val domene: String
+    val domene: String,
+    @JsonProperty("gyldigdato")
+    val gyldigdato: String?
 )
 
 data class RightsResponse(
