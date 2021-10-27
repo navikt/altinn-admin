@@ -1,0 +1,1105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+                  xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex"
+                  xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy"
+                  xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract"
+                  xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:tns="http://www.altinn.no/services/ServiceEngine/Subscription/2009/10"
+                  xmlns:wsa10="http://www.w3.org/2005/08/addressing"
+                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+                  xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="SubscriptionExternalBasicSF"
+                  targetNamespace="http://www.altinn.no/services/ServiceEngine/Subscription/2009/10">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.altinn.no/services/2009/10"
+                   elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/2009/10">
+            <xs:element name="Test">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="TestResponse">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/" attributeFormDefault="qualified"
+                   elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/">
+            <xs:element name="anyType" nillable="true" type="xs:anyType"/>
+            <xs:element name="anyURI" nillable="true" type="xs:anyURI"/>
+            <xs:element name="base64Binary" nillable="true" type="xs:base64Binary"/>
+            <xs:element name="boolean" nillable="true" type="xs:boolean"/>
+            <xs:element name="byte" nillable="true" type="xs:byte"/>
+            <xs:element name="dateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element name="decimal" nillable="true" type="xs:decimal"/>
+            <xs:element name="double" nillable="true" type="xs:double"/>
+            <xs:element name="float" nillable="true" type="xs:float"/>
+            <xs:element name="int" nillable="true" type="xs:int"/>
+            <xs:element name="long" nillable="true" type="xs:long"/>
+            <xs:element name="QName" nillable="true" type="xs:QName"/>
+            <xs:element name="short" nillable="true" type="xs:short"/>
+            <xs:element name="string" nillable="true" type="xs:string"/>
+            <xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte"/>
+            <xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt"/>
+            <xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong"/>
+            <xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort"/>
+            <xs:element name="char" nillable="true" type="tns:char"/>
+            <xs:simpleType name="char">
+                <xs:restriction base="xs:int"/>
+            </xs:simpleType>
+            <xs:element name="duration" nillable="true" type="tns:duration"/>
+            <xs:simpleType name="duration">
+                <xs:restriction base="xs:duration">
+                    <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?"/>
+                    <xs:minInclusive value="-P10675199DT2H48M5.4775808S"/>
+                    <xs:maxInclusive value="P10675199DT2H48M5.4775807S"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="guid" nillable="true" type="tns:guid"/>
+            <xs:simpleType name="guid">
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:attribute name="FactoryType" type="xs:QName"/>
+            <xs:attribute name="Id" type="xs:ID"/>
+            <xs:attribute name="Ref" type="xs:IDREF"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://www.altinn.no/services/common/fault/2009/10" elementFormDefault="qualified"
+                   targetNamespace="http://www.altinn.no/services/common/fault/2009/10">
+            <xs:complexType name="AltinnFault">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a SOAP fault message used by Altinn to convey exception information to the
+                            caller.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="AltinnErrorMessage" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the error message.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="AltinnExtendedErrorMessage" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the verbose version of the error message.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="AltinnLocalizedErrorMessage" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the localized version of the error message.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ErrorGuid" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the unique GUID for the specific fault.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ErrorID" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the error type id.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="UserGuid" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the GUID of the user.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="UserId" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the id of the user.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="AltinnFault" nillable="true" type="tns:AltinnFault"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+                   targetNamespace="http://www.altinn.no/services/ServiceEngine/Subscription/2009/10">
+            <xs:import namespace="http://schemas.altinn.no/services/ServiceEngine/Subscription/2009/10"/>
+            <xs:import namespace="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"/>
+            <xs:element name="SubmitSubscriptionBasic">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="systemUserName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="systemPassword" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="externalBatchId" nillable="true" type="xs:string"/>
+                        <xs:element xmlns:q1="http://schemas.altinn.no/services/ServiceEngine/Subscription/2009/10"
+                                    minOccurs="0" name="subscriptionDetails" nillable="true"
+                                    type="q1:SubscriptionDetails"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SubmitSubscriptionBasicResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element xmlns:q2="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"
+                                    minOccurs="0" name="SubmitSubscriptionBasicResult" nillable="true"
+                                    type="q2:ReceiptExternal"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.altinn.no/services/ServiceEngine/Subscription/2009/10"
+                   elementFormDefault="qualified"
+                   targetNamespace="http://schemas.altinn.no/services/ServiceEngine/Subscription/2009/10">
+            <xs:import namespace="http://schemas.altinn.no/services/serviceEntity/2009/10"/>
+            <xs:complexType name="SubscriptionDetails">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents an input parameter to services that register subscriptions in Altinn.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element name="Subscriptionlist" nillable="true" type="tns:ArrayOfSubscription">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a strongly typed list of Subscription elements that can be
+                                    accessed by index.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="SystemUserCode" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the system user of the agency system.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="SubscriptionDetails" nillable="true" type="tns:SubscriptionDetails"/>
+            <xs:complexType name="ArrayOfSubscription">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a strongly typed list of Subscription elements that can be accessed by
+                            index.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="Subscription" nillable="true"
+                                type="tns:Subscription"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ArrayOfSubscription" nillable="true" type="tns:ArrayOfSubscription"/>
+            <xs:complexType name="Subscription">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a subscription in Altinn. A subscription is a mechanism to automatically
+                            create form task instances for an end user.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="CaseId" nillable="true" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the case id to use on a form task if the service is a part of a
+                                    collaboration service.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ExpirationDate" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the date and time for when the subscription should end.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ExternalServiceCode" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the primary id of a service. To uniquely identify a service, the
+                                    service edition code must also be assigned.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ExternalServiceEditionCode" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the secondary id of a service. To uniquely identify a service, the
+                                    service code must also be assigned.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="IdentityFields" nillable="true"
+                                type="tns:SubscriptionIdentityFieldList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a list of values to identify what prefill to use when creating the
+                                    form task.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="NextDueDate" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the next due date and time for when the reportee must act.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="NextScheduleDate" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the date and time for the next time the subscription should
+                                    trigger a new form task.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ReporteeId" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the unique ID of the reportee of the form task to be made.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="StartDate" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the date and time for when the subscription should become
+                                    active.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="SubscriptionID" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the unique id of the subscription.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element xmlns:q1="http://schemas.altinn.no/services/serviceEntity/2009/10"
+                                name="SubscriptionPeriodType" type="q1:PeriodType">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a value that indicates the frequency of the subscription.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="UserType" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the user type. (SSN, OrgNo, Self-Identified.)</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="VisibleDate" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the date and time for when a created form task should be
+                                    visible.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="Subscription" nillable="true" type="tns:Subscription"/>
+            <xs:complexType name="SubscriptionIdentityFieldList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a strongly typed list of SubscriptionIdentityFieldExternal elements that can
+                            be accessed by index.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="SubscriptionIdentityFieldExternal"
+                                nillable="true" type="tns:SubscriptionIdentityFieldExternal"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="SubscriptionIdentityFieldList" nillable="true" type="tns:SubscriptionIdentityFieldList"/>
+            <xs:complexType name="SubscriptionIdentityFieldExternal">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents an identity field for a subscription. Identity fields are used to connect
+                            subscriptions with prefill data.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="FieldValue" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the value used to identify the prefill for a form task.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="SubscriptionIdentityFieldExternal" nillable="true"
+                        type="tns:SubscriptionIdentityFieldExternal"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.altinn.no/services/serviceEntity/2009/10" elementFormDefault="qualified"
+                   targetNamespace="http://schemas.altinn.no/services/serviceEntity/2009/10">
+            <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+            <xs:simpleType name="PeriodType">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Specifies frequency options for how a subscription should trigger.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Annual">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">1
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>The span of time for particular subscription is Annual i.e., once in a year
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Semiannual">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">2
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>The span of time for particular subscription is Semiannual i.e., twice in a
+                                    year
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Quarterly">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">3
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>The span of time for particular subscription is Quarterly i.e., 3 times in a
+                                    year
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Tertiary">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">4
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>The span of time for particular subscription is Tertiary i.e., 4 times in a
+                                    year
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Bimonthly">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">5
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>The span of time for particular subscription is Bimonthly, 1 time in 2 months
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Monthly">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">6
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>The span of time for particular subscription is monthly, i.e. ever month
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Fortnightly">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">26
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>The span of time for particular subscription is Fortnightly, i.e. in every 15
+                                    days
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Weekly">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">52
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>The span of time for particular subscription is Weekly</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Daily">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">365
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>Daily Subscription</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Once">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">0
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>Only once the subscription is required</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="PeriodType" nillable="true" type="tns:PeriodType"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"
+                   elementFormDefault="qualified"
+                   targetNamespace="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10">
+            <xs:import namespace="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10"/>
+            <xs:complexType name="ReceiptExternal">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a the data in a receipt that is generated by Altinn when it has received
+                            data from an external source. A receipt contains details about the data received and its
+                            steps through Altinn.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="LastChanged" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the date and time for when the receipt was last changed.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ParentReceiptId" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the id of the parent receipt if the current receipt is a child
+                                    receipt.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptHistory" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the receipt history. The content of ReceiptText is added to
+                                    ReceiptHistory at every update.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptId" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the unique id of the receipt.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptStatusCode" type="tns:ReceiptStatusEnum">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a value that indicates the status of the action that the receipt
+                                    belong. For example if a submission has been "Rejected".
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptText" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the receipt text with a short description of the last step done to
+                                    the element.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptTypeName" type="tns:ReceiptTypeEnum">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a value indicating what type of receipt.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a list of references.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="SubReceipts" nillable="true" type="tns:ReceiptExternalList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a list of child receipts.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReceiptExternal" nillable="true" type="tns:ReceiptExternal"/>
+            <xs:simpleType name="ReceiptStatusEnum">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Specifies different statuses on a receipt. The status is a response to the action the
+                            caller tried to perform.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="NotSet">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt status is unknown.</summary>
+                                <remarks>This type should not be used. It is an error condition if status is of this
+                                    type.
+                                </remarks>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="OK">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the request was processed without any error.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="UnExpectedError">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that there was an unexpected error during processing of a request.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="ValidationFailed">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the data in a request failed validation.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Rejected">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the request was rejected. Usually because of known error
+                                    conditions.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="ReceiptStatusEnum" nillable="true" type="tns:ReceiptStatusEnum"/>
+            <xs:simpleType name="ReceiptTypeEnum">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Defines receipt types.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="NotSet">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>SHOULD NOT BE USED (For Enumeration error handling).</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="FormTask">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a form task.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Correspondence">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for correspondence.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="PINCODE">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for pin code.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Subscription">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a subscription shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Outbound">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for an outbound shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="PreFill">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a prefill shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDLS">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DLS shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSF">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterER">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register ER shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFProperty">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DFS property shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFStreet">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DFS street shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFCountry">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF country shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFUser">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF user shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="LookUp">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a lookup shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFStreetAdd">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF street address batch.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFPropertyAdd">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF property address batch.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="ReceiptTypeEnum" nillable="true" type="tns:ReceiptTypeEnum"/>
+            <xs:complexType name="ReferenceList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a strongly typed collection of Reference elements.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="Reference" nillable="true"
+                                type="tns:Reference"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReferenceList" nillable="true" type="tns:ReferenceList"/>
+            <xs:complexType name="Reference">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a key-value pair that is associated with a receipt.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element xmlns:q1="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10" minOccurs="0"
+                                name="ReferenceTypeName" type="q1:ReferenceType">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the reference type.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReferenceValue" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the reference value.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="Reference" nillable="true" type="tns:Reference"/>
+            <xs:complexType name="ReceiptExternalList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a strongly typed list of ReceiptExternalBE elements that can be accessed by
+                            index.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="ReceiptExternal" nillable="true"
+                                type="tns:ReceiptExternal"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReceiptExternalList" nillable="true" type="tns:ReceiptExternalList"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10"
+                   elementFormDefault="qualified"
+                   targetNamespace="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10">
+            <xs:simpleType name="ReferenceType">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Specifies a list of different reference types.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="NotSet">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that reference type is unknown.</summary>
+                                <remarks>This type should not be used. It is an error condition if a reference is of
+                                    this type.
+                                </remarks>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="ExternalShipmentReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is a shipment reference given by an external
+                                    system.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="EndUserSystemReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is an element (usually form task) reference
+                                    given by an external system.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="ParentReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is an element id for a parent element.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="SendersReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is an element reference given by an external
+                                    system. This is similar to EndUserSystemReference, but can also be used by service
+                                    owners when they are creating elements.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="WorkFlowReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is a workflow id.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="BatchReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is a batch reference.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="OutboundShipmentReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is an outbound shipment reference.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="ReceiversReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is a receivers reference.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Altinn1Reference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is an Altinn1 reference.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="OwnerPartyReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is the id of the receipt owner.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="PartyReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is the id of the receipt reportee.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="ArchiveReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is an archive reference.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="ReferenceType" nillable="true" type="tns:ReferenceType"/>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="ISubscriptionExternalBasic_Test_InputMessage">
+        <wsdl:part xmlns:q1="http://www.altinn.no/services/2009/10" name="parameters" element="q1:Test"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionExternalBasic_Test_OutputMessage">
+        <wsdl:part xmlns:q2="http://www.altinn.no/services/2009/10" name="parameters" element="q2:TestResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionExternalBasic_Test_AltinnFaultFault_FaultMessage">
+        <wsdl:part xmlns:q3="http://www.altinn.no/services/common/fault/2009/10" name="detail"
+                   element="q3:AltinnFault"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionExternalBasic_SubmitSubscriptionBasic_InputMessage">
+        <wsdl:part name="parameters" element="tns:SubmitSubscriptionBasic"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionExternalBasic_SubmitSubscriptionBasic_OutputMessage">
+        <wsdl:part name="parameters" element="tns:SubmitSubscriptionBasicResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ISubscriptionExternalBasic_SubmitSubscriptionBasic_AltinnFaultFault_FaultMessage">
+        <wsdl:part xmlns:q4="http://www.altinn.no/services/common/fault/2009/10" name="detail"
+                   element="q4:AltinnFault"/>
+    </wsdl:message>
+    <wsdl:portType name="ISubscriptionExternalBasic">
+        <wsdl:documentation>
+            <summary>This service is exposed to the service owners for sending a list of subscriptions</summary>
+            <remarks>The service is authenticated before being able to send subscription data. The subscription list is
+                validated through the WCF contract and divided into single items if it contains more than one. Every
+                single item is saved to DB. A receipt is returned to the service owner.
+            </remarks>
+        </wsdl:documentation>
+        <wsdl:operation name="Test">
+            <wsdl:input wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test"
+                        message="tns:ISubscriptionExternalBasic_Test_InputMessage"/>
+            <wsdl:output wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestResponse"
+                         message="tns:ISubscriptionExternalBasic_Test_OutputMessage"/>
+            <wsdl:fault wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestAltinnFaultFault"
+                        name="AltinnFaultFault"
+                        message="tns:ISubscriptionExternalBasic_Test_AltinnFaultFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="SubmitSubscriptionBasic">
+            <wsdl:documentation>
+                <summary>Operation enabling service owners to send a list of subscriptions to Altinn</summary>
+                <remarks>Operation enabling service owners to send a list of subscription entities to Altinn through a
+                    service interface. The list may contain one or more items. Initially the service owner is
+                    authenticated through WCF configuration. The subscription list may contain one or several
+                    subscription entities. The subscription list is validated through the WCF contract and divided into
+                    single entities and queued for further processing. By submitting the optional CaseId per FormTask
+                    the FormTask will be instantiated as a part of that specific collaboration service.
+                </remarks>
+                <param name="systemUserName">System user name is the relevant agency system name that is registered in
+                    Altinn - mandatory parameter
+                </param>
+                <param name="systemPassword">System password is the password for the corresponding registered agency
+                    system - mandatory parameter
+                </param>
+                <param name="externalBatchId">Unique external batch id set by service owner - mandatory parameter
+                </param>
+                <param name="subscriptionDetails">Every item contains information about participant, what to subscribe
+                    for, when, how often and fields to identify an unique prefilled form set, an optional caseId can be
+                    provided to link the instantiation as part of a collaboration service - mandatory parameter
+                </param>
+                <returns>A shipment receipt indicating if the subscription list was received and queued without errors
+                </returns>
+            </wsdl:documentation>
+            <wsdl:input
+                    wsaw:Action="http://www.altinn.no/services/ServiceEngine/Subscription/2009/10/ISubscriptionExternalBasic/SubmitSubscriptionBasic"
+                    message="tns:ISubscriptionExternalBasic_SubmitSubscriptionBasic_InputMessage"/>
+            <wsdl:output
+                    wsaw:Action="http://www.altinn.no/services/ServiceEngine/Subscription/2009/10/ISubscriptionExternalBasic/SubmitSubscriptionBasicResponse"
+                    message="tns:ISubscriptionExternalBasic_SubmitSubscriptionBasic_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://www.altinn.no/services/ServiceEngine/Subscription/2009/10/ISubscriptionExternalBasic/SubmitSubscriptionBasicAltinnFaultFault"
+                    name="AltinnFaultFault"
+                    message="tns:ISubscriptionExternalBasic_SubmitSubscriptionBasic_AltinnFaultFault_FaultMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BasicHttpBinding_ISubscriptionExternalBasic" type="tns:ISubscriptionExternalBasic">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="Test">
+            <soap:operation soapAction="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test"
+                            style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AltinnFaultFault">
+                <soap:fault use="literal" name="AltinnFaultFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="SubmitSubscriptionBasic">
+            <soap:operation
+                    soapAction="http://www.altinn.no/services/ServiceEngine/Subscription/2009/10/ISubscriptionExternalBasic/SubmitSubscriptionBasic"
+                    style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AltinnFaultFault">
+                <soap:fault use="literal" name="AltinnFaultFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="SubscriptionExternalBasicSF">
+        <wsdl:port name="BasicHttpBinding_ISubscriptionExternalBasic"
+                   binding="tns:BasicHttpBinding_ISubscriptionExternalBasic">
+            <soap:address location="https://www.altinn.no/ServiceEngineExternal/SubscriptionBasic.svc"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

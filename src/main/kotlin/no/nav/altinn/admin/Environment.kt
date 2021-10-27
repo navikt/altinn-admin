@@ -31,7 +31,6 @@ private val config = if (System.getenv("APPLICATION_PROFILE") == "remote" && Sys
 }
 
 data class Environment(
-    val stsUrl: String = config[Key("sts.url", stringType)],
     val altinn: Altinn = Altinn(),
     val application: Application = Application(),
     val srrService: SrrService = SrrService(),
@@ -48,6 +47,9 @@ data class Environment(
         val altinnCorrespondenceUrl: String = config[Key("altinn.correspondence.url", stringType)],
         val altinnPrefillUrl: String = config[Key("altinn.prefill.url", stringType)],
         val altinnReceiptUrl: String = config[Key("altinn.receipt.url", stringType)],
+        val altinnNotificationUrl: String = config[Key("altinn.notification.url", stringType)],
+        val altinnSubscriptionUrl: String = config[Key("altinn.subscription.url", stringType)],
+        val altinnArchiveUrl: String = config[Key("altinn.archive.url", stringType)],
         val username: String = config[Key("altinn.username", stringType)],
         val password: String = config[Key("altinn.password", stringType)]
     )
@@ -56,8 +58,6 @@ data class Environment(
         val devProfile: Boolean = config[Key("application.profile", stringType)] == "local",
         val localEnv: String = config[Key("application.env", stringType)],
         val port: Int = config[Key("application.port", intType)],
-        val username: String = config[Key("serviceuser.username", stringType)],
-        val password: String = config[Key("serviceuser.password", stringType)],
         val users: String = config[Key("approved.users.list", stringType)],
 
         // common ldap details for both authentication and group management

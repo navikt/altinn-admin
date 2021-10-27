@@ -1,0 +1,1803 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+                  xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex"
+                  xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy"
+                  xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract"
+                  xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:tns="http://www.altinn.no/services/ServiceEngine/PreFill/2009/10"
+                  xmlns:wsa10="http://www.w3.org/2005/08/addressing"
+                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+                  xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="PreFillExternalBasicSF"
+                  targetNamespace="http://www.altinn.no/services/ServiceEngine/PreFill/2009/10">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.altinn.no/services/2009/10"
+                   elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/2009/10">
+            <xs:element name="Test">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="TestResponse">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/" attributeFormDefault="qualified"
+                   elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/">
+            <xs:element name="anyType" nillable="true" type="xs:anyType"/>
+            <xs:element name="anyURI" nillable="true" type="xs:anyURI"/>
+            <xs:element name="base64Binary" nillable="true" type="xs:base64Binary"/>
+            <xs:element name="boolean" nillable="true" type="xs:boolean"/>
+            <xs:element name="byte" nillable="true" type="xs:byte"/>
+            <xs:element name="dateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element name="decimal" nillable="true" type="xs:decimal"/>
+            <xs:element name="double" nillable="true" type="xs:double"/>
+            <xs:element name="float" nillable="true" type="xs:float"/>
+            <xs:element name="int" nillable="true" type="xs:int"/>
+            <xs:element name="long" nillable="true" type="xs:long"/>
+            <xs:element name="QName" nillable="true" type="xs:QName"/>
+            <xs:element name="short" nillable="true" type="xs:short"/>
+            <xs:element name="string" nillable="true" type="xs:string"/>
+            <xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte"/>
+            <xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt"/>
+            <xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong"/>
+            <xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort"/>
+            <xs:element name="char" nillable="true" type="tns:char"/>
+            <xs:simpleType name="char">
+                <xs:restriction base="xs:int"/>
+            </xs:simpleType>
+            <xs:element name="duration" nillable="true" type="tns:duration"/>
+            <xs:simpleType name="duration">
+                <xs:restriction base="xs:duration">
+                    <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?"/>
+                    <xs:minInclusive value="-P10675199DT2H48M5.4775808S"/>
+                    <xs:maxInclusive value="P10675199DT2H48M5.4775807S"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="guid" nillable="true" type="tns:guid"/>
+            <xs:simpleType name="guid">
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:attribute name="FactoryType" type="xs:QName"/>
+            <xs:attribute name="Id" type="xs:ID"/>
+            <xs:attribute name="Ref" type="xs:IDREF"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://www.altinn.no/services/common/fault/2009/10" elementFormDefault="qualified"
+                   targetNamespace="http://www.altinn.no/services/common/fault/2009/10">
+            <xs:complexType name="AltinnFault">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a SOAP fault message used by Altinn to convey exception information to the
+                            caller.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="AltinnErrorMessage" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the error message.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="AltinnExtendedErrorMessage" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the verbose version of the error message.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="AltinnLocalizedErrorMessage" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the localized version of the error message.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ErrorGuid" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the unique GUID for the specific fault.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ErrorID" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the error type id.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="UserGuid" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the GUID of the user.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="UserId" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the id of the user.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="AltinnFault" nillable="true" type="tns:AltinnFault"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+                   targetNamespace="http://www.altinn.no/services/ServiceEngine/PreFill/2009/10">
+            <xs:import namespace="http://schemas.altinn.no/services/ServiceEngine/PreFill/2009/10"/>
+            <xs:import namespace="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"/>
+            <xs:element name="SubmitAndInstantiatePrefilledFormTaskBasic">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="systemUserName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="systemPassword" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="externalBatchId" nillable="true" type="xs:string"/>
+                        <xs:element xmlns:q1="http://schemas.altinn.no/services/ServiceEngine/PreFill/2009/10"
+                                    minOccurs="0" name="preFillFormTask" nillable="true" type="q1:PrefillFormTask"/>
+                        <xs:element minOccurs="0" name="doSaveFormTask" type="xs:boolean"/>
+                        <xs:element minOccurs="0" name="doinstantiateFormTask" type="xs:boolean"/>
+                        <xs:element minOccurs="0" name="caseId" nillable="true" type="xs:int"/>
+                        <xs:element minOccurs="0" name="dueDate" nillable="true" type="xs:dateTime"/>
+                        <xs:element minOccurs="0" name="instantitedOnBehalfOf" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SubmitAndInstantiatePrefilledFormTaskBasicResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element xmlns:q2="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"
+                                    minOccurs="0" name="SubmitAndInstantiatePrefilledFormTaskBasicResult"
+                                    nillable="true" type="q2:ReceiptExternal"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SubmitPrefilledFormTasksBasic">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="systemUserName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="systemPassword" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="externalBatchId" nillable="true" type="xs:string"/>
+                        <xs:element xmlns:q3="http://schemas.altinn.no/services/ServiceEngine/PreFill/2009/10"
+                                    minOccurs="0" name="preFillFormTasksDetails" nillable="true"
+                                    type="q3:PrefillFormTaskDetails"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SubmitPrefilledFormTasksBasicResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element xmlns:q4="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"
+                                    minOccurs="0" name="SubmitPrefilledFormTasksBasicResult" nillable="true"
+                                    type="q4:ReceiptExternal"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.altinn.no/services/ServiceEngine/PreFill/2009/10"
+                   xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" elementFormDefault="qualified"
+                   targetNamespace="http://schemas.altinn.no/services/ServiceEngine/PreFill/2009/10">
+            <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+            <xs:import namespace="http://schemas.altinn.no/services/ServiceEngine/Notification/2009/10"/>
+            <xs:import namespace="http://schemas.altinn.no/services/serviceEntity/2009/10"/>
+            <xs:complexType name="PrefillFormTask">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Entity for representing a PreFill FormTask.</summary>
+                        <remarks>Represents a Relation of FormTask, FormSets, Attachments and IdentityFields FormSets,
+                            Attachments and Identity fields are implemented as Lists with the FormTask entity.
+                        </remarks>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element name="ExternalServiceCode" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the External Service Code given by the service owner</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ExternalServiceEditionCode" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets external service edition given by the service owner</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ExternalShipmentReference" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a unique reference set by service owner to identify the prefill
+                                    shipment
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="IdentityFieldHashCode" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a hash code generated based on Identity Field.</summary>
+                                <remarks>This Hash code will be generated while data is saved by prefill service
+                                </remarks>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="LargeInboundReference" type="ser:guid">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a large inbound reference.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="PreFillAttachments" nillable="true"
+                                type="tns:PrefillAttachmentBEList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a list of attachments.</summary>
+                                <remarks>There may be zero or more attachments for a given form set.</remarks>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="PreFillForms" nillable="true" type="tns:PrefillFormBEList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets information for forms in the form task. There may be one or more
+                                    forms for a given form set.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="PreFillIdentityFields" nillable="true"
+                                type="tns:PreFillIdentityFieldBEList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets information for identity field(s) in the form task.</summary>
+                                <remarks>There may be zero or more identity fields for a given form set</remarks>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element xmlns:q1="http://schemas.altinn.no/services/ServiceEngine/Notification/2009/10"
+                                minOccurs="0" name="PrefillNotifications" nillable="true" type="q1:NotificationBEList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a list of notifications. related to this FormTask.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiversReference" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a reference set by Altinn</summary>
+                                <remarks>This reference to be used together with Receipts</remarks>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="Reportee" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the unique Id for the Reportee for whom the prefill data belongs
+                                    to
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="SendersReference" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a reference set by Service Owner</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ServiceOwnerCode" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the code of the service owner from where the prefill data
+                                    originates.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ValidFromDate" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets when the Prefill data becomes valid.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ValidToDate" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets when the Prefill data becomes invalid.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="IsReservable" nillable="true" type="xs:boolean">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a value indicating whether it is possible to be reserved against
+                                    this specific prefill. Altinn is using the Contact and Reservation Register to
+                                    determine if a person has reserved themselves against digital communication with the
+                                    public sector. Organizations cannot reserve themselves. The default value for this
+                                    property is true.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ValidateButDoNotSendNotification" type="xs:boolean">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a value indicating whether Altinn should suppress the creation of
+                                    notifications. Setting the property to true will make sure that Altinn stops any
+                                    notifications even if everything validates okay. The intended scenario is for when a
+                                    service owner want to create both a reporting and a correspondence element for the
+                                    same reportee while having notifications only for the correspondence. The primary
+                                    use is to allow for notification details on the <c>
+                                        SubmitAndInstantiatePrefilledFormtask
+                                    </c> so that the logic can validate the input, but still not actually send any
+                                    notifications if everything is fine.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="PrefillFormTask" nillable="true" type="tns:PrefillFormTask"/>
+            <xs:complexType name="PrefillAttachmentBEList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Collection of PrefillAttachmentBE implemented as List.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="PrefillFormTaskAttachment" nillable="true"
+                                type="tns:PrefillFormTaskAttachment"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="PrefillAttachmentBEList" nillable="true" type="tns:PrefillAttachmentBEList"/>
+            <xs:complexType name="PrefillFormTaskAttachment">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents the Prefill Attachment entity.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element name="AttachmentData" nillable="true" type="xs:base64Binary">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets The actual attached data, in binary format</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="AttachmentName" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets Attachment Name to be shown in the Portal</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element xmlns:q2="http://schemas.altinn.no/services/serviceEntity/2009/10" name="AttachmentType"
+                                type="q2:AttachmentType">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets Attachment Type e.g., DOC, PDF, etc...</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="FileName" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets Name of the Attached File Name</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="SendersReference" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets Reference set by the Service Owner</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="SignedByDefault" nillable="true" type="xs:boolean">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a value indicating whether each of the forms should be checked or
+                                    unchecked by default in signing page
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="SigningLocked" nillable="true" type="xs:boolean">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a value indicating whether each of the forms is locked for signing
+                                    or not for user
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="PrefillFormTaskAttachment" nillable="true" type="tns:PrefillFormTaskAttachment"/>
+            <xs:complexType name="PrefillFormBEList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Collection of PreFillFormBE, implemented as List.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="PrefillForm" nillable="true"
+                                type="tns:PrefillForm"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="PrefillFormBEList" nillable="true" type="tns:PrefillFormBEList"/>
+            <xs:complexType name="PrefillForm">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a PrefillForm Entity.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element name="DataFormatID" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets Unique external Id of the form</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="DataFormatVersion" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets External edition of the form</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="FormDataXML" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets The actual prefill data in xml format</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="SendersReference" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets Unique reference for this form given by the service owner
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="SignedByDefault" nillable="true" type="xs:boolean">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a value indicating whether each of the forms should be checked or
+                                    unchecked by default in signing page
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="SigningLocked" nillable="true" type="xs:boolean">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a value indicating whether each of the forms is locked for signing
+                                    or not for user
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="PrefillForm" nillable="true" type="tns:PrefillForm"/>
+            <xs:complexType name="PreFillIdentityFieldBEList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Collection of PreFillIdentityFieldBE</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="PreFillIdentityFieldBE" nillable="true"
+                                type="tns:PreFillIdentityFieldBE"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="PreFillIdentityFieldBEList" nillable="true" type="tns:PreFillIdentityFieldBEList"/>
+            <xs:complexType name="PreFillIdentityFieldBE">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents the PreFill Identity field Entity</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="FieldValue" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets Prefill Identity Field Value</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="Index" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets Prefill Identity Index Value</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="PreFillIdentityFieldBE" nillable="true" type="tns:PreFillIdentityFieldBE"/>
+            <xs:complexType name="PrefillFormTaskDetails">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a container entity for a collection of PrefillFormTask elements.</summary>
+                        <remarks>Represents a Relation of FormTask, FormSets, Attachments and IdentityFields FormSets,
+                            Attachments and Identity fields are implemented as Lists with the FormTask entity.
+                        </remarks>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="PreFillFormTasklist" nillable="true"
+                                type="tns:PreFillFormTaskBEList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a strongly typed list of PrefillFormTask elements.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="SystemUserCode" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the system user id.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="PrefillFormTaskDetails" nillable="true" type="tns:PrefillFormTaskDetails"/>
+            <xs:complexType name="PreFillFormTaskBEList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a strongly typed collection of PrefillFormTask elements.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="PrefillFormTask" nillable="true"
+                                type="tns:PrefillFormTask"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="PreFillFormTaskBEList" nillable="true" type="tns:PreFillFormTaskBEList"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.altinn.no/services/serviceEntity/2009/10" elementFormDefault="qualified"
+                   targetNamespace="http://schemas.altinn.no/services/serviceEntity/2009/10">
+            <xs:simpleType name="AttachmentType">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Attachment type is used to provide information about the type of the attachment.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="application_None">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>When there is no attachment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="application_pdf">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>When the attachment is of PDF type.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="application_msword">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>When the attachment is of Microsoft word type.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="application_vnd_ms_excel">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>When the attachment is of Microsoft excel type.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="application_vnd_oasis_opendocument_text">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>When the attachment is of Open document of Text type.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="application_vnd_oasis_opendocument_presentation">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>When the attachment is of Open document of Presentation type.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="application_vnd_oasis_opendocument_spreadsheet">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>When the attachment is of Open document of Spreadsheet type.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="application_rtf">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>When the attachment is of Rich text format type.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="application_vnd_ms_powerpoint">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>When the attachment is of Microsoft power point type.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="application_postscript">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>When the attachment is of Postscript type.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="application_zip">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>When the attachment is a zip type.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="text_plain">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>When the attachment is a plain text.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="text_html">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>When the attachment is a html text.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="text_xml">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>When the attachment is a xml text.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="text_rtf">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>When the attachment is of rich text format type.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="text_richtext">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>When the attachment is a rich text.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="binary_octet_stream">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>When the attachment is a binary.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="not_Applicable">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>When the attachment is not of any type.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="MTOM">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>MTOM type</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="BASE64">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>BASE64 type</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="image_jpeg">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>JPEG type</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="image_gif">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>GIF type</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="image_bmp">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Image type</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="formtask_pdf">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Form Task PDF</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="AttachmentType" nillable="true" type="tns:AttachmentType"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.altinn.no/services/ServiceEngine/Notification/2009/10"
+                   elementFormDefault="qualified"
+                   targetNamespace="http://schemas.altinn.no/services/ServiceEngine/Notification/2009/10">
+            <xs:import namespace="http://schemas.altinn.no/services/Intermediary/Notification/2009/10"/>
+            <xs:import namespace="http://schemas.altinn.no/serviceengine/formsengine/2009/10"/>
+            <xs:complexType name="NotificationBEList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a strongly typed list of Notification elements.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="Notification" nillable="true"
+                                type="tns:Notification"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="NotificationBEList" nillable="true" type="tns:NotificationBEList"/>
+            <xs:complexType name="Notification">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a notification.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="FromAddress" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the default sender used when no sender is necessary as for SMS and
+                                    Emails when the address is only set to noReply@altinn.no
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="NotificationID" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a unique id on the notification.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element xmlns:q1="http://schemas.altinn.no/services/Intermediary/Notification/2009/10"
+                                minOccurs="0" name="NotifyType" type="q1:NotificationType">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the notify type by type id.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReporteeElementID" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the id of a reportee element.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReporteeId" nillable="true" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the reportee for the Notification.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ShipmentDateTime" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the date and time for when the notification should be sent.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="LanguageCode" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the language code of the notification.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="NotificationType" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the notification type by name.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="TextTokens" nillable="true" type="tns:TextTokenSubstitutionBEList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a list of text substitution tokens.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiverEndPoints" nillable="true"
+                                type="tns:ReceiverEndPointBEList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a list of receiver end points.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="Notification" nillable="true" type="tns:Notification"/>
+            <xs:complexType name="TextTokenSubstitutionBEList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a strongly typed collection of token elements.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="TextToken" nillable="true"
+                                type="tns:TextToken"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="TextTokenSubstitutionBEList" nillable="true" type="tns:TextTokenSubstitutionBEList"/>
+            <xs:complexType name="TextToken">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a text replacement rule in notifications. Text in a template is replaced
+                            with data in a token.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="TokenNum" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the text token number. This is the element that is replaced.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="TokenValue" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the text token value. This is the value that is inserted in place
+                                    of the token number.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="TextToken" nillable="true" type="tns:TextToken"/>
+            <xs:complexType name="ReceiverEndPointBEList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a strongly typed collection of ReceiverEndPoint elements.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="ReceiverEndPoint" nillable="true"
+                                type="tns:ReceiverEndPoint"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReceiverEndPointBEList" nillable="true" type="tns:ReceiverEndPointBEList"/>
+            <xs:complexType name="ReceiverEndPoint">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a receiver of a notification.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element xmlns:q2="http://schemas.altinn.no/serviceengine/formsengine/2009/10" minOccurs="0"
+                                name="TransportType" nillable="true" type="q2:TransportType">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets transport type.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiverAddress" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the receiver address.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReceiverEndPoint" nillable="true" type="tns:ReceiverEndPoint"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.altinn.no/services/Intermediary/Notification/2009/10"
+                   elementFormDefault="qualified"
+                   targetNamespace="http://schemas.altinn.no/services/Intermediary/Notification/2009/10">
+            <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+            <xs:simpleType name="NotificationType">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>This specifies what type of notification to be used</summary>
+                        <remarks>The Notify service should be used for all kind of notifications (correspondence, online
+                            batch, PIN and so on).
+                        </remarks>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="PIN">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">1
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>The Notify service should be used for PIN notification</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Correspondence">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">2
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>The Notify service should be used for Correspondence</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="PreFill">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">3
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>This Notification can be used at the time of PreFill</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="StandAlone">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">5
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>This Notification can be used at the time of Standalone notification</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="General">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>This Type is used when Notification has to send for other cases apart from
+                                    PIN,Correspondence, PreFill and Standalone.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="NotificationType" nillable="true" type="tns:NotificationType"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.altinn.no/serviceengine/formsengine/2009/10" elementFormDefault="qualified"
+                   targetNamespace="http://schemas.altinn.no/serviceengine/formsengine/2009/10">
+            <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+            <xs:simpleType name="TransportType">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Enumeration types specifying the TransportTypes for sending the Notifications</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="SMS">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">1
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>When the Transport Type is EMAIL</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Email">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">2
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>When the Transport Type is SMS</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="IM">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">3
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>When the Transport Type is IM</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Both">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">4
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>When the Transport Type is BOTH(EMAIL AND SMS)</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="SMSPreferred">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">5
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>When the Transport Type is preferred to be SMS</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="EmailPreferred">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">6
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>When the Transport Type is preferred to be EMAIL</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="TransportType" nillable="true" type="tns:TransportType"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"
+                   elementFormDefault="qualified"
+                   targetNamespace="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10">
+            <xs:import namespace="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10"/>
+            <xs:complexType name="ReceiptExternal">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a the data in a receipt that is generated by Altinn when it has received
+                            data from an external source. A receipt contains details about the data received and its
+                            steps through Altinn.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="LastChanged" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the date and time for when the receipt was last changed.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ParentReceiptId" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the id of the parent receipt if the current receipt is a child
+                                    receipt.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptHistory" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the receipt history. The content of ReceiptText is added to
+                                    ReceiptHistory at every update.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptId" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the unique id of the receipt.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptStatusCode" type="tns:ReceiptStatusEnum">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a value that indicates the status of the action that the receipt
+                                    belong. For example if a submission has been "Rejected".
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptText" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the receipt text with a short description of the last step done to
+                                    the element.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptTypeName" type="tns:ReceiptTypeEnum">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a value indicating what type of receipt.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a list of references.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="SubReceipts" nillable="true" type="tns:ReceiptExternalList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a list of child receipts.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReceiptExternal" nillable="true" type="tns:ReceiptExternal"/>
+            <xs:simpleType name="ReceiptStatusEnum">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Specifies different statuses on a receipt. The status is a response to the action the
+                            caller tried to perform.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="NotSet">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt status is unknown.</summary>
+                                <remarks>This type should not be used. It is an error condition if status is of this
+                                    type.
+                                </remarks>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="OK">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the request was processed without any error.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="UnExpectedError">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that there was an unexpected error during processing of a request.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="ValidationFailed">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the data in a request failed validation.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Rejected">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the request was rejected. Usually because of known error
+                                    conditions.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="ReceiptStatusEnum" nillable="true" type="tns:ReceiptStatusEnum"/>
+            <xs:simpleType name="ReceiptTypeEnum">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Defines receipt types.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="NotSet">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>SHOULD NOT BE USED (For Enumeration error handling).</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="FormTask">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a form task.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Correspondence">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for correspondence.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="PINCODE">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for pin code.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Subscription">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a subscription shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Outbound">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for an outbound shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="PreFill">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a prefill shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDLS">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DLS shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSF">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterER">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register ER shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFProperty">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DFS property shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFStreet">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DFS street shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFCountry">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF country shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFUser">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF user shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="LookUp">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a lookup shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFStreetAdd">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF street address batch.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFPropertyAdd">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF property address batch.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="ReceiptTypeEnum" nillable="true" type="tns:ReceiptTypeEnum"/>
+            <xs:complexType name="ReferenceList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a strongly typed collection of Reference elements.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="Reference" nillable="true"
+                                type="tns:Reference"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReferenceList" nillable="true" type="tns:ReferenceList"/>
+            <xs:complexType name="Reference">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a key-value pair that is associated with a receipt.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element xmlns:q1="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10" minOccurs="0"
+                                name="ReferenceTypeName" type="q1:ReferenceType">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the reference type.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReferenceValue" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the reference value.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="Reference" nillable="true" type="tns:Reference"/>
+            <xs:complexType name="ReceiptExternalList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a strongly typed list of ReceiptExternalBE elements that can be accessed by
+                            index.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="ReceiptExternal" nillable="true"
+                                type="tns:ReceiptExternal"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReceiptExternalList" nillable="true" type="tns:ReceiptExternalList"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10"
+                   elementFormDefault="qualified"
+                   targetNamespace="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10">
+            <xs:simpleType name="ReferenceType">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Specifies a list of different reference types.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="NotSet">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that reference type is unknown.</summary>
+                                <remarks>This type should not be used. It is an error condition if a reference is of
+                                    this type.
+                                </remarks>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="ExternalShipmentReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is a shipment reference given by an external
+                                    system.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="EndUserSystemReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is an element (usually form task) reference
+                                    given by an external system.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="ParentReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is an element id for a parent element.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="SendersReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is an element reference given by an external
+                                    system. This is similar to EndUserSystemReference, but can also be used by service
+                                    owners when they are creating elements.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="WorkFlowReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is a workflow id.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="BatchReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is a batch reference.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="OutboundShipmentReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is an outbound shipment reference.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="ReceiversReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is a receivers reference.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Altinn1Reference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is an Altinn1 reference.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="OwnerPartyReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is the id of the receipt owner.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="PartyReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is the id of the receipt reportee.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="ArchiveReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is an archive reference.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="ReferenceType" nillable="true" type="tns:ReferenceType"/>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="IPreFillExternalBasic_Test_InputMessage">
+        <wsdl:part xmlns:q1="http://www.altinn.no/services/2009/10" name="parameters" element="q1:Test"/>
+    </wsdl:message>
+    <wsdl:message name="IPreFillExternalBasic_Test_OutputMessage">
+        <wsdl:part xmlns:q2="http://www.altinn.no/services/2009/10" name="parameters" element="q2:TestResponse"/>
+    </wsdl:message>
+    <wsdl:message name="IPreFillExternalBasic_Test_AltinnFaultFault_FaultMessage">
+        <wsdl:part xmlns:q3="http://www.altinn.no/services/common/fault/2009/10" name="detail"
+                   element="q3:AltinnFault"/>
+    </wsdl:message>
+    <wsdl:message name="IPreFillExternalBasic_SubmitAndInstantiatePrefilledFormTaskBasic_InputMessage">
+        <wsdl:part name="parameters" element="tns:SubmitAndInstantiatePrefilledFormTaskBasic"/>
+    </wsdl:message>
+    <wsdl:message name="IPreFillExternalBasic_SubmitAndInstantiatePrefilledFormTaskBasic_OutputMessage">
+        <wsdl:part name="parameters" element="tns:SubmitAndInstantiatePrefilledFormTaskBasicResponse"/>
+    </wsdl:message>
+    <wsdl:message name="IPreFillExternalBasic_SubmitAndInstantiatePrefilledFormTaskBasic_AltinnFaultFault_FaultMessage">
+        <wsdl:part xmlns:q4="http://www.altinn.no/services/common/fault/2009/10" name="detail"
+                   element="q4:AltinnFault"/>
+    </wsdl:message>
+    <wsdl:message name="IPreFillExternalBasic_SubmitPrefilledFormTasksBasic_InputMessage">
+        <wsdl:part name="parameters" element="tns:SubmitPrefilledFormTasksBasic"/>
+    </wsdl:message>
+    <wsdl:message name="IPreFillExternalBasic_SubmitPrefilledFormTasksBasic_OutputMessage">
+        <wsdl:part name="parameters" element="tns:SubmitPrefilledFormTasksBasicResponse"/>
+    </wsdl:message>
+    <wsdl:message name="IPreFillExternalBasic_SubmitPrefilledFormTasksBasic_AltinnFaultFault_FaultMessage">
+        <wsdl:part xmlns:q5="http://www.altinn.no/services/common/fault/2009/10" name="detail"
+                   element="q5:AltinnFault"/>
+    </wsdl:message>
+    <wsdl:portType name="IPreFillExternalBasic">
+        <wsdl:documentation>
+            <summary>Service contract for the PrefillFormTask Exposed to Service Owners</summary>
+            <remarks>This will expose methods that allow the Service Owners to submit Prefilled FormTasks to the Prefill
+                service. 1. SubmitPrefilledFormTasks(), and 2. SubmitAndInstantiatePrefilledFormTask().
+            </remarks>
+        </wsdl:documentation>
+        <wsdl:operation name="Test">
+            <wsdl:input wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test"
+                        message="tns:IPreFillExternalBasic_Test_InputMessage"/>
+            <wsdl:output wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestResponse"
+                         message="tns:IPreFillExternalBasic_Test_OutputMessage"/>
+            <wsdl:fault wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestAltinnFaultFault"
+                        name="AltinnFaultFault" message="tns:IPreFillExternalBasic_Test_AltinnFaultFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="SubmitAndInstantiatePrefilledFormTaskBasic">
+            <wsdl:documentation>
+                <summary>SubmitAndInstantiatePrefilledFormTask () allows a single prefilled form task to be received
+                    online from a service owner and immediately instantiated as a form task in Altinn and send back a
+                    Receipt for submission.
+                </summary>
+                <remarks>Shipment will hold reference to Form task and for each form a Receipt will be created and
+                    attached along Shipment. "doSaveFormTask" should be set to save the "prefilled FormTask" and
+                    "doInstantiateFormTask" should be set to instantiate the FormTask. By submitting the optional
+                    element caseId the FormTask will be a part of that specific collaboration service instance.
+                </remarks>
+                <param name="systemUserName">System user name is the system identifier for the end user system as
+                    registered in Altinn - mandatory parameter
+                </param>
+                <param name="systemPassword">System password is the password for the corresponding registered agency
+                    system - mandatory parameter
+                </param>
+                <param name="externalBatchId">Unique Id that can be used as a Reference for this FormTask - mandatory
+                    parameter
+                </param>
+                <param name="preFillFormTask">Single Prefilled FormTask object - mandatory parameter</param>
+                <param name="doSaveFormTask">Flag should be set to True/False if Prefilled FormTask should be saved or
+                    not - mandatory parameter
+                </param>
+                <param name="doinstantiateFormTask">Flag should be set to True/False to instantiate the FormTask -
+                    mandatory parameter
+                </param>
+                <param name="caseId">CaseId used if the form should be instantiated as part of a collaboration service
+                </param>
+                <param name="dueDate">due Date</param>
+                <param name="instantitedOnBehalfOf">Number of the representing organization</param>
+                <returns>A ReceiptExternalBE entity with reference information for the prefill</returns>
+            </wsdl:documentation>
+            <wsdl:input
+                    wsaw:Action="http://www.altinn.no/services/ServiceEngine/PreFill/2009/10/IPreFillExternalBasic/SubmitAndInstantiatePrefilledFormTaskBasic"
+                    message="tns:IPreFillExternalBasic_SubmitAndInstantiatePrefilledFormTaskBasic_InputMessage"/>
+            <wsdl:output
+                    wsaw:Action="http://www.altinn.no/services/ServiceEngine/PreFill/2009/10/IPreFillExternalBasic/SubmitAndInstantiatePrefilledFormTaskBasicResponse"
+                    message="tns:IPreFillExternalBasic_SubmitAndInstantiatePrefilledFormTaskBasic_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://www.altinn.no/services/ServiceEngine/PreFill/2009/10/IPreFillExternalBasic/SubmitAndInstantiatePrefilledFormTaskBasicAltinnFaultFault"
+                    name="AltinnFaultFault"
+                    message="tns:IPreFillExternalBasic_SubmitAndInstantiatePrefilledFormTaskBasic_AltinnFaultFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="SubmitPrefilledFormTasksBasic">
+            <wsdl:documentation>
+                <summary>SubmitPrefilledFormTasks() is a service operation that allows a list of prefilled form task to
+                    be received online from a service owner and processed and stores it. A Shipment Receipt is sent back
+                    as acknowledgement for submission.
+                </summary>
+                <remarks>The shipment will hold reference to the FormTask.</remarks>
+                <param name="systemUserName">System user name is the system identifier for the end user system as
+                    registered in Altinn - mandatory parameter
+                </param>
+                <param name="systemPassword">System password is the password for the corresponding registered agency
+                    system - mandatory parameter
+                </param>
+                <param name="externalBatchId">Unique Id that can be used as a Reference for this FormTask - mandatory
+                    parameter
+                </param>
+                <param name="preFillFormTasksDetails">A List of PreFillFormTask - mandatory parameter</param>
+                <returns>A ReceiptExternalBE entity with reference information for the prefill</returns>
+            </wsdl:documentation>
+            <wsdl:input
+                    wsaw:Action="http://www.altinn.no/services/ServiceEngine/PreFill/2009/10/IPreFillExternalBasic/SubmitPrefilledFormTasksBasic"
+                    message="tns:IPreFillExternalBasic_SubmitPrefilledFormTasksBasic_InputMessage"/>
+            <wsdl:output
+                    wsaw:Action="http://www.altinn.no/services/ServiceEngine/PreFill/2009/10/IPreFillExternalBasic/SubmitPrefilledFormTasksBasicResponse"
+                    message="tns:IPreFillExternalBasic_SubmitPrefilledFormTasksBasic_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://www.altinn.no/services/ServiceEngine/PreFill/2009/10/IPreFillExternalBasic/SubmitPrefilledFormTasksBasicAltinnFaultFault"
+                    name="AltinnFaultFault"
+                    message="tns:IPreFillExternalBasic_SubmitPrefilledFormTasksBasic_AltinnFaultFault_FaultMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BasicHttpBinding_IPreFillExternalBasic" type="tns:IPreFillExternalBasic">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="Test">
+            <soap:operation soapAction="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test"
+                            style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AltinnFaultFault">
+                <soap:fault use="literal" name="AltinnFaultFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="SubmitAndInstantiatePrefilledFormTaskBasic">
+            <soap:operation
+                    soapAction="http://www.altinn.no/services/ServiceEngine/PreFill/2009/10/IPreFillExternalBasic/SubmitAndInstantiatePrefilledFormTaskBasic"
+                    style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AltinnFaultFault">
+                <soap:fault use="literal" name="AltinnFaultFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="SubmitPrefilledFormTasksBasic">
+            <soap:operation
+                    soapAction="http://www.altinn.no/services/ServiceEngine/PreFill/2009/10/IPreFillExternalBasic/SubmitPrefilledFormTasksBasic"
+                    style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AltinnFaultFault">
+                <soap:fault use="literal" name="AltinnFaultFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="PreFillExternalBasicSF">
+        <wsdl:port name="BasicHttpBinding_IPreFillExternalBasic" binding="tns:BasicHttpBinding_IPreFillExternalBasic">
+            <soap:address location="https://www.altinn.no/ServiceEngineExternal/PreFillBasic.svc"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

@@ -58,9 +58,6 @@ import no.nav.altinn.admin.service.receipt.receiptsAPI
 import no.nav.altinn.admin.service.srr.AltinnSRRService
 import no.nav.altinn.admin.service.srr.ssrAPI
 import no.nav.altinn.admin.ws.Clients
-import no.nav.altinn.admin.ws.STS_SAML_POLICY_NO_TRANSPORT_BINDING
-import no.nav.altinn.admin.ws.configureFor
-import no.nav.altinn.admin.ws.stsClient
 import org.slf4j.event.Level
 
 const val AUTHENTICATION_BASIC = "basicAuth"
@@ -154,67 +151,20 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
 
     val swaggerUI = SwaggerUi()
 
-    val stsClient by lazy {
-        stsClient(
-            stsUrl = environment.stsUrl,
-            credentials = environment.application.username to environment.application.password
-        )
-    }
-
     val altinnSRRService = AltinnSRRService(environment) {
-        when (environment.application.localEnv != "localWin") {
-            true -> Clients.iRegisterSRRAgencyExternalBasic(environment.altinn.altinnSrrUrl).apply {
-                when (environment.application.devProfile) {
-                    true -> stsClient.configureFor(this, STS_SAML_POLICY_NO_TRANSPORT_BINDING)
-                    false -> stsClient.configureFor(this)
-                }
-            }
-            false -> Clients.iRegisterSRRAgencyExternalBasic(environment.altinn.altinnSrrUrl)
-        }
+        Clients.iRegisterSRRAgencyExternalBasic(environment.altinn.altinnSrrUrl)
     }
     val altinnDqService = AltinnDQService(environment) {
-        when (environment.application.localEnv != "localWin") {
-            true -> Clients.iDownloadQueueExternalBasic(environment.altinn.altinnDqUrl).apply {
-                when (environment.application.devProfile) {
-                    true -> stsClient.configureFor(this, STS_SAML_POLICY_NO_TRANSPORT_BINDING)
-                    false -> stsClient.configureFor(this)
-                }
-            }
-            false -> Clients.iDownloadQueueExternalBasic(environment.altinn.altinnDqUrl)
-        }
+        Clients.iDownloadQueueExternalBasic(environment.altinn.altinnDqUrl)
     }
     val altinnCorrespondenceService = AltinnCorrespondenceService(environment) {
-        when (environment.application.localEnv != "localWin") {
-            true -> Clients.iCorrespondenceExternalBasic(environment.altinn.altinnCorrespondenceUrl).apply {
-                when (environment.application.devProfile) {
-                    true -> stsClient.configureFor(this, STS_SAML_POLICY_NO_TRANSPORT_BINDING)
-                    false -> stsClient.configureFor(this)
-                }
-            }
-            false -> Clients.iCorrespondenceExternalBasic(environment.altinn.altinnCorrespondenceUrl)
-        }
+        Clients.iCorrespondenceExternalBasic(environment.altinn.altinnCorrespondenceUrl)
     }
     val altinnPrefillService = AltinnPrefillService(environment) {
-        when (environment.application.localEnv != "localWin") {
-            true -> Clients.iPrefillExternalBasic(environment.altinn.altinnPrefillUrl).apply {
-                when (environment.application.devProfile) {
-                    true -> stsClient.configureFor(this, STS_SAML_POLICY_NO_TRANSPORT_BINDING)
-                    false -> stsClient.configureFor(this)
-                }
-            }
-            false -> Clients.iPrefillExternalBasic(environment.altinn.altinnPrefillUrl)
-        }
+        Clients.iPrefillExternalBasic(environment.altinn.altinnPrefillUrl)
     }
     val altinnReceiptService = AltinnReceiptService(environment) {
-        when (environment.application.localEnv != "localWin") {
-            true -> Clients.iReceiptAgencyExternalBasic(environment.altinn.altinnReceiptUrl).apply {
-                when (environment.application.devProfile) {
-                    true -> stsClient.configureFor(this, STS_SAML_POLICY_NO_TRANSPORT_BINDING)
-                    false -> stsClient.configureFor(this)
-                }
-            }
-            false -> Clients.iReceiptAgencyExternalBasic(environment.altinn.altinnReceiptUrl)
-        }
+        Clients.iReceiptAgencyExternalBasic(environment.altinn.altinnReceiptUrl)
     }
 
     val expireAlerts = ExpireAlerts(environment, applicationState, altinnSRRService)

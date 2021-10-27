@@ -1,10 +1,13 @@
 package no.nav.altinn.admin.ws
 
 import no.altinn.services.archive.downloadqueue._2012._08.IDownloadQueueExternalBasic
+import no.altinn.services.archive.serviceownerarchive._2009._10.IServiceOwnerArchiveExternalBasic
 import no.altinn.services.intermediary.receipt._2009._10.IReceiptAgencyExternalBasic
 import no.altinn.services.register.srr._2015._06.IRegisterSRRAgencyExternalBasic
 import no.altinn.services.serviceengine.correspondence._2009._10.ICorrespondenceAgencyExternalBasic
+import no.altinn.services.serviceengine.notification._2010._10.INotificationAgencyExternalBasic
 import no.altinn.services.serviceengine.prefill._2009._10.IPreFillExternalBasic
+import no.altinn.services.serviceengine.subscription._2009._10.ISubscriptionExternalBasic
 import org.apache.cxf.ext.logging.LoggingFeature
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean
 import org.apache.cxf.ws.addressing.WSAddressingFeature
@@ -38,6 +41,24 @@ object Clients {
         createServicePort(
             serviceUrl = serviceUrl,
             serviceClazz = IReceiptAgencyExternalBasic::class.java
+        )
+
+    fun iArchiveAgencyExternalBasic(serviceUrl: String): IServiceOwnerArchiveExternalBasic =
+        createServicePort(
+            serviceUrl = serviceUrl,
+            serviceClazz = IServiceOwnerArchiveExternalBasic::class.java
+        )
+
+    fun iSubscriptionAgencyExternalBasic(serviceUrl: String): ISubscriptionExternalBasic =
+        createServicePort(
+            serviceUrl = serviceUrl,
+            serviceClazz = ISubscriptionExternalBasic::class.java
+        )
+
+    fun iNotificationAgencyExternalBasic(serviceUrl: String): INotificationAgencyExternalBasic =
+        createServicePort(
+            serviceUrl = serviceUrl,
+            serviceClazz = INotificationAgencyExternalBasic::class.java
         )
 
     private fun <PORT_TYPE> createServicePort(

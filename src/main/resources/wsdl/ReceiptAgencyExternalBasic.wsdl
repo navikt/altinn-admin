@@ -1,1591 +1,1586 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="ReceiptAgencyExternalBasicSF" targetNamespace="http://www.altinn.no/services/Intermediary/Receipt/2009/10" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.altinn.no/services/Intermediary/Receipt/2009/10" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
-  <wsdl:types>
-    <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/2009/10">
-      <xsd:element name="Test">
-        <xsd:complexType>
-          <xsd:sequence/>
-        </xsd:complexType>
-      </xsd:element>
-      <xsd:element name="TestResponse">
-        <xsd:complexType>
-          <xsd:sequence/>
-        </xsd:complexType>
-      </xsd:element>
-    </xsd:schema>
-    <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/common/fault/2009/10" xmlns:tns="http://www.altinn.no/services/common/fault/2009/10">
-      <xsd:complexType name="AltinnFault">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:Text z:Id="2">&lt;summary>
-            Represents a SOAP fault message used by Altinn to convey exception information to the caller.
-            &lt;/summary></d1p1:Text>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:sequence>
-          <xsd:element minOccurs="0" name="AltinnErrorMessage" nillable="true" type="xsd:string">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the error message.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="AltinnExtendedErrorMessage" nillable="true" type="xsd:string">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the verbose version of the error message.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="AltinnLocalizedErrorMessage" nillable="true" type="xsd:string">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the localized version of the error message.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ErrorGuid" nillable="true" type="xsd:string">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the unique GUID for the specific fault.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ErrorID" type="xsd:int">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the error type id.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="UserGuid" nillable="true" type="xsd:string">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the GUID of the user.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="UserId" nillable="true" type="xsd:string">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the id of the user.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="AltinnFault" nillable="true" type="tns:AltinnFault"/>
-    </xsd:schema>
-    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/">
-      <xs:element name="anyType" nillable="true" type="xs:anyType"/>
-      <xs:element name="anyURI" nillable="true" type="xs:anyURI"/>
-      <xs:element name="base64Binary" nillable="true" type="xs:base64Binary"/>
-      <xs:element name="boolean" nillable="true" type="xs:boolean"/>
-      <xs:element name="byte" nillable="true" type="xs:byte"/>
-      <xs:element name="dateTime" nillable="true" type="xs:dateTime"/>
-      <xs:element name="decimal" nillable="true" type="xs:decimal"/>
-      <xs:element name="double" nillable="true" type="xs:double"/>
-      <xs:element name="float" nillable="true" type="xs:float"/>
-      <xs:element name="int" nillable="true" type="xs:int"/>
-      <xs:element name="long" nillable="true" type="xs:long"/>
-      <xs:element name="QName" nillable="true" type="xs:QName"/>
-      <xs:element name="short" nillable="true" type="xs:short"/>
-      <xs:element name="string" nillable="true" type="xs:string"/>
-      <xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte"/>
-      <xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt"/>
-      <xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong"/>
-      <xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort"/>
-      <xs:element name="char" nillable="true" type="tns:char"/>
-      <xs:simpleType name="char">
-        <xs:restriction base="xs:int"/>
-      </xs:simpleType>
-      <xs:element name="duration" nillable="true" type="tns:duration"/>
-      <xs:simpleType name="duration">
-        <xs:restriction base="xs:duration">
-          <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?"/>
-          <xs:minInclusive value="-P10675199DT2H48M5.4775808S"/>
-          <xs:maxInclusive value="P10675199DT2H48M5.4775807S"/>
-        </xs:restriction>
-      </xs:simpleType>
-      <xs:element name="guid" nillable="true" type="tns:guid"/>
-      <xs:simpleType name="guid">
-        <xs:restriction base="xs:string">
-          <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}"/>
-        </xs:restriction>
-      </xs:simpleType>
-      <xs:attribute name="FactoryType" type="xs:QName"/>
-      <xs:attribute name="Id" type="xs:ID"/>
-      <xs:attribute name="Ref" type="xs:IDREF"/>
-    </xs:schema>
-    <xsd:schema elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/Intermediary/Receipt/2009/10">
-      <xsd:import namespace="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"/>
-      <xsd:import namespace="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06"/>
-      <xsd:element name="GetReceiptBasic">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element minOccurs="0" name="systemUserName" nillable="true" type="xsd:string"/>
-            <xsd:element minOccurs="0" name="systemPassword" nillable="true" type="xsd:string"/>
-            <xsd:element minOccurs="0" name="receipt" nillable="true" type="q1:ReceiptSearchExternal" xmlns:q1="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"/>
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-      <xsd:element name="GetReceiptBasicResponse">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element minOccurs="0" name="GetReceiptBasicResult" nillable="true" type="q2:ReceiptExternal" xmlns:q2="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"/>
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-      <xsd:element name="GetReceiptBasicV2">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element minOccurs="1" name="systemUserName" type="xsd:string"/>
-            <xsd:element minOccurs="1" name="systemPassword" type="xsd:string"/>
-            <xsd:element minOccurs="1" name="receipt" type="q3:ReceiptSearch" xmlns:q3="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06"/>
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-      <xsd:element name="GetReceiptBasicV2Response">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element minOccurs="0" name="GetReceiptBasicV2Result" nillable="true" type="q4:Receipt" xmlns:q4="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06"/>
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-      <xsd:element name="GetReceiptListBasic">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element minOccurs="0" name="systemUserName" nillable="true" type="xsd:string"/>
-            <xsd:element minOccurs="0" name="systemPassword" nillable="true" type="xsd:string"/>
-            <xsd:element minOccurs="0" name="receiptTypeName" type="q5:ReceiptTypeEnum" xmlns:q5="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"/>
-            <xsd:element minOccurs="0" name="dateFrom" type="xsd:dateTime"/>
-            <xsd:element minOccurs="0" name="dateTo" type="xsd:dateTime"/>
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-      <xsd:element name="GetReceiptListBasicResponse">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element minOccurs="0" name="GetReceiptListBasicResult" nillable="true" type="q6:ReceiptExternalList" xmlns:q6="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"/>
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-      <xsd:element name="GetReceiptListBasicV2">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element minOccurs="1" name="systemUserName" type="xsd:string"/>
-            <xsd:element minOccurs="1" name="systemPassword" type="xsd:string"/>
-            <xsd:element minOccurs="1" name="receiptTypeName" type="q7:ReceiptType" xmlns:q7="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06"/>
-            <xsd:element minOccurs="0" name="dateFrom" type="xsd:dateTime"/>
-            <xsd:element minOccurs="0" name="dateTo" type="xsd:dateTime"/>
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-      <xsd:element name="GetReceiptListBasicV2Response">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element minOccurs="0" name="GetReceiptListBasicV2Result" nillable="true" type="q8:ReceiptList" xmlns:q8="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06"/>
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-      <xsd:element name="SaveReceiptBasic">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element minOccurs="0" name="systemUserName" nillable="true" type="xsd:string"/>
-            <xsd:element minOccurs="0" name="systemPassword" nillable="true" type="xsd:string"/>
-            <xsd:element minOccurs="0" name="receipt" nillable="true" type="q9:ReceiptSaveExternal" xmlns:q9="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"/>
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-      <xsd:element name="SaveReceiptBasicResponse">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element minOccurs="0" name="SaveReceiptBasicResult" nillable="true" type="q10:ReceiptExternal" xmlns:q10="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"/>
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-      <xsd:element name="UpdateReceiptBasic">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element minOccurs="1" name="systemUserName" type="xsd:string"/>
-            <xsd:element minOccurs="1" name="systemPassword" type="xsd:string"/>
-            <xsd:element minOccurs="1" name="receipt" type="q11:ReceiptSave" xmlns:q11="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06"/>
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-      <xsd:element name="UpdateReceiptBasicResponse">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element minOccurs="0" name="UpdateReceiptBasicResult" nillable="true" type="q12:Receipt" xmlns:q12="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06"/>
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-    </xsd:schema>
-    <xsd:schema elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10" xmlns:tns="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10">
-      <xsd:import namespace="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10"/>
-      <xsd:complexType name="ReceiptSearchExternal">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:Text z:Id="2">&lt;summary>
-            Represents a receipt search with filter data that helps identify a set of receipts.
-            &lt;/summary></d1p1:Text>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:sequence>
-          <xsd:element minOccurs="0" name="ReceiptId" type="xsd:int">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets a unique id for the receipt. This id is generated by Altinn when the receipt is created.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets a list of receipt references.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="ReceiptSearchExternal" nillable="true" type="tns:ReceiptSearchExternal"/>
-      <xsd:complexType name="ReferenceList">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:Text z:Id="2">&lt;summary>
-            Represents a strongly typed collection of Reference elements.
-            &lt;/summary></d1p1:Text>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:sequence>
-          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Reference" nillable="true" type="tns:Reference"/>
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="ReferenceList" nillable="true" type="tns:ReferenceList"/>
-      <xsd:complexType name="Reference">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:Text z:Id="2">&lt;summary>
-            Represents a key-value pair that is associated with a receipt.
-            &lt;/summary></d1p1:Text>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:sequence>
-          <xsd:element minOccurs="0" name="ReferenceTypeName" type="q13:ReferenceType" xmlns:q13="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the reference type.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ReferenceValue" nillable="true" type="xsd:string">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the reference value.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="Reference" nillable="true" type="tns:Reference"/>
-      <xsd:complexType name="ReceiptExternal">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:Text z:Id="2">&lt;summary>
-            Represents a the data in a receipt that is generated by Altinn when it has received data from an external source. A receipt
-            contains details about the data received and its steps through Altinn.
-            &lt;/summary></d1p1:Text>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:sequence>
-          <xsd:element minOccurs="0" name="LastChanged" type="xsd:dateTime">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the date and time for when the receipt was last changed.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ParentReceiptId" type="xsd:int">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the id of the parent receipt if the current receipt is a child receipt.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ReceiptHistory" nillable="true" type="xsd:string">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the receipt history. The content of ReceiptText is added to ReceiptHistory at every update.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ReceiptId" type="xsd:int">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the unique id of the receipt.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ReceiptStatusCode" type="tns:ReceiptStatusEnum">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets a value that indicates the status of the action that the receipt belong. For example if a submission
-            has been "Rejected".
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ReceiptText" nillable="true" type="xsd:string">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the receipt text with a short description of the last step done to the element.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ReceiptTypeName" type="tns:ReceiptTypeEnum">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets a value indicating what type of receipt.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets a list of references.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="SubReceipts" nillable="true" type="tns:ReceiptExternalList">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets a list of child receipts.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="ReceiptExternal" nillable="true" type="tns:ReceiptExternal"/>
-      <xsd:simpleType name="ReceiptStatusEnum">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:EnumAnnotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:EnumText z:Id="2">&lt;summary>
-            Specifies different statuses on a receipt. The status is a response to the action the caller tried to perform.
-            &lt;/summary></d1p1:EnumText>
-              <d1p1:Members z:Id="3" z:Size="5" xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="4">NotSet</d2p1:Key>
-                  <d2p1:Value z:Id="5">&lt;summary>
-            Specifies that the receipt status is unknown.
-            &lt;/summary>
-            &lt;remarks>
-            This type should not be used. It is an error condition if status is of this type.
-            &lt;/remarks></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="6">OK</d2p1:Key>
-                  <d2p1:Value z:Id="7">&lt;summary>
-            Specifies that the request was processed without any error.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="8">UnExpectedError</d2p1:Key>
-                  <d2p1:Value z:Id="9">&lt;summary>
-            Specifies that there was an unexpected error during processing of a request.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="10">ValidationFailed</d2p1:Key>
-                  <d2p1:Value z:Id="11">&lt;summary>
-             Specifies that the data in a request failed validation.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="12">Rejected</d2p1:Key>
-                  <d2p1:Value z:Id="13">&lt;summary>
-             Specifies that the request was rejected. Usually because of known error conditions.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-              </d1p1:Members>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:restriction base="xsd:string">
-          <xsd:enumeration value="NotSet"/>
-          <xsd:enumeration value="OK"/>
-          <xsd:enumeration value="UnExpectedError"/>
-          <xsd:enumeration value="ValidationFailed"/>
-          <xsd:enumeration value="Rejected"/>
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:element name="ReceiptStatusEnum" nillable="true" type="tns:ReceiptStatusEnum"/>
-      <xsd:simpleType name="ReceiptTypeEnum">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:EnumAnnotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:EnumText z:Id="2">&lt;summary>
-            Defines receipt types.
-            &lt;/summary></d1p1:EnumText>
-              <d1p1:Members z:Id="3" z:Size="17" xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="4">NotSet</d2p1:Key>
-                  <d2p1:Value z:Id="5">&lt;summary>
-            SHOULD NOT BE USED (For Enumeration error handling).
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="6">FormTask</d2p1:Key>
-                  <d2p1:Value z:Id="7">&lt;summary>
-            Specifies that the receipt is for a form task.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="8">Correspondence</d2p1:Key>
-                  <d2p1:Value z:Id="9">&lt;summary>
-            Specifies that the receipt is for correspondence.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="10">PINCODE</d2p1:Key>
-                  <d2p1:Value z:Id="11">&lt;summary>
-            Specifies that the receipt is for pin code.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="12">Subscription</d2p1:Key>
-                  <d2p1:Value z:Id="13">&lt;summary>
-            Specifies that the receipt is for a subscription shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="14">Outbound</d2p1:Key>
-                  <d2p1:Value z:Id="15">&lt;summary>
-            Specifies that the receipt is for an outbound shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="16">PreFill</d2p1:Key>
-                  <d2p1:Value z:Id="17">&lt;summary>
-            Specifies that the receipt is for a prefill shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="18">RegisterDLS</d2p1:Key>
-                  <d2p1:Value z:Id="19">&lt;summary>
-            Specifies that the receipt is for a register DLS shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="20">RegisterDSF</d2p1:Key>
-                  <d2p1:Value z:Id="21">&lt;summary>
-            Specifies that the receipt is for a register DSF shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="22">RegisterER</d2p1:Key>
-                  <d2p1:Value z:Id="23">&lt;summary>
-            Specifies that the receipt is for a register ER shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="24">RegisterDSFProperty</d2p1:Key>
-                  <d2p1:Value z:Id="25">&lt;summary>
-            Specifies that the receipt is for a register DFS property shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="26">RegisterDSFStreet</d2p1:Key>
-                  <d2p1:Value z:Id="27">&lt;summary>
-            Specifies that the receipt is for a register DFS street shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="28">RegisterDSFCountry</d2p1:Key>
-                  <d2p1:Value z:Id="29">&lt;summary>
-            Specifies that the receipt is for a register DSF country shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="30">RegisterDSFUser</d2p1:Key>
-                  <d2p1:Value z:Id="31">&lt;summary>
-            Specifies that the receipt is for a register DSF user shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="32">LookUp</d2p1:Key>
-                  <d2p1:Value z:Id="33">&lt;summary>
-            Specifies that the receipt is for a lookup shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="34">RegisterDSFStreetAdd</d2p1:Key>
-                  <d2p1:Value z:Id="35">&lt;summary>
-            Specifies that the receipt is for a register DSF street address batch.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="36">RegisterDSFPropertyAdd</d2p1:Key>
-                  <d2p1:Value z:Id="37">&lt;summary>
-            Specifies that the receipt is for a register DSF property address batch.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-              </d1p1:Members>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:restriction base="xsd:string">
-          <xsd:enumeration value="NotSet"/>
-          <xsd:enumeration value="FormTask"/>
-          <xsd:enumeration value="Correspondence"/>
-          <xsd:enumeration value="PINCODE"/>
-          <xsd:enumeration value="Subscription"/>
-          <xsd:enumeration value="Outbound"/>
-          <xsd:enumeration value="PreFill"/>
-          <xsd:enumeration value="RegisterDLS"/>
-          <xsd:enumeration value="RegisterDSF"/>
-          <xsd:enumeration value="RegisterER"/>
-          <xsd:enumeration value="RegisterDSFProperty"/>
-          <xsd:enumeration value="RegisterDSFStreet"/>
-          <xsd:enumeration value="RegisterDSFCountry"/>
-          <xsd:enumeration value="RegisterDSFUser"/>
-          <xsd:enumeration value="LookUp"/>
-          <xsd:enumeration value="RegisterDSFStreetAdd"/>
-          <xsd:enumeration value="RegisterDSFPropertyAdd"/>
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:element name="ReceiptTypeEnum" nillable="true" type="tns:ReceiptTypeEnum"/>
-      <xsd:complexType name="ReceiptExternalList">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:Text z:Id="2">&lt;summary>
-            Represents a strongly typed list of ReceiptExternalBE elements that can be accessed by index.
-            &lt;/summary></d1p1:Text>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:sequence>
-          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ReceiptExternal" nillable="true" type="tns:ReceiptExternal"/>
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="ReceiptExternalList" nillable="true" type="tns:ReceiptExternalList"/>
-      <xsd:complexType name="ReceiptSaveExternal">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:Text z:Id="2">&lt;summary>
-            Represents a receipt about to be stored or updated in a save operation.
-            &lt;/summary></d1p1:Text>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:sequence>
-          <xsd:element minOccurs="0" name="ArchiveReference" nillable="true" type="xsd:string">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets an archive reference. 
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ReceiptId" type="xsd:int">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the unique receipt id. The value is generated when a receipt is stored in the database. 
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ReceiptStatusCode" type="tns:ReceiptStatusEnum">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the last status of an operation.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ReceiptText" nillable="true" type="xsd:string">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the receipt text. This is a short description of the last "state" of an operation.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets a list of references.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="SubReceipts" nillable="true" type="tns:ReceiptSaveExternalList">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets a list of sub receipts.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="ReceiptSaveExternal" nillable="true" type="tns:ReceiptSaveExternal"/>
-      <xsd:complexType name="ReceiptSaveExternalList">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:Text z:Id="2">&lt;summary>
-            Represents a strongly typed collection of ReceiptSaveExternal elements.
-            &lt;/summary></d1p1:Text>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:sequence>
-          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ReceiptSaveExternal" nillable="true" type="tns:ReceiptSaveExternal"/>
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="ReceiptSaveExternalList" nillable="true" type="tns:ReceiptSaveExternalList"/>
-    </xsd:schema>
-    <xsd:schema elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10" xmlns:tns="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10">
-      <xsd:simpleType name="ReferenceType">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:EnumAnnotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:EnumText z:Id="2">&lt;summary>
-            Specifies a list of different reference types.
-            &lt;/summary></d1p1:EnumText>
-              <d1p1:Members z:Id="3" z:Size="13" xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="4">NotSet</d2p1:Key>
-                  <d2p1:Value z:Id="5">&lt;summary>
-            Specifies that reference type is unknown.
-            &lt;/summary>
-            &lt;remarks>
-            This type should not be used. It is an error condition if a reference is of this type.
-            &lt;/remarks></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="6">ExternalShipmentReference</d2p1:Key>
-                  <d2p1:Value z:Id="7">&lt;summary>
-            Specifies that a reference value is a shipment reference given by an external system.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="8">EndUserSystemReference</d2p1:Key>
-                  <d2p1:Value z:Id="9">&lt;summary>
-            Specifies that a reference value is an element (usually form task) reference given by an external system.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="10">ParentReference</d2p1:Key>
-                  <d2p1:Value z:Id="11">&lt;summary>
-            Specifies that a reference value is an element id for a parent element.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="12">SendersReference</d2p1:Key>
-                  <d2p1:Value z:Id="13">&lt;summary>
-            Specifies that a reference value is an element reference given by an external system. This is similar to EndUserSystemReference,
-            but can also be used by service owners when they are creating elements.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="14">WorkFlowReference</d2p1:Key>
-                  <d2p1:Value z:Id="15">&lt;summary>
-            Specifies that a reference value is a workflow id.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="16">BatchReference</d2p1:Key>
-                  <d2p1:Value z:Id="17">&lt;summary>
-            Specifies that a reference value is a batch reference.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="18">OutboundShipmentReference</d2p1:Key>
-                  <d2p1:Value z:Id="19">&lt;summary>
-            Specifies that a reference value is an outbound shipment reference.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="20">ReceiversReference</d2p1:Key>
-                  <d2p1:Value z:Id="21">&lt;summary>
-            Specifies that a reference value is a receivers reference.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="22">Altinn1Reference</d2p1:Key>
-                  <d2p1:Value z:Id="23">&lt;summary>
-            Specifies that a reference value is an Altinn1 reference.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="24">OwnerPartyReference</d2p1:Key>
-                  <d2p1:Value z:Id="25">&lt;summary>
-            Specifies that a reference value is the id of the receipt owner.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="26">PartyReference</d2p1:Key>
-                  <d2p1:Value z:Id="27">&lt;summary>
-            Specifies that a reference value is the id of the receipt reportee.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="28">ArchiveReference</d2p1:Key>
-                  <d2p1:Value z:Id="29">&lt;summary>
-            Specifies that a reference value is an archive reference.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-              </d1p1:Members>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:restriction base="xsd:string">
-          <xsd:enumeration value="NotSet"/>
-          <xsd:enumeration value="ExternalShipmentReference"/>
-          <xsd:enumeration value="EndUserSystemReference"/>
-          <xsd:enumeration value="ParentReference"/>
-          <xsd:enumeration value="SendersReference"/>
-          <xsd:enumeration value="WorkFlowReference"/>
-          <xsd:enumeration value="BatchReference"/>
-          <xsd:enumeration value="OutboundShipmentReference"/>
-          <xsd:enumeration value="ReceiversReference"/>
-          <xsd:enumeration value="Altinn1Reference"/>
-          <xsd:enumeration value="OwnerPartyReference"/>
-          <xsd:enumeration value="PartyReference"/>
-          <xsd:enumeration value="ArchiveReference"/>
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:element name="ReferenceType" nillable="true" type="tns:ReferenceType"/>
-    </xsd:schema>
-    <xsd:schema elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06" xmlns:tns="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06">
-      <xsd:import namespace="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10"/>
-      <xsd:import namespace="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"/>
-      <xsd:complexType name="ReceiptSearch">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:Text z:Id="2">&lt;summary>
-            Represents a receipt search with filter data that helps identify a receipts. Use either a receipt id or a single reference.
-            &lt;/summary></d1p1:Text>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:sequence>
-          <xsd:element minOccurs="0" name="ReceiptId" type="xsd:int">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets a unique id for the receipt.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets a list of receipt references.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="ReceiptSearch" nillable="true" type="tns:ReceiptSearch"/>
-      <xsd:complexType name="ReferenceList">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:Text z:Id="2">&lt;summary>
-            Represents a strongly typed collection of Reference elements.
-            &lt;/summary></d1p1:Text>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:sequence>
-          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Reference" nillable="true" type="tns:Reference"/>
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="ReferenceList" nillable="true" type="tns:ReferenceList"/>
-      <xsd:complexType name="Reference">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:Text z:Id="2">&lt;summary>
-            Represents a key-value pair that is associated with a receipt.
-            &lt;/summary></d1p1:Text>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:sequence>
-          <xsd:element name="ReferenceType" type="q14:ReferenceType" xmlns:q14="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the reference type.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element name="ReferenceValue" nillable="true" type="xsd:string">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the reference value.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="Reference" nillable="true" type="tns:Reference"/>
-      <xsd:complexType name="Receipt">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:Text z:Id="2">&lt;summary>
-            Represents a the data in a receipt that is generated by Altinn when it has received data from an external source. A receipt
-            contains details about the data received and its steps through Altinn.
-            &lt;/summary></d1p1:Text>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:sequence>
-          <xsd:element minOccurs="0" name="LastChanged" type="xsd:dateTime">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the date and time for the last update to the receipt.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ParentReceiptId" type="xsd:int">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the main Receipt Id which is linked to all sub receipts.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ReceiptHistory" nillable="true" type="xsd:string">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the receipt text history.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ReceiptId" type="xsd:int">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the unique receipt id. The value is generated when a receipt is stored in the database. 
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ReceiptStatus" type="q15:ReceiptStatusEnum" xmlns:q15="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the status given by the receipt.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ReceiptTemplate" nillable="true" type="xsd:string">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets a receipt Xml Template.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ReceiptText" nillable="true" type="xsd:string">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the receipt text. This is a short description of the last "state" of an operation.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ReceiptType" type="tns:ReceiptType">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the receipt type.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets a collection of references.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="SubReceipts" nillable="true" type="tns:ReceiptList">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets a collection of sub receipts.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="Receipt" nillable="true" type="tns:Receipt"/>
-      <xsd:simpleType name="ReceiptType">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:EnumAnnotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:EnumText z:Id="2">&lt;summary>
-            Defines receipt types.
-            &lt;/summary></d1p1:EnumText>
-              <d1p1:Members z:Id="3" z:Size="18" xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="4">NotSet</d2p1:Key>
-                  <d2p1:Value z:Id="5">&lt;summary>
-            SHOULD NOT BE USED (For Enumeration error handling).
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="6">FormTask</d2p1:Key>
-                  <d2p1:Value z:Id="7">&lt;summary>
-            Specifies that the receipt is for a form task.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="8">Correspondence</d2p1:Key>
-                  <d2p1:Value z:Id="9">&lt;summary>
-            Specifies that the receipt is for correspondence.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="10">PINCODE</d2p1:Key>
-                  <d2p1:Value z:Id="11">&lt;summary>
-            Specifies that the receipt is for pin code.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="12">Subscription</d2p1:Key>
-                  <d2p1:Value z:Id="13">&lt;summary>
-            Specifies that the receipt is for a subscription shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="14">Outbound</d2p1:Key>
-                  <d2p1:Value z:Id="15">&lt;summary>
-            Specifies that the receipt is for an outbound shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="16">PreFill</d2p1:Key>
-                  <d2p1:Value z:Id="17">&lt;summary>
-            Specifies that the receipt is for a prefill shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="18">RegisterDLS</d2p1:Key>
-                  <d2p1:Value z:Id="19">&lt;summary>
-            Specifies that the receipt is for a register DLS shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="20">RegisterDSF</d2p1:Key>
-                  <d2p1:Value z:Id="21">&lt;summary>
-            Specifies that the receipt is for a register DSF shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="22">RegisterER</d2p1:Key>
-                  <d2p1:Value z:Id="23">&lt;summary>
-            Specifies that the receipt is for a register ER shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="24">RegisterDSFProperty</d2p1:Key>
-                  <d2p1:Value z:Id="25">&lt;summary>
-            Specifies that the receipt is for a register DFS property shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="26">RegisterDSFStreet</d2p1:Key>
-                  <d2p1:Value z:Id="27">&lt;summary>
-            Specifies that the receipt is for a register DFS street shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="28">RegisterDSFCountry</d2p1:Key>
-                  <d2p1:Value z:Id="29">&lt;summary>
-            Specifies that the receipt is for a register DSF country shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="30">RegisterDSFUser</d2p1:Key>
-                  <d2p1:Value z:Id="31">&lt;summary>
-            Specifies that the receipt is for a register DSF user shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="32">LookUp</d2p1:Key>
-                  <d2p1:Value z:Id="33">&lt;summary>
-            Specifies that the receipt is for a lookup shipment.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="34">RegisterDSFStreetAdd</d2p1:Key>
-                  <d2p1:Value z:Id="35">&lt;summary>
-            Specifies that the receipt is for a register DSF street address batch.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="36">RegisterDSFPropertyAdd</d2p1:Key>
-                  <d2p1:Value z:Id="37">&lt;summary>
-            Specifies that the receipt is for a register DSF property address batch.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-                <d2p1:KeyValueOfstringstring>
-                  <d2p1:Key z:Id="38">BrokerService</d2p1:Key>
-                  <d2p1:Value z:Id="39">&lt;summary>
-            Specifies that the receipt is for a BrokerService related data transfer.
-            &lt;/summary></d2p1:Value>
-                </d2p1:KeyValueOfstringstring>
-              </d1p1:Members>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:restriction base="xsd:string">
-          <xsd:enumeration value="NotSet"/>
-          <xsd:enumeration value="FormTask"/>
-          <xsd:enumeration value="Correspondence"/>
-          <xsd:enumeration value="PINCODE"/>
-          <xsd:enumeration value="Subscription"/>
-          <xsd:enumeration value="Outbound"/>
-          <xsd:enumeration value="PreFill"/>
-          <xsd:enumeration value="RegisterDLS"/>
-          <xsd:enumeration value="RegisterDSF"/>
-          <xsd:enumeration value="RegisterER"/>
-          <xsd:enumeration value="RegisterDSFProperty"/>
-          <xsd:enumeration value="RegisterDSFStreet"/>
-          <xsd:enumeration value="RegisterDSFCountry"/>
-          <xsd:enumeration value="RegisterDSFUser"/>
-          <xsd:enumeration value="LookUp"/>
-          <xsd:enumeration value="RegisterDSFStreetAdd"/>
-          <xsd:enumeration value="RegisterDSFPropertyAdd"/>
-          <xsd:enumeration value="BrokerService"/>
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:element name="ReceiptType" nillable="true" type="tns:ReceiptType"/>
-      <xsd:complexType name="ReceiptList">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:Text z:Id="2">&lt;summary>
-            Represents a strongly typed collection of Receipt elements.
-            &lt;/summary></d1p1:Text>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:sequence>
-          <xsd:element minOccurs="0" maxOccurs="unbounded" name="Receipt" nillable="true" type="tns:Receipt"/>
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="ReceiptList" nillable="true" type="tns:ReceiptList"/>
-      <xsd:complexType name="ReceiptSave">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:Text z:Id="2">&lt;summary>
-            Represents a receipt about to be stored or updated in a save operation.
-            &lt;/summary></d1p1:Text>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:sequence>
-          <xsd:element minOccurs="0" name="ArchiveReference" nillable="true" type="xsd:string">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets an archive reference. 
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="ReceiptId" type="xsd:int">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the unique receipt id. The value is generated when a receipt is stored in the database. 
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element name="ReceiptStatus" type="q16:ReceiptStatusEnum" xmlns:q16="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the last status of an operation.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element name="ReceiptText" nillable="true" type="xsd:string">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets the receipt text. This is a short description of the last "state" of an operation.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets a list of references.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-          <xsd:element minOccurs="0" name="SubReceipts" nillable="true" type="tns:ReceiptSaveList">
-            <xsd:annotation>
-              <xsd:appinfo>
-                <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-                  <d1p1:Text z:Id="2">&lt;summary>
-            Gets or sets a list of sub receipts.
-            &lt;/summary></d1p1:Text>
-                </Surrogate>
-              </xsd:appinfo>
-            </xsd:annotation>
-          </xsd:element>
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="ReceiptSave" nillable="true" type="tns:ReceiptSave"/>
-      <xsd:complexType name="ReceiptSaveList">
-        <xsd:annotation>
-          <xsd:appinfo>
-            <Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation">
-              <d1p1:Text z:Id="2">&lt;summary>
-            Represents a strongly typed collection of ReceiptSaveExternal elements.
-            &lt;/summary></d1p1:Text>
-            </Surrogate>
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:sequence>
-          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ReceiptSave" nillable="true" type="tns:ReceiptSave"/>
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:element name="ReceiptSaveList" nillable="true" type="tns:ReceiptSaveList"/>
-    </xsd:schema>
-  </wsdl:types>
-  <wsdl:message name="IReceiptAgencyExternalBasic_Test_InputMessage">
-    <wsdl:part name="parameters" element="q17:Test" xmlns:q17="http://www.altinn.no/services/2009/10"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_Test_OutputMessage">
-    <wsdl:part name="parameters" element="q18:TestResponse" xmlns:q18="http://www.altinn.no/services/2009/10"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_Test_AltinnFaultFault_FaultMessage">
-    <wsdl:part name="detail" element="q19:AltinnFault" xmlns:q19="http://www.altinn.no/services/common/fault/2009/10"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptBasic_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetReceiptBasic"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptBasic_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetReceiptBasicResponse"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptBasic_AltinnFaultFault_FaultMessage">
-    <wsdl:part name="detail" element="q20:AltinnFault" xmlns:q20="http://www.altinn.no/services/common/fault/2009/10"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptBasicV2_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetReceiptBasicV2"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptBasicV2_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetReceiptBasicV2Response"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptBasicV2_AltinnFaultFault_FaultMessage">
-    <wsdl:part name="detail" element="q21:AltinnFault" xmlns:q21="http://www.altinn.no/services/common/fault/2009/10"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptListBasic_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetReceiptListBasic"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptListBasic_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetReceiptListBasicResponse"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptListBasic_AltinnFaultFault_FaultMessage">
-    <wsdl:part name="detail" element="q22:AltinnFault" xmlns:q22="http://www.altinn.no/services/common/fault/2009/10"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptListBasicV2_InputMessage">
-    <wsdl:part name="parameters" element="tns:GetReceiptListBasicV2"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptListBasicV2_OutputMessage">
-    <wsdl:part name="parameters" element="tns:GetReceiptListBasicV2Response"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptListBasicV2_AltinnFaultFault_FaultMessage">
-    <wsdl:part name="detail" element="q23:AltinnFault" xmlns:q23="http://www.altinn.no/services/common/fault/2009/10"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_SaveReceiptBasic_InputMessage">
-    <wsdl:part name="parameters" element="tns:SaveReceiptBasic"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_SaveReceiptBasic_OutputMessage">
-    <wsdl:part name="parameters" element="tns:SaveReceiptBasicResponse"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_SaveReceiptBasic_AltinnFaultFault_FaultMessage">
-    <wsdl:part name="detail" element="q24:AltinnFault" xmlns:q24="http://www.altinn.no/services/common/fault/2009/10"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_UpdateReceiptBasic_InputMessage">
-    <wsdl:part name="parameters" element="tns:UpdateReceiptBasic"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_UpdateReceiptBasic_OutputMessage">
-    <wsdl:part name="parameters" element="tns:UpdateReceiptBasicResponse"/>
-  </wsdl:message>
-  <wsdl:message name="IReceiptAgencyExternalBasic_UpdateReceiptBasic_AltinnFaultFault_FaultMessage">
-    <wsdl:part name="detail" element="q25:AltinnFault" xmlns:q25="http://www.altinn.no/services/common/fault/2009/10"/>
-  </wsdl:message>
-  <wsdl:portType name="IReceiptAgencyExternalBasic">
-    <wsdl:documentation>&lt;summary>
-            Service contract for the receipt service exposed to agency.
-            Contains GetReceipt, GetReceiptList and SaveReceipt methods for implementation
-            &lt;/summary></wsdl:documentation>
-    <wsdl:operation name="Test">
-      <wsdl:input wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test" message="tns:IReceiptAgencyExternalBasic_Test_InputMessage"/>
-      <wsdl:output wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestResponse" message="tns:IReceiptAgencyExternalBasic_Test_OutputMessage"/>
-      <wsdl:fault wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestAltinnFaultFault" name="AltinnFaultFault" message="tns:IReceiptAgencyExternalBasic_Test_AltinnFaultFault_FaultMessage"/>
-    </wsdl:operation>
-    <wsdl:operation name="GetReceiptBasic">
-      <wsdl:documentation><![CDATA[<summary>
-            This method has been deprecated, use GetReceiptBasicV2 instead.
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+                  xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex"
+                  xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy"
+                  xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract"
+                  xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:tns="http://www.altinn.no/services/Intermediary/Receipt/2009/10"
+                  xmlns:wsa10="http://www.w3.org/2005/08/addressing"
+                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+                  xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="ReceiptAgencyExternalBasicSF"
+                  targetNamespace="http://www.altinn.no/services/Intermediary/Receipt/2009/10">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.altinn.no/services/2009/10"
+                   elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/2009/10">
+            <xs:element name="Test">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="TestResponse">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/" attributeFormDefault="qualified"
+                   elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/">
+            <xs:element name="anyType" nillable="true" type="xs:anyType"/>
+            <xs:element name="anyURI" nillable="true" type="xs:anyURI"/>
+            <xs:element name="base64Binary" nillable="true" type="xs:base64Binary"/>
+            <xs:element name="boolean" nillable="true" type="xs:boolean"/>
+            <xs:element name="byte" nillable="true" type="xs:byte"/>
+            <xs:element name="dateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element name="decimal" nillable="true" type="xs:decimal"/>
+            <xs:element name="double" nillable="true" type="xs:double"/>
+            <xs:element name="float" nillable="true" type="xs:float"/>
+            <xs:element name="int" nillable="true" type="xs:int"/>
+            <xs:element name="long" nillable="true" type="xs:long"/>
+            <xs:element name="QName" nillable="true" type="xs:QName"/>
+            <xs:element name="short" nillable="true" type="xs:short"/>
+            <xs:element name="string" nillable="true" type="xs:string"/>
+            <xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte"/>
+            <xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt"/>
+            <xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong"/>
+            <xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort"/>
+            <xs:element name="char" nillable="true" type="tns:char"/>
+            <xs:simpleType name="char">
+                <xs:restriction base="xs:int"/>
+            </xs:simpleType>
+            <xs:element name="duration" nillable="true" type="tns:duration"/>
+            <xs:simpleType name="duration">
+                <xs:restriction base="xs:duration">
+                    <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?"/>
+                    <xs:minInclusive value="-P10675199DT2H48M5.4775808S"/>
+                    <xs:maxInclusive value="P10675199DT2H48M5.4775807S"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="guid" nillable="true" type="tns:guid"/>
+            <xs:simpleType name="guid">
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:attribute name="FactoryType" type="xs:QName"/>
+            <xs:attribute name="Id" type="xs:ID"/>
+            <xs:attribute name="Ref" type="xs:IDREF"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://www.altinn.no/services/common/fault/2009/10" elementFormDefault="qualified"
+                   targetNamespace="http://www.altinn.no/services/common/fault/2009/10">
+            <xs:complexType name="AltinnFault">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a SOAP fault message used by Altinn to convey exception information to the
+                            caller.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="AltinnErrorMessage" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the error message.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="AltinnExtendedErrorMessage" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the verbose version of the error message.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="AltinnLocalizedErrorMessage" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the localized version of the error message.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ErrorGuid" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the unique GUID for the specific fault.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ErrorID" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the error type id.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="UserGuid" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the GUID of the user.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="UserId" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the id of the user.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="AltinnFault" nillable="true" type="tns:AltinnFault"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+                   targetNamespace="http://www.altinn.no/services/Intermediary/Receipt/2009/10">
+            <xs:import namespace="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"/>
+            <xs:import namespace="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06"/>
+            <xs:element name="GetReceiptBasic">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="systemUserName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="systemPassword" nillable="true" type="xs:string"/>
+                        <xs:element xmlns:q1="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"
+                                    minOccurs="0" name="receipt" nillable="true" type="q1:ReceiptSearchExternal"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetReceiptBasicResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element xmlns:q2="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"
+                                    minOccurs="0" name="GetReceiptBasicResult" nillable="true"
+                                    type="q2:ReceiptExternal"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetReceiptBasicV2">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="1" name="systemUserName" type="xs:string"/>
+                        <xs:element minOccurs="1" name="systemPassword" type="xs:string"/>
+                        <xs:element xmlns:q3="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06"
+                                    minOccurs="1" name="receipt" type="q3:ReceiptSearch"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetReceiptBasicV2Response">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element xmlns:q4="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06"
+                                    minOccurs="0" name="GetReceiptBasicV2Result" nillable="true" type="q4:Receipt"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetReceiptListBasic">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="systemUserName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="systemPassword" nillable="true" type="xs:string"/>
+                        <xs:element xmlns:q5="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"
+                                    minOccurs="0" name="receiptTypeName" type="q5:ReceiptTypeEnum"/>
+                        <xs:element minOccurs="0" name="dateFrom" type="xs:dateTime"/>
+                        <xs:element minOccurs="0" name="dateTo" type="xs:dateTime"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetReceiptListBasicResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element xmlns:q6="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"
+                                    minOccurs="0" name="GetReceiptListBasicResult" nillable="true"
+                                    type="q6:ReceiptExternalList"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetReceiptListBasicV2">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="1" name="systemUserName" type="xs:string"/>
+                        <xs:element minOccurs="1" name="systemPassword" type="xs:string"/>
+                        <xs:element xmlns:q7="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06"
+                                    minOccurs="1" name="receiptTypeName" type="q7:ReceiptType"/>
+                        <xs:element minOccurs="0" name="dateFrom" type="xs:dateTime"/>
+                        <xs:element minOccurs="0" name="dateTo" type="xs:dateTime"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetReceiptListBasicV2Response">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element xmlns:q8="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06"
+                                    minOccurs="0" name="GetReceiptListBasicV2Result" nillable="true"
+                                    type="q8:ReceiptList"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SaveReceiptBasic">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="systemUserName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="systemPassword" nillable="true" type="xs:string"/>
+                        <xs:element xmlns:q9="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"
+                                    minOccurs="0" name="receipt" nillable="true" type="q9:ReceiptSaveExternal"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SaveReceiptBasicResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element xmlns:q10="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"
+                                    minOccurs="0" name="SaveReceiptBasicResult" nillable="true"
+                                    type="q10:ReceiptExternal"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="UpdateReceiptBasic">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="1" name="systemUserName" type="xs:string"/>
+                        <xs:element minOccurs="1" name="systemPassword" type="xs:string"/>
+                        <xs:element xmlns:q11="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06"
+                                    minOccurs="1" name="receipt" type="q11:ReceiptSave"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="UpdateReceiptBasicResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element xmlns:q12="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06"
+                                    minOccurs="0" name="UpdateReceiptBasicResult" nillable="true" type="q12:Receipt"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"
+                   elementFormDefault="qualified"
+                   targetNamespace="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10">
+            <xs:import namespace="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10"/>
+            <xs:complexType name="ReceiptSearchExternal">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a receipt search with filter data that helps identify a set of receipts.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="ReceiptId" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a unique id for the receipt. This id is generated by Altinn when
+                                    the receipt is created.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a list of receipt references.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReceiptSearchExternal" nillable="true" type="tns:ReceiptSearchExternal"/>
+            <xs:complexType name="ReferenceList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a strongly typed collection of Reference elements.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="Reference" nillable="true"
+                                type="tns:Reference"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReferenceList" nillable="true" type="tns:ReferenceList"/>
+            <xs:complexType name="Reference">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a key-value pair that is associated with a receipt.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element xmlns:q1="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10" minOccurs="0"
+                                name="ReferenceTypeName" type="q1:ReferenceType">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the reference type.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReferenceValue" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the reference value.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="Reference" nillable="true" type="tns:Reference"/>
+            <xs:complexType name="ReceiptExternal">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a the data in a receipt that is generated by Altinn when it has received
+                            data from an external source. A receipt contains details about the data received and its
+                            steps through Altinn.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="LastChanged" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the date and time for when the receipt was last changed.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ParentReceiptId" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the id of the parent receipt if the current receipt is a child
+                                    receipt.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptHistory" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the receipt history. The content of ReceiptText is added to
+                                    ReceiptHistory at every update.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptId" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the unique id of the receipt.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptStatusCode" type="tns:ReceiptStatusEnum">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a value that indicates the status of the action that the receipt
+                                    belong. For example if a submission has been "Rejected".
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptText" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the receipt text with a short description of the last step done to
+                                    the element.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptTypeName" type="tns:ReceiptTypeEnum">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a value indicating what type of receipt.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a list of references.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="SubReceipts" nillable="true" type="tns:ReceiptExternalList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a list of child receipts.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReceiptExternal" nillable="true" type="tns:ReceiptExternal"/>
+            <xs:simpleType name="ReceiptStatusEnum">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Specifies different statuses on a receipt. The status is a response to the action the
+                            caller tried to perform.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="NotSet">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt status is unknown.</summary>
+                                <remarks>This type should not be used. It is an error condition if status is of this
+                                    type.
+                                </remarks>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="OK">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the request was processed without any error.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="UnExpectedError">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that there was an unexpected error during processing of a request.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="ValidationFailed">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the data in a request failed validation.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Rejected">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the request was rejected. Usually because of known error
+                                    conditions.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="ReceiptStatusEnum" nillable="true" type="tns:ReceiptStatusEnum"/>
+            <xs:simpleType name="ReceiptTypeEnum">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Defines receipt types.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="NotSet">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>SHOULD NOT BE USED (For Enumeration error handling).</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="FormTask">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a form task.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Correspondence">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for correspondence.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="PINCODE">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for pin code.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Subscription">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a subscription shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Outbound">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for an outbound shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="PreFill">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a prefill shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDLS">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DLS shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSF">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterER">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register ER shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFProperty">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DFS property shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFStreet">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DFS street shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFCountry">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF country shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFUser">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF user shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="LookUp">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a lookup shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFStreetAdd">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF street address batch.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFPropertyAdd">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF property address batch.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="ReceiptTypeEnum" nillable="true" type="tns:ReceiptTypeEnum"/>
+            <xs:complexType name="ReceiptExternalList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a strongly typed list of ReceiptExternalBE elements that can be accessed by
+                            index.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="ReceiptExternal" nillable="true"
+                                type="tns:ReceiptExternal"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReceiptExternalList" nillable="true" type="tns:ReceiptExternalList"/>
+            <xs:complexType name="ReceiptSaveExternal">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a receipt about to be stored or updated in a save operation.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="ArchiveReference" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets an archive reference.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptId" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the unique receipt id. The value is generated when a receipt is
+                                    stored in the database.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptStatusCode" type="tns:ReceiptStatusEnum">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the last status of an operation.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptText" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the receipt text. This is a short description of the last "state"
+                                    of an operation.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a list of references.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="SubReceipts" nillable="true" type="tns:ReceiptSaveExternalList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a list of sub receipts.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReceiptSaveExternal" nillable="true" type="tns:ReceiptSaveExternal"/>
+            <xs:complexType name="ReceiptSaveExternalList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a strongly typed collection of ReceiptSaveExternal elements.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="ReceiptSaveExternal" nillable="true"
+                                type="tns:ReceiptSaveExternal"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReceiptSaveExternalList" nillable="true" type="tns:ReceiptSaveExternalList"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10"
+                   elementFormDefault="qualified"
+                   targetNamespace="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10">
+            <xs:simpleType name="ReferenceType">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Specifies a list of different reference types.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="NotSet">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that reference type is unknown.</summary>
+                                <remarks>This type should not be used. It is an error condition if a reference is of
+                                    this type.
+                                </remarks>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="ExternalShipmentReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is a shipment reference given by an external
+                                    system.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="EndUserSystemReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is an element (usually form task) reference
+                                    given by an external system.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="ParentReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is an element id for a parent element.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="SendersReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is an element reference given by an external
+                                    system. This is similar to EndUserSystemReference, but can also be used by service
+                                    owners when they are creating elements.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="WorkFlowReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is a workflow id.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="BatchReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is a batch reference.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="OutboundShipmentReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is an outbound shipment reference.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="ReceiversReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is a receivers reference.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Altinn1Reference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is an Altinn1 reference.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="OwnerPartyReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is the id of the receipt owner.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="PartyReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is the id of the receipt reportee.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="ArchiveReference">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that a reference value is an archive reference.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="ReferenceType" nillable="true" type="tns:ReferenceType"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06"
+                   elementFormDefault="qualified"
+                   targetNamespace="http://schemas.altinn.no/services/Intermediary/Receipt/2015/06">
+            <xs:import namespace="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10"/>
+            <xs:import namespace="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"/>
+            <xs:complexType name="ReceiptSearch">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a receipt search with filter data that helps identify a receipts. Use either
+                            a receipt id or a single reference.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="ReceiptId" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a unique id for the receipt.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a list of receipt references.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReceiptSearch" nillable="true" type="tns:ReceiptSearch"/>
+            <xs:complexType name="ReferenceList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a strongly typed collection of Reference elements.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="Reference" nillable="true"
+                                type="tns:Reference"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReferenceList" nillable="true" type="tns:ReferenceList"/>
+            <xs:complexType name="Reference">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a key-value pair that is associated with a receipt.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element xmlns:q1="http://schemas.altinn.no/services/Intermediary/Shipment/2009/10"
+                                name="ReferenceType" type="q1:ReferenceType">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the reference type.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ReferenceValue" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the reference value.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="Reference" nillable="true" type="tns:Reference"/>
+            <xs:complexType name="Receipt">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a the data in a receipt that is generated by Altinn when it has received
+                            data from an external source. A receipt contains details about the data received and its
+                            steps through Altinn.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="LastChanged" type="xs:dateTime">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the date and time for the last update to the receipt.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ParentReceiptId" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the main Receipt Id which is linked to all sub receipts.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptHistory" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the receipt text history.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptId" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the unique receipt id. The value is generated when a receipt is
+                                    stored in the database.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element xmlns:q2="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10" minOccurs="0"
+                                name="ReceiptStatus" type="q2:ReceiptStatusEnum">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the status given by the receipt.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptTemplate" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a receipt Xml Template.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptText" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the receipt text. This is a short description of the last "state"
+                                    of an operation.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptType" type="tns:ReceiptType">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the receipt type.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a collection of references.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="SubReceipts" nillable="true" type="tns:ReceiptList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a collection of sub receipts.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="Receipt" nillable="true" type="tns:Receipt"/>
+            <xs:simpleType name="ReceiptType">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Defines receipt types.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="NotSet">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>SHOULD NOT BE USED (For Enumeration error handling).</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="FormTask">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a form task.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Correspondence">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for correspondence.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="PINCODE">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for pin code.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Subscription">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a subscription shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Outbound">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for an outbound shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="PreFill">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a prefill shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDLS">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DLS shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSF">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterER">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register ER shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFProperty">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DFS property shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFStreet">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DFS street shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFCountry">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF country shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFUser">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF user shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="LookUp">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a lookup shipment.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFStreetAdd">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF street address batch.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RegisterDSFPropertyAdd">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a register DSF property address batch.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="BrokerService">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Specifies that the receipt is for a BrokerService related data transfer.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="ReceiptType" nillable="true" type="tns:ReceiptType"/>
+            <xs:complexType name="ReceiptList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a strongly typed collection of Receipt elements.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="Receipt" nillable="true" type="tns:Receipt"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReceiptList" nillable="true" type="tns:ReceiptList"/>
+            <xs:complexType name="ReceiptSave">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a receipt about to be stored or updated in a save operation.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="ArchiveReference" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets an archive reference.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ReceiptId" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the unique receipt id. The value is generated when a receipt is
+                                    stored in the database.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element xmlns:q3="http://schemas.altinn.no/services/Intermediary/Receipt/2009/10"
+                                name="ReceiptStatus" type="q3:ReceiptStatusEnum">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the last status of an operation.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="ReceiptText" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the receipt text. This is a short description of the last "state"
+                                    of an operation.
+                                </summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="References" nillable="true" type="tns:ReferenceList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a list of references.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="SubReceipts" nillable="true" type="tns:ReceiptSaveList">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets a list of sub receipts.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReceiptSave" nillable="true" type="tns:ReceiptSave"/>
+            <xs:complexType name="ReceiptSaveList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a strongly typed collection of ReceiptSaveExternal elements.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="ReceiptSave" nillable="true"
+                                type="tns:ReceiptSave"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ReceiptSaveList" nillable="true" type="tns:ReceiptSaveList"/>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="IReceiptAgencyExternalBasic_Test_InputMessage">
+        <wsdl:part xmlns:q1="http://www.altinn.no/services/2009/10" name="parameters" element="q1:Test"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_Test_OutputMessage">
+        <wsdl:part xmlns:q2="http://www.altinn.no/services/2009/10" name="parameters" element="q2:TestResponse"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_Test_AltinnFaultFault_FaultMessage">
+        <wsdl:part xmlns:q3="http://www.altinn.no/services/common/fault/2009/10" name="detail"
+                   element="q3:AltinnFault"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptBasic_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetReceiptBasic"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptBasic_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetReceiptBasicResponse"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptBasic_AltinnFaultFault_FaultMessage">
+        <wsdl:part xmlns:q4="http://www.altinn.no/services/common/fault/2009/10" name="detail"
+                   element="q4:AltinnFault"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptBasicV2_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetReceiptBasicV2"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptBasicV2_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetReceiptBasicV2Response"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptBasicV2_AltinnFaultFault_FaultMessage">
+        <wsdl:part xmlns:q5="http://www.altinn.no/services/common/fault/2009/10" name="detail"
+                   element="q5:AltinnFault"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptListBasic_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetReceiptListBasic"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptListBasic_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetReceiptListBasicResponse"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptListBasic_AltinnFaultFault_FaultMessage">
+        <wsdl:part xmlns:q6="http://www.altinn.no/services/common/fault/2009/10" name="detail"
+                   element="q6:AltinnFault"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptListBasicV2_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetReceiptListBasicV2"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptListBasicV2_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetReceiptListBasicV2Response"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_GetReceiptListBasicV2_AltinnFaultFault_FaultMessage">
+        <wsdl:part xmlns:q7="http://www.altinn.no/services/common/fault/2009/10" name="detail"
+                   element="q7:AltinnFault"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_SaveReceiptBasic_InputMessage">
+        <wsdl:part name="parameters" element="tns:SaveReceiptBasic"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_SaveReceiptBasic_OutputMessage">
+        <wsdl:part name="parameters" element="tns:SaveReceiptBasicResponse"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_SaveReceiptBasic_AltinnFaultFault_FaultMessage">
+        <wsdl:part xmlns:q8="http://www.altinn.no/services/common/fault/2009/10" name="detail"
+                   element="q8:AltinnFault"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_UpdateReceiptBasic_InputMessage">
+        <wsdl:part name="parameters" element="tns:UpdateReceiptBasic"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_UpdateReceiptBasic_OutputMessage">
+        <wsdl:part name="parameters" element="tns:UpdateReceiptBasicResponse"/>
+    </wsdl:message>
+    <wsdl:message name="IReceiptAgencyExternalBasic_UpdateReceiptBasic_AltinnFaultFault_FaultMessage">
+        <wsdl:part xmlns:q9="http://www.altinn.no/services/common/fault/2009/10" name="detail"
+                   element="q9:AltinnFault"/>
+    </wsdl:message>
+    <wsdl:portType name="IReceiptAgencyExternalBasic">
+        <wsdl:documentation>
+            <summary>Service contract for the receipt service exposed to agency. Contains GetReceipt, GetReceiptList and
+                SaveReceipt methods for implementation
             </summary>
-            <param name="systemUserName">System user name is the relevant agency system name that is registered in Altinn - mandatory parameter.</param>
-            <param name="systemPassword">System password is the password for the corresponding registered agency system - mandatory parameter.</param>
-            <param name="receipt">Receipt search criteria.</param>
-            <returns>The identified receipt.</returns>]]></wsdl:documentation>
-      <wsdl:input wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptBasic" message="tns:IReceiptAgencyExternalBasic_GetReceiptBasic_InputMessage"/>
-      <wsdl:output wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptBasicResponse" message="tns:IReceiptAgencyExternalBasic_GetReceiptBasic_OutputMessage"/>
-      <wsdl:fault wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IReceiptAgencyExternalBasic_GetReceiptBasic_AltinnFaultFault_FaultMessage"/>
-    </wsdl:operation>
-    <wsdl:operation name="GetReceiptBasicV2">
-      <wsdl:documentation><![CDATA[<summary>
-            This operations enables the retrieval of a receipt based on a number of different inputs. Input values have the following
-            priority: ReceiptId, WorkFlowReference, any other reference.
-            If the receipt is a child receipt, then the parent receipt is also retrieved. If the given party have access to the parent, then
-            the parent receipt will be returned with the original receipt as one of the sub receipts.
-            </summary>
-            <remarks>
-            The operation will throw an exception if no receipt is found.
-            </remarks>
-            <param name="systemUserName">System user name is the relevant agency system name that is registered in Altinn.</param>
-            <param name="systemPassword">System password is the password for the corresponding registered agency system.</param>
-            <param name="receipt">Receipt search criteria.</param>
-            <returns>The identified receipt.</returns>]]></wsdl:documentation>
-      <wsdl:input wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptBasicV2" message="tns:IReceiptAgencyExternalBasic_GetReceiptBasicV2_InputMessage"/>
-      <wsdl:output wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptBasicV2Response" message="tns:IReceiptAgencyExternalBasic_GetReceiptBasicV2_OutputMessage"/>
-      <wsdl:fault wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptBasicV2AltinnFaultFault" name="AltinnFaultFault" message="tns:IReceiptAgencyExternalBasic_GetReceiptBasicV2_AltinnFaultFault_FaultMessage"/>
-    </wsdl:operation>
-    <wsdl:operation name="GetReceiptListBasic">
-      <wsdl:documentation><![CDATA[<summary>
-            This method has been deprecated, use GetReceiptListBasicV2 instead.
-            </summary>
-            <param name="systemUserName">System user name is the relevant agency system name that is registered in Altinn.</param>
-            <param name="systemPassword">System password is the password for the corresponding registered agency system.</param>
-            <param name="receiptTypeName">Type of the Receipt - mandatory parameter.</param>
-            <param name="dateFrom">From which date onwards - mandatory parameter.</param>
-            <param name="dateTo">To which date - mandatory parameter.</param>
-            <returns>List of receipts.</returns>]]></wsdl:documentation>
-      <wsdl:input wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptListBasic" message="tns:IReceiptAgencyExternalBasic_GetReceiptListBasic_InputMessage"/>
-      <wsdl:output wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptListBasicResponse" message="tns:IReceiptAgencyExternalBasic_GetReceiptListBasic_OutputMessage"/>
-      <wsdl:fault wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptListBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IReceiptAgencyExternalBasic_GetReceiptListBasic_AltinnFaultFault_FaultMessage"/>
-    </wsdl:operation>
-    <wsdl:operation name="GetReceiptListBasicV2">
-      <wsdl:documentation><![CDATA[<summary>
-            This operation enables the search for a list of receipts based on a given receipt type and a date and time span for when
-            the receipt was changed.
-            </summary>
-            <param name="systemUserName">System user name is the relevant agency system name that is registered in Altinn.</param>
-            <param name="systemPassword">System password is the password for the corresponding registered agency system.</param>
-            <param name="receiptTypeName">Type of receipts to search for.</param>
-            <param name="dateFrom">The start date and time for time span of the search.</param>
-            <param name="dateTo">The end date and time for time span of the search.</param>
-            <returns>A list of receipts that match the search criteria.</returns>]]></wsdl:documentation>
-      <wsdl:input wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptListBasicV2" message="tns:IReceiptAgencyExternalBasic_GetReceiptListBasicV2_InputMessage"/>
-      <wsdl:output wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptListBasicV2Response" message="tns:IReceiptAgencyExternalBasic_GetReceiptListBasicV2_OutputMessage"/>
-      <wsdl:fault wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptListBasicV2AltinnFaultFault" name="AltinnFaultFault" message="tns:IReceiptAgencyExternalBasic_GetReceiptListBasicV2_AltinnFaultFault_FaultMessage"/>
-    </wsdl:operation>
-    <wsdl:operation name="SaveReceiptBasic">
-      <wsdl:documentation><![CDATA[<summary>
-            This method has been deprecated, use UpdateReceiptBasic instead.
-            </summary>
-            <param name="systemUserName">System user name is the relevant agency system name that is registered in Altinn.</param>
-            <param name="systemPassword">System password is the password for the corresponding registered agency system.</param>
-            <param name="receipt">The search criteria and new receipt details to be stored.</param>
-            <returns>The updated receipt with references and sub receipts.</returns>]]></wsdl:documentation>
-      <wsdl:input wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/SaveReceiptBasic" message="tns:IReceiptAgencyExternalBasic_SaveReceiptBasic_InputMessage"/>
-      <wsdl:output wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/SaveReceiptBasicResponse" message="tns:IReceiptAgencyExternalBasic_SaveReceiptBasic_OutputMessage"/>
-      <wsdl:fault wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/SaveReceiptBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IReceiptAgencyExternalBasic_SaveReceiptBasic_AltinnFaultFault_FaultMessage"/>
-    </wsdl:operation>
-    <wsdl:operation name="UpdateReceiptBasic">
-      <wsdl:documentation><![CDATA[<summary>
-            This operation enables updating of an existing receipt. Receipt can be identified with receipt id or an archive reference.
-            The logic will update receipt status and text, add new references, and update sub receipts with references. Sub receipts must
-            be identified with their ids and must already exist as child receipts for the main receipt.
-            </summary>
-            <param name="systemUserName">System user name is the relevant agency system name that is registered in Altinn.</param>
-            <param name="systemPassword">System password is the password for the corresponding registered agency system.</param>
-            <param name="receipt">The search criteria and new receipt details to be stored.</param>
-            <returns>The updated receipt with references and sub receipts.</returns>]]></wsdl:documentation>
-      <wsdl:input wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/UpdateReceiptBasic" message="tns:IReceiptAgencyExternalBasic_UpdateReceiptBasic_InputMessage"/>
-      <wsdl:output wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/UpdateReceiptBasicResponse" message="tns:IReceiptAgencyExternalBasic_UpdateReceiptBasic_OutputMessage"/>
-      <wsdl:fault wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/UpdateReceiptBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IReceiptAgencyExternalBasic_UpdateReceiptBasic_AltinnFaultFault_FaultMessage"/>
-    </wsdl:operation>
-  </wsdl:portType>
-  <wsdl:binding name="BasicHttpBinding_IReceiptAgencyExternalBasic" type="tns:IReceiptAgencyExternalBasic">
-    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
-    <wsdl:operation name="Test">
-      <soap:operation soapAction="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test" style="document"/>
-      <wsdl:input>
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal"/>
-      </wsdl:output>
-      <wsdl:fault name="AltinnFaultFault">
-        <soap:fault name="AltinnFaultFault" use="literal"/>
-      </wsdl:fault>
-    </wsdl:operation>
-    <wsdl:operation name="GetReceiptBasic">
-      <soap:operation soapAction="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptBasic" style="document"/>
-      <wsdl:input>
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal"/>
-      </wsdl:output>
-      <wsdl:fault name="AltinnFaultFault">
-        <soap:fault name="AltinnFaultFault" use="literal"/>
-      </wsdl:fault>
-    </wsdl:operation>
-    <wsdl:operation name="GetReceiptBasicV2">
-      <soap:operation soapAction="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptBasicV2" style="document"/>
-      <wsdl:input>
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal"/>
-      </wsdl:output>
-      <wsdl:fault name="AltinnFaultFault">
-        <soap:fault name="AltinnFaultFault" use="literal"/>
-      </wsdl:fault>
-    </wsdl:operation>
-    <wsdl:operation name="GetReceiptListBasic">
-      <soap:operation soapAction="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptListBasic" style="document"/>
-      <wsdl:input>
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal"/>
-      </wsdl:output>
-      <wsdl:fault name="AltinnFaultFault">
-        <soap:fault name="AltinnFaultFault" use="literal"/>
-      </wsdl:fault>
-    </wsdl:operation>
-    <wsdl:operation name="GetReceiptListBasicV2">
-      <soap:operation soapAction="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptListBasicV2" style="document"/>
-      <wsdl:input>
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal"/>
-      </wsdl:output>
-      <wsdl:fault name="AltinnFaultFault">
-        <soap:fault name="AltinnFaultFault" use="literal"/>
-      </wsdl:fault>
-    </wsdl:operation>
-    <wsdl:operation name="SaveReceiptBasic">
-      <soap:operation soapAction="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/SaveReceiptBasic" style="document"/>
-      <wsdl:input>
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal"/>
-      </wsdl:output>
-      <wsdl:fault name="AltinnFaultFault">
-        <soap:fault name="AltinnFaultFault" use="literal"/>
-      </wsdl:fault>
-    </wsdl:operation>
-    <wsdl:operation name="UpdateReceiptBasic">
-      <soap:operation soapAction="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/UpdateReceiptBasic" style="document"/>
-      <wsdl:input>
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal"/>
-      </wsdl:output>
-      <wsdl:fault name="AltinnFaultFault">
-        <soap:fault name="AltinnFaultFault" use="literal"/>
-      </wsdl:fault>
-    </wsdl:operation>
-  </wsdl:binding>
-  <wsdl:service name="ReceiptAgencyExternalBasicSF">
-    <wsdl:port name="BasicHttpBinding_IReceiptAgencyExternalBasic" binding="tns:BasicHttpBinding_IReceiptAgencyExternalBasic">
-      <soap:address location="http://www.altinn.no/IntermediaryExternal/ReceiptAgencyExternalBasic.svc"/>
-    </wsdl:port>
-  </wsdl:service>
+        </wsdl:documentation>
+        <wsdl:operation name="Test">
+            <wsdl:input wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test"
+                        message="tns:IReceiptAgencyExternalBasic_Test_InputMessage"/>
+            <wsdl:output wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestResponse"
+                         message="tns:IReceiptAgencyExternalBasic_Test_OutputMessage"/>
+            <wsdl:fault wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestAltinnFaultFault"
+                        name="AltinnFaultFault"
+                        message="tns:IReceiptAgencyExternalBasic_Test_AltinnFaultFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetReceiptBasic">
+            <wsdl:documentation>
+                <summary>This method has been deprecated, use GetReceiptBasicV2 instead.</summary>
+                <param name="systemUserName">System user name is the relevant agency system name that is registered in
+                    Altinn - mandatory parameter.
+                </param>
+                <param name="systemPassword">System password is the password for the corresponding registered agency
+                    system - mandatory parameter.
+                </param>
+                <param name="receipt">Receipt search criteria.</param>
+                <returns>The identified receipt.</returns>
+            </wsdl:documentation>
+            <wsdl:input
+                    wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptBasic"
+                    message="tns:IReceiptAgencyExternalBasic_GetReceiptBasic_InputMessage"/>
+            <wsdl:output
+                    wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptBasicResponse"
+                    message="tns:IReceiptAgencyExternalBasic_GetReceiptBasic_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptBasicAltinnFaultFault"
+                    name="AltinnFaultFault"
+                    message="tns:IReceiptAgencyExternalBasic_GetReceiptBasic_AltinnFaultFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetReceiptBasicV2">
+            <wsdl:documentation>
+                <summary>This operations enables the retrieval of a receipt based on a number of different inputs. Input
+                    values have the following priority: ReceiptId, WorkFlowReference, any other reference. If the
+                    receipt is a child receipt, then the parent receipt is also retrieved. If the given party have
+                    access to the parent, then the parent receipt will be returned with the original receipt as one of
+                    the sub receipts.
+                </summary>
+                <remarks>The operation will throw an exception if no receipt is found.</remarks>
+                <param name="systemUserName">System user name is the relevant agency system name that is registered in
+                    Altinn.
+                </param>
+                <param name="systemPassword">System password is the password for the corresponding registered agency
+                    system.
+                </param>
+                <param name="receipt">Receipt search criteria.</param>
+                <returns>The identified receipt.</returns>
+            </wsdl:documentation>
+            <wsdl:input
+                    wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptBasicV2"
+                    message="tns:IReceiptAgencyExternalBasic_GetReceiptBasicV2_InputMessage"/>
+            <wsdl:output
+                    wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptBasicV2Response"
+                    message="tns:IReceiptAgencyExternalBasic_GetReceiptBasicV2_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptBasicV2AltinnFaultFault"
+                    name="AltinnFaultFault"
+                    message="tns:IReceiptAgencyExternalBasic_GetReceiptBasicV2_AltinnFaultFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetReceiptListBasic">
+            <wsdl:documentation>
+                <summary>This method has been deprecated, use GetReceiptListBasicV2 instead.</summary>
+                <param name="systemUserName">System user name is the relevant agency system name that is registered in
+                    Altinn.
+                </param>
+                <param name="systemPassword">System password is the password for the corresponding registered agency
+                    system.
+                </param>
+                <param name="receiptTypeName">Type of the Receipt - mandatory parameter.</param>
+                <param name="dateFrom">From which date onwards - mandatory parameter.</param>
+                <param name="dateTo">To which date - mandatory parameter.</param>
+                <returns>List of receipts.</returns>
+            </wsdl:documentation>
+            <wsdl:input
+                    wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptListBasic"
+                    message="tns:IReceiptAgencyExternalBasic_GetReceiptListBasic_InputMessage"/>
+            <wsdl:output
+                    wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptListBasicResponse"
+                    message="tns:IReceiptAgencyExternalBasic_GetReceiptListBasic_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptListBasicAltinnFaultFault"
+                    name="AltinnFaultFault"
+                    message="tns:IReceiptAgencyExternalBasic_GetReceiptListBasic_AltinnFaultFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetReceiptListBasicV2">
+            <wsdl:documentation>
+                <summary>This operation enables the search for a list of receipts based on a given receipt type and a
+                    date and time span for when the receipt was changed.
+                </summary>
+                <param name="systemUserName">System user name is the relevant agency system name that is registered in
+                    Altinn.
+                </param>
+                <param name="systemPassword">System password is the password for the corresponding registered agency
+                    system.
+                </param>
+                <param name="receiptTypeName">Type of receipts to search for.</param>
+                <param name="dateFrom">The start date and time for time span of the search.</param>
+                <param name="dateTo">The end date and time for time span of the search.</param>
+                <returns>A list of receipts that match the search criteria.</returns>
+            </wsdl:documentation>
+            <wsdl:input
+                    wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptListBasicV2"
+                    message="tns:IReceiptAgencyExternalBasic_GetReceiptListBasicV2_InputMessage"/>
+            <wsdl:output
+                    wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptListBasicV2Response"
+                    message="tns:IReceiptAgencyExternalBasic_GetReceiptListBasicV2_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptListBasicV2AltinnFaultFault"
+                    name="AltinnFaultFault"
+                    message="tns:IReceiptAgencyExternalBasic_GetReceiptListBasicV2_AltinnFaultFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="SaveReceiptBasic">
+            <wsdl:documentation>
+                <summary>This method has been deprecated, use UpdateReceiptBasic instead.</summary>
+                <param name="systemUserName">System user name is the relevant agency system name that is registered in
+                    Altinn.
+                </param>
+                <param name="systemPassword">System password is the password for the corresponding registered agency
+                    system.
+                </param>
+                <param name="receipt">The search criteria and new receipt details to be stored.</param>
+                <returns>The updated receipt with references and sub receipts.</returns>
+            </wsdl:documentation>
+            <wsdl:input
+                    wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/SaveReceiptBasic"
+                    message="tns:IReceiptAgencyExternalBasic_SaveReceiptBasic_InputMessage"/>
+            <wsdl:output
+                    wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/SaveReceiptBasicResponse"
+                    message="tns:IReceiptAgencyExternalBasic_SaveReceiptBasic_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/SaveReceiptBasicAltinnFaultFault"
+                    name="AltinnFaultFault"
+                    message="tns:IReceiptAgencyExternalBasic_SaveReceiptBasic_AltinnFaultFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="UpdateReceiptBasic">
+            <wsdl:documentation>
+                <summary>This operation enables updating of an existing receipt. Receipt can be identified with receipt
+                    id or an archive reference. The logic will update receipt status and text, add new references, and
+                    update sub receipts with references. Sub receipts must be identified with their ids and must already
+                    exist as child receipts for the main receipt.
+                </summary>
+                <param name="systemUserName">System user name is the relevant agency system name that is registered in
+                    Altinn.
+                </param>
+                <param name="systemPassword">System password is the password for the corresponding registered agency
+                    system.
+                </param>
+                <param name="receipt">The search criteria and new receipt details to be stored.</param>
+                <returns>The updated receipt with references and sub receipts.</returns>
+            </wsdl:documentation>
+            <wsdl:input
+                    wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/UpdateReceiptBasic"
+                    message="tns:IReceiptAgencyExternalBasic_UpdateReceiptBasic_InputMessage"/>
+            <wsdl:output
+                    wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/UpdateReceiptBasicResponse"
+                    message="tns:IReceiptAgencyExternalBasic_UpdateReceiptBasic_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/UpdateReceiptBasicAltinnFaultFault"
+                    name="AltinnFaultFault"
+                    message="tns:IReceiptAgencyExternalBasic_UpdateReceiptBasic_AltinnFaultFault_FaultMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BasicHttpBinding_IReceiptAgencyExternalBasic" type="tns:IReceiptAgencyExternalBasic">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="Test">
+            <soap:operation soapAction="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test"
+                            style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AltinnFaultFault">
+                <soap:fault use="literal" name="AltinnFaultFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="GetReceiptBasic">
+            <soap:operation
+                    soapAction="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptBasic"
+                    style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AltinnFaultFault">
+                <soap:fault use="literal" name="AltinnFaultFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="GetReceiptBasicV2">
+            <soap:operation
+                    soapAction="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptBasicV2"
+                    style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AltinnFaultFault">
+                <soap:fault use="literal" name="AltinnFaultFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="GetReceiptListBasic">
+            <soap:operation
+                    soapAction="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptListBasic"
+                    style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AltinnFaultFault">
+                <soap:fault use="literal" name="AltinnFaultFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="GetReceiptListBasicV2">
+            <soap:operation
+                    soapAction="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/GetReceiptListBasicV2"
+                    style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AltinnFaultFault">
+                <soap:fault use="literal" name="AltinnFaultFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="SaveReceiptBasic">
+            <soap:operation
+                    soapAction="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/SaveReceiptBasic"
+                    style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AltinnFaultFault">
+                <soap:fault use="literal" name="AltinnFaultFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="UpdateReceiptBasic">
+            <soap:operation
+                    soapAction="http://www.altinn.no/services/Intermediary/Receipt/2009/10/IReceiptAgencyExternalBasic/UpdateReceiptBasic"
+                    style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AltinnFaultFault">
+                <soap:fault use="literal" name="AltinnFaultFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="ReceiptAgencyExternalBasicSF">
+        <wsdl:port name="BasicHttpBinding_IReceiptAgencyExternalBasic"
+                   binding="tns:BasicHttpBinding_IReceiptAgencyExternalBasic">
+            <soap:address location="https://www.altinn.no/IntermediaryExternal/ReceiptAgencyExternalBasic.svc"/>
+        </wsdl:port>
+    </wsdl:service>
 </wsdl:definitions>

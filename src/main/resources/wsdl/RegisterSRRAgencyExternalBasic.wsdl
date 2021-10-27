@@ -1,142 +1,737 @@
-<?xml version="1.0" encoding="utf-8"?><wsdl:definitions name="RegisterSRRAgencyExternalBasicSF" targetNamespace="http://www.altinn.no/services/Register/SRR/2015/06" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.altinn.no/services/Register/SRR/2015/06" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"><wsdl:types><xsd:schema elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/2009/10"><xsd:element name="Test"><xsd:complexType><xsd:sequence/></xsd:complexType></xsd:element><xsd:element name="TestResponse"><xsd:complexType><xsd:sequence/></xsd:complexType></xsd:element></xsd:schema><xsd:schema elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/common/fault/2009/10" xmlns:tns="http://www.altinn.no/services/common/fault/2009/10"><xsd:complexType name="AltinnFault"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Represents a SOAP fault message used by Altinn to convey exception information to the caller.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation><xsd:sequence><xsd:element minOccurs="0" name="AltinnErrorMessage" nillable="true" type="xsd:string"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Gets or sets the error message.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation></xsd:element><xsd:element minOccurs="0" name="AltinnExtendedErrorMessage" nillable="true" type="xsd:string"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Gets or sets the verbose version of the error message.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation></xsd:element><xsd:element minOccurs="0" name="AltinnLocalizedErrorMessage" nillable="true" type="xsd:string"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Gets or sets the localized version of the error message.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation></xsd:element><xsd:element minOccurs="0" name="ErrorGuid" nillable="true" type="xsd:string"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Gets or sets the unique GUID for the specific fault.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation></xsd:element><xsd:element minOccurs="0" name="ErrorID" type="xsd:int"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Gets or sets the error type id.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation></xsd:element><xsd:element minOccurs="0" name="UserGuid" nillable="true" type="xsd:string"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Gets or sets the GUID of the user.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation></xsd:element><xsd:element minOccurs="0" name="UserId" nillable="true" type="xsd:string"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Gets or sets the id of the user.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation></xsd:element></xsd:sequence></xsd:complexType><xsd:element name="AltinnFault" nillable="true" type="tns:AltinnFault"/></xsd:schema><xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/"><xs:element name="anyType" nillable="true" type="xs:anyType"/><xs:element name="anyURI" nillable="true" type="xs:anyURI"/><xs:element name="base64Binary" nillable="true" type="xs:base64Binary"/><xs:element name="boolean" nillable="true" type="xs:boolean"/><xs:element name="byte" nillable="true" type="xs:byte"/><xs:element name="dateTime" nillable="true" type="xs:dateTime"/><xs:element name="decimal" nillable="true" type="xs:decimal"/><xs:element name="double" nillable="true" type="xs:double"/><xs:element name="float" nillable="true" type="xs:float"/><xs:element name="int" nillable="true" type="xs:int"/><xs:element name="long" nillable="true" type="xs:long"/><xs:element name="QName" nillable="true" type="xs:QName"/><xs:element name="short" nillable="true" type="xs:short"/><xs:element name="string" nillable="true" type="xs:string"/><xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte"/><xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt"/><xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong"/><xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort"/><xs:element name="char" nillable="true" type="tns:char"/><xs:simpleType name="char"><xs:restriction base="xs:int"/></xs:simpleType><xs:element name="duration" nillable="true" type="tns:duration"/><xs:simpleType name="duration"><xs:restriction base="xs:duration"><xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?"/><xs:minInclusive value="-P10675199DT2H48M5.4775808S"/><xs:maxInclusive value="P10675199DT2H48M5.4775807S"/></xs:restriction></xs:simpleType><xs:element name="guid" nillable="true" type="tns:guid"/><xs:simpleType name="guid"><xs:restriction base="xs:string"><xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}"/></xs:restriction></xs:simpleType><xs:attribute name="FactoryType" type="xs:QName"/><xs:attribute name="Id" type="xs:ID"/><xs:attribute name="Ref" type="xs:IDREF"/></xs:schema><xsd:schema elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/Register/SRR/2015/06"><xsd:import namespace="http://schemas.altinn.no/services/Register/SRR/2015/06"/><xsd:element name="GetRightsBasic"><xsd:complexType><xsd:sequence><xsd:element minOccurs="1" name="systemUserName" type="xsd:string"/><xsd:element minOccurs="1" name="systemPassword" type="xsd:string"/><xsd:element minOccurs="1" name="serviceCode" type="xsd:string"/><xsd:element minOccurs="1" name="serviceEditionCode" type="xsd:int"/><xsd:element minOccurs="0" name="reportee" nillable="true" type="xsd:string"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="GetRightsBasicResponse"><xsd:complexType><xsd:sequence><xsd:element minOccurs="0" name="GetRightsBasicResult" nillable="true" type="q1:GetRightResponseList" xmlns:q1="http://schemas.altinn.no/services/Register/SRR/2015/06"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="AddRightsBasic"><xsd:complexType><xsd:sequence><xsd:element minOccurs="1" name="systemUserName" type="xsd:string"/><xsd:element minOccurs="1" name="systemPassword" type="xsd:string"/><xsd:element minOccurs="1" name="serviceCode" type="xsd:string"/><xsd:element minOccurs="1" name="serviceEditionCode" type="xsd:int"/><xsd:element minOccurs="1" name="insertRightList" type="q2:AddRightRequestList" xmlns:q2="http://schemas.altinn.no/services/Register/SRR/2015/06"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="AddRightsBasicResponse"><xsd:complexType><xsd:sequence><xsd:element minOccurs="0" name="AddRightsBasicResult" nillable="true" type="q3:AddRightResponseList" xmlns:q3="http://schemas.altinn.no/services/Register/SRR/2015/06"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="DeleteRightsBasic"><xsd:complexType><xsd:sequence><xsd:element minOccurs="1" name="systemUserName" type="xsd:string"/><xsd:element minOccurs="1" name="systemPassword" type="xsd:string"/><xsd:element minOccurs="1" name="serviceCode" type="xsd:string"/><xsd:element minOccurs="1" name="serviceEditionCode" type="xsd:int"/><xsd:element minOccurs="1" name="deleteRightList" type="q4:DeleteRightRequestList" xmlns:q4="http://schemas.altinn.no/services/Register/SRR/2015/06"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name="DeleteRightsBasicResponse"><xsd:complexType><xsd:sequence><xsd:element minOccurs="0" name="DeleteRightsBasicResult" nillable="true" type="q5:DeleteRightResponseList" xmlns:q5="http://schemas.altinn.no/services/Register/SRR/2015/06"/></xsd:sequence></xsd:complexType></xsd:element></xsd:schema><xsd:schema elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/Register/SRR/2015/06" xmlns:tns="http://schemas.altinn.no/services/Register/SRR/2015/06"><xsd:import namespace="http://schemas.altinn.no/services/Register/2015/06"/><xsd:complexType name="GetRightResponseList"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Collection of RegisterSRRGetRightResponseExternalBE objects.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation><xsd:sequence><xsd:element minOccurs="0" maxOccurs="unbounded" name="GetRightResponse" nillable="true" type="tns:GetRightResponse"/></xsd:sequence></xsd:complexType><xsd:element name="GetRightResponseList" nillable="true" type="tns:GetRightResponseList"/><xsd:complexType name="GetRightResponse"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Entity for representing an entry in the Service Rights Registry.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation><xsd:complexContent mixed="false"><xsd:extension base="tns:RegisterSRRRight"><xsd:sequence><xsd:element minOccurs="0" name="ValidTo" type="xsd:dateTime"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Gets or sets date to which the right is valid.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation></xsd:element></xsd:sequence></xsd:extension></xsd:complexContent></xsd:complexType><xsd:element name="GetRightResponse" nillable="true" type="tns:GetRightResponse"/><xsd:complexType name="RegisterSRRRight"><xsd:sequence><xsd:element minOccurs="0" name="Condition" nillable="true" type="xsd:string"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Gets or sets the Condition
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation></xsd:element><xsd:element name="Reportee" nillable="true" type="xsd:string"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Gets or sets Identifier used to identify a Reportee.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation></xsd:element><xsd:element name="Right" type="q6:RegisterSRRRightsType" xmlns:q6="http://schemas.altinn.no/services/Register/2015/06"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Gets or sets the Right.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation></xsd:element></xsd:sequence></xsd:complexType><xsd:element name="RegisterSRRRight" nillable="true" type="tns:RegisterSRRRight"/><xsd:complexType name="AddRightRequestList"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Collection of RegisterSRRRightsExternalBE objects.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation><xsd:sequence><xsd:element minOccurs="0" maxOccurs="unbounded" name="AddRightRequest" nillable="true" type="tns:AddRightRequest"/></xsd:sequence></xsd:complexType><xsd:element name="AddRightRequestList" nillable="true" type="tns:AddRightRequestList"/><xsd:complexType name="AddRightRequest"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Entity for representing an entry in the Service Rights Registry.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation><xsd:complexContent mixed="false"><xsd:extension base="tns:RegisterSRRRight"><xsd:sequence><xsd:element name="ValidTo" type="xsd:dateTime"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Gets or sets date to which the right is valid.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation></xsd:element></xsd:sequence></xsd:extension></xsd:complexContent></xsd:complexType><xsd:element name="AddRightRequest" nillable="true" type="tns:AddRightRequest"/><xsd:complexType name="AddRightResponseList"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Collection of RegisterSRRAddRightResponseExternalBE objects.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation><xsd:sequence><xsd:element minOccurs="0" maxOccurs="unbounded" name="AddRightResponse" nillable="true" type="tns:AddRightResponse"/></xsd:sequence></xsd:complexType><xsd:element name="AddRightResponseList" nillable="true" type="tns:AddRightResponseList"/><xsd:complexType name="AddRightResponse"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Entity for representing an entry in the Service Rights Registry.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation><xsd:complexContent mixed="false"><xsd:extension base="tns:AddRightRequest"><xsd:sequence><xsd:element minOccurs="0" name="OperationResult" nillable="true" type="q7:OperationResult" xmlns:q7="http://schemas.altinn.no/services/Register/2015/06"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Gets or sets a result for the current operation.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation></xsd:element></xsd:sequence></xsd:extension></xsd:complexContent></xsd:complexType><xsd:element name="AddRightResponse" nillable="true" type="tns:AddRightResponse"/><xsd:complexType name="DeleteRightRequestList"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Collection of RegisterSRRDeleteRightRequestExternalBE objects.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation><xsd:sequence><xsd:element minOccurs="0" maxOccurs="unbounded" name="DeleteRightRequest" nillable="true" type="tns:DeleteRightRequest"/></xsd:sequence></xsd:complexType><xsd:element name="DeleteRightRequestList" nillable="true" type="tns:DeleteRightRequestList"/><xsd:complexType name="DeleteRightRequest"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Entity for representing an entry in the Service Rights Registry.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation><xsd:complexContent mixed="false"><xsd:extension base="tns:RegisterSRRRight"><xsd:sequence/></xsd:extension></xsd:complexContent></xsd:complexType><xsd:element name="DeleteRightRequest" nillable="true" type="tns:DeleteRightRequest"/><xsd:complexType name="DeleteRightResponseList"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Collection of RegisterSRRDeleteRightResponseExternalBE objects.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation><xsd:sequence><xsd:element minOccurs="0" maxOccurs="unbounded" name="DeleteRightResponse" nillable="true" type="tns:DeleteRightResponse"/></xsd:sequence></xsd:complexType><xsd:element name="DeleteRightResponseList" nillable="true" type="tns:DeleteRightResponseList"/><xsd:complexType name="DeleteRightResponse"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Entity for representing an entry in the Service Rights Registry.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation><xsd:complexContent mixed="false"><xsd:extension base="tns:DeleteRightRequest"><xsd:sequence><xsd:element minOccurs="0" name="OperationResult" nillable="true" type="q8:OperationResult" xmlns:q8="http://schemas.altinn.no/services/Register/2015/06"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:Annotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:Text z:Id="2">&lt;summary&gt;
-            Gets or sets a result for the current operation.
-            &lt;/summary&gt;</d1p1:Text></Surrogate></xsd:appinfo></xsd:annotation></xsd:element></xsd:sequence></xsd:extension></xsd:complexContent></xsd:complexType><xsd:element name="DeleteRightResponse" nillable="true" type="tns:DeleteRightResponse"/></xsd:schema><xsd:schema elementFormDefault="qualified" targetNamespace="http://schemas.altinn.no/services/Register/2015/06" xmlns:tns="http://schemas.altinn.no/services/Register/2015/06"><xsd:simpleType name="RegisterSRRRightsType"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:EnumAnnotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:EnumText z:Id="2">&lt;summary&gt;
-             The right for a reportee over a Service in Service Rights Registry.
-            &lt;/summary&gt;</d1p1:EnumText><d1p1:Members z:Id="3" z:Size="3" xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays"><d2p1:KeyValueOfstringstring><d2p1:Key z:Id="4">None</d2p1:Key><d2p1:Value z:Id="5">&lt;summary&gt;
-            None has been specified
-            &lt;/summary&gt;</d2p1:Value></d2p1:KeyValueOfstringstring><d2p1:KeyValueOfstringstring><d2p1:Key z:Id="6">Read</d2p1:Key><d2p1:Value z:Id="7">&lt;summary&gt;
-            Read right
-            &lt;/summary&gt;</d2p1:Value></d2p1:KeyValueOfstringstring><d2p1:KeyValueOfstringstring><d2p1:Key z:Id="8">Write</d2p1:Key><d2p1:Value z:Id="9">&lt;summary&gt;
-            Write right
-            &lt;/summary&gt;</d2p1:Value></d2p1:KeyValueOfstringstring></d1p1:Members></Surrogate></xsd:appinfo></xsd:annotation><xsd:restriction base="xsd:string"><xsd:enumeration value="None"/><xsd:enumeration value="Read"/><xsd:enumeration value="Write"/></xsd:restriction></xsd:simpleType><xsd:element name="RegisterSRRRightsType" nillable="true" type="tns:RegisterSRRRightsType"/><xsd:simpleType name="OperationResult"><xsd:annotation><xsd:appinfo><Surrogate z:Id="1" i:type="d1p1:EnumAnnotation" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:d1p1="XmlCommentsExporter.Annotation"><d1p1:EnumText z:Id="2">&lt;summary&gt;
-             This Enum is used to return appropriate status for a operation on a particular right in Service Rights Registry.
-            &lt;/summary&gt;</d1p1:EnumText><d1p1:Members z:Id="3" z:Size="6" xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays"><d2p1:KeyValueOfstringstring><d2p1:Key z:Id="4">Unknown</d2p1:Key><d2p1:Value z:Id="5">&lt;summary&gt;
-            None has been specified.
-            &lt;/summary&gt;</d2p1:Value></d2p1:KeyValueOfstringstring><d2p1:KeyValueOfstringstring><d2p1:Key z:Id="6">Ok</d2p1:Key><d2p1:Value z:Id="7">&lt;summary&gt;
-            Rule Successfully Inserted.
-            &lt;/summary&gt;</d2p1:Value></d2p1:KeyValueOfstringstring><d2p1:KeyValueOfstringstring><d2p1:Key z:Id="8">RuleNotFound</d2p1:Key><d2p1:Value z:Id="9">&lt;summary&gt;
-            Rule was not found to be deleted.
-            &lt;/summary&gt;</d2p1:Value></d2p1:KeyValueOfstringstring><d2p1:KeyValueOfstringstring><d2p1:Key z:Id="10">RuleAlreadyExists</d2p1:Key><d2p1:Value z:Id="11">&lt;summary&gt;
-            Rule already exists in the database.
-            &lt;/summary&gt;</d2p1:Value></d2p1:KeyValueOfstringstring><d2p1:KeyValueOfstringstring><d2p1:Key z:Id="12">EmptyOrNotAValidSsnOrOrganisation</d2p1:Key><d2p1:Value z:Id="13">&lt;summary&gt;
-            The current Reportee is not a valid SSN or Organization.
-            &lt;/summary&gt;</d2p1:Value></d2p1:KeyValueOfstringstring><d2p1:KeyValueOfstringstring><d2p1:Key z:Id="14">RightAlreadyExpired</d2p1:Key><d2p1:Value z:Id="15">&lt;summary&gt;
-            The right which is to be assigned has already expired.
-            &lt;/summary&gt;</d2p1:Value></d2p1:KeyValueOfstringstring></d1p1:Members></Surrogate></xsd:appinfo></xsd:annotation><xsd:restriction base="xsd:string"><xsd:enumeration value="Unknown"/><xsd:enumeration value="Ok"/><xsd:enumeration value="RuleNotFound"/><xsd:enumeration value="RuleAlreadyExists"/><xsd:enumeration value="EmptyOrNotAValidSsnOrOrganisation"/><xsd:enumeration value="RightAlreadyExpired"/></xsd:restriction></xsd:simpleType><xsd:element name="OperationResult" nillable="true" type="tns:OperationResult"/></xsd:schema></wsdl:types><wsdl:message name="IRegisterSRRAgencyExternalBasic_Test_InputMessage"><wsdl:part name="parameters" element="q9:Test" xmlns:q9="http://www.altinn.no/services/2009/10"/></wsdl:message><wsdl:message name="IRegisterSRRAgencyExternalBasic_Test_OutputMessage"><wsdl:part name="parameters" element="q10:TestResponse" xmlns:q10="http://www.altinn.no/services/2009/10"/></wsdl:message><wsdl:message name="IRegisterSRRAgencyExternalBasic_Test_AltinnFaultFault_FaultMessage"><wsdl:part name="detail" element="q11:AltinnFault" xmlns:q11="http://www.altinn.no/services/common/fault/2009/10"/></wsdl:message><wsdl:message name="IRegisterSRRAgencyExternalBasic_GetRightsBasic_InputMessage"><wsdl:part name="parameters" element="tns:GetRightsBasic"/></wsdl:message><wsdl:message name="IRegisterSRRAgencyExternalBasic_GetRightsBasic_OutputMessage"><wsdl:part name="parameters" element="tns:GetRightsBasicResponse"/></wsdl:message><wsdl:message name="IRegisterSRRAgencyExternalBasic_GetRightsBasic_AltinnFaultFault_FaultMessage"><wsdl:part name="detail" element="q12:AltinnFault" xmlns:q12="http://www.altinn.no/services/common/fault/2009/10"/></wsdl:message><wsdl:message name="IRegisterSRRAgencyExternalBasic_AddRightsBasic_InputMessage"><wsdl:part name="parameters" element="tns:AddRightsBasic"/></wsdl:message><wsdl:message name="IRegisterSRRAgencyExternalBasic_AddRightsBasic_OutputMessage"><wsdl:part name="parameters" element="tns:AddRightsBasicResponse"/></wsdl:message><wsdl:message name="IRegisterSRRAgencyExternalBasic_AddRightsBasic_AltinnFaultFault_FaultMessage"><wsdl:part name="detail" element="q13:AltinnFault" xmlns:q13="http://www.altinn.no/services/common/fault/2009/10"/></wsdl:message><wsdl:message name="IRegisterSRRAgencyExternalBasic_DeleteRightsBasic_InputMessage"><wsdl:part name="parameters" element="tns:DeleteRightsBasic"/></wsdl:message><wsdl:message name="IRegisterSRRAgencyExternalBasic_DeleteRightsBasic_OutputMessage"><wsdl:part name="parameters" element="tns:DeleteRightsBasicResponse"/></wsdl:message><wsdl:message name="IRegisterSRRAgencyExternalBasic_DeleteRightsBasic_AltinnFaultFault_FaultMessage"><wsdl:part name="detail" element="q14:AltinnFault" xmlns:q14="http://www.altinn.no/services/common/fault/2009/10"/></wsdl:message><wsdl:portType name="IRegisterSRRAgencyExternalBasic"><wsdl:documentation>&lt;summary&gt;&#xD;
-            Service contract for the Register SRR Agency External Service. &#xD;
-            It uses the Basic Http Binding.&#xD;
-            &lt;/summary&gt;</wsdl:documentation><wsdl:operation name="Test"><wsdl:input wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test" message="tns:IRegisterSRRAgencyExternalBasic_Test_InputMessage"/><wsdl:output wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestResponse" message="tns:IRegisterSRRAgencyExternalBasic_Test_OutputMessage"/><wsdl:fault wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestAltinnFaultFault" name="AltinnFaultFault" message="tns:IRegisterSRRAgencyExternalBasic_Test_AltinnFaultFault_FaultMessage"/></wsdl:operation><wsdl:operation name="GetRightsBasic"><wsdl:documentation>&lt;summary&gt;&#xD;
-            This method calls an internal method which&#xD;
-            returns rights for a service saved in register database in &#xD;
-            Service Rights Registry table for the Service code &#xD;
-            and Service Edition Code passed on as inputs.&#xD;
-            &lt;/summary&gt;&#xD;
-            &lt;param name="systemUserName"&gt;&#xD;
-            The UserName for the calling system.&#xD;
-            &lt;/param&gt;&#xD;
-            &lt;param name="systemPassword"&gt;&#xD;
-            The password used to authenticate the calling system.&#xD;
-            &lt;/param&gt;&#xD;
-            &lt;param name="serviceCode"&gt;&#xD;
-            External Service Code of the Service.&#xD;
-            &lt;/param&gt;        &#xD;
-            &lt;param name="serviceEditionCode"&gt;&#xD;
-            External Service Edition Code of the Service.&#xD;
-            &lt;/param&gt;&#xD;
-            &lt;param name="reportee"&gt;&#xD;
-            Optional reportee, If we want to know right for a reportee for a service.&#xD;
-            &lt;/param&gt;&#xD;
-            &lt;returns&gt;&#xD;
-            Returns a list of rights with Reportee for &#xD;
-            a service using the input parameters.&#xD;
-            &lt;/returns&gt;</wsdl:documentation><wsdl:input wsaw:Action="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/GetRightsBasic" message="tns:IRegisterSRRAgencyExternalBasic_GetRightsBasic_InputMessage"/><wsdl:output wsaw:Action="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/GetRightsBasicResponse" message="tns:IRegisterSRRAgencyExternalBasic_GetRightsBasic_OutputMessage"/><wsdl:fault wsaw:Action="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/GetRightsBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IRegisterSRRAgencyExternalBasic_GetRightsBasic_AltinnFaultFault_FaultMessage"/></wsdl:operation><wsdl:operation name="AddRightsBasic"><wsdl:documentation>&lt;summary&gt;&#xD;
-            This method calls an internal method which in turn&#xD;
-            adds new rights for a service to the Service Rights Registry table.&#xD;
-            &lt;/summary&gt;&#xD;
-            &lt;param name="systemUserName"&gt;&#xD;
-            The UserName for the calling system.&#xD;
-            &lt;/param&gt;&#xD;
-            &lt;param name="systemPassword"&gt;&#xD;
-            The password used to authenticate the calling system.&#xD;
-            &lt;/param&gt;&#xD;
-            &lt;param name="serviceCode"&gt;&#xD;
-            External Service Code of the Service for which rights are being added.&#xD;
-            &lt;/param&gt;        &#xD;
-            &lt;param name="serviceEditionCode"&gt;&#xD;
-            External Service Edition Code of the Service for which rights are being added.&#xD;
-            &lt;/param&gt;&#xD;
-            &lt;param name="insertRightList"&gt;&#xD;
-            Rights to be added into the register.&#xD;
-            &lt;/param&gt;&#xD;
-            &lt;returns&gt;&#xD;
-            Returns the same list back with result of each of the operation.&#xD;
-            &lt;/returns&gt;</wsdl:documentation><wsdl:input wsaw:Action="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/AddRightsBasic" message="tns:IRegisterSRRAgencyExternalBasic_AddRightsBasic_InputMessage"/><wsdl:output wsaw:Action="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/AddRightsBasicResponse" message="tns:IRegisterSRRAgencyExternalBasic_AddRightsBasic_OutputMessage"/><wsdl:fault wsaw:Action="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/AddRightsBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IRegisterSRRAgencyExternalBasic_AddRightsBasic_AltinnFaultFault_FaultMessage"/></wsdl:operation><wsdl:operation name="DeleteRightsBasic"><wsdl:documentation>&lt;summary&gt;&#xD;
-            This external method  calls an internal method which &#xD;
-            deletes existing rights for a service from the Service Rights Registry table.&#xD;
-            &lt;/summary&gt;&#xD;
-            &lt;param name="systemUserName"&gt;&#xD;
-            The UserName for the calling system.&#xD;
-            &lt;/param&gt;&#xD;
-            &lt;param name="systemPassword"&gt;&#xD;
-            The password used to authenticate the calling system.&#xD;
-            &lt;/param&gt;&#xD;
-            &lt;param name="serviceCode"&gt;&#xD;
-            External Service Code of the Service for which rights are being deleted.&#xD;
-            &lt;/param&gt;        &#xD;
-            &lt;param name="serviceEditionCode"&gt;&#xD;
-            External Service Edition Code of the Service for which rights are being deleted.&#xD;
-            &lt;/param&gt;&#xD;
-            &lt;param name="deleteRightList"&gt;&#xD;
-            Rights to be deleted from the register.&#xD;
-            &lt;/param&gt;&#xD;
-            &lt;returns&gt;&#xD;
-            Returns the same list back with result of each of the operation.&#xD;
-            &lt;/returns&gt;</wsdl:documentation><wsdl:input wsaw:Action="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/DeleteRightsBasic" message="tns:IRegisterSRRAgencyExternalBasic_DeleteRightsBasic_InputMessage"/><wsdl:output wsaw:Action="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/DeleteRightsBasicResponse" message="tns:IRegisterSRRAgencyExternalBasic_DeleteRightsBasic_OutputMessage"/><wsdl:fault wsaw:Action="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/DeleteRightsBasicAltinnFaultFault" name="AltinnFaultFault" message="tns:IRegisterSRRAgencyExternalBasic_DeleteRightsBasic_AltinnFaultFault_FaultMessage"/></wsdl:operation></wsdl:portType><wsdl:binding name="BasicHttpBinding_IRegisterSRRAgencyExternalBasic" type="tns:IRegisterSRRAgencyExternalBasic"><soap:binding transport="http://schemas.xmlsoap.org/soap/http"/><wsdl:operation name="Test"><soap:operation soapAction="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test" style="document"/><wsdl:input><soap:body use="literal"/></wsdl:input><wsdl:output><soap:body use="literal"/></wsdl:output><wsdl:fault name="AltinnFaultFault"><soap:fault name="AltinnFaultFault" use="literal"/></wsdl:fault></wsdl:operation><wsdl:operation name="GetRightsBasic"><soap:operation soapAction="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/GetRightsBasic" style="document"/><wsdl:input><soap:body use="literal"/></wsdl:input><wsdl:output><soap:body use="literal"/></wsdl:output><wsdl:fault name="AltinnFaultFault"><soap:fault name="AltinnFaultFault" use="literal"/></wsdl:fault></wsdl:operation><wsdl:operation name="AddRightsBasic"><soap:operation soapAction="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/AddRightsBasic" style="document"/><wsdl:input><soap:body use="literal"/></wsdl:input><wsdl:output><soap:body use="literal"/></wsdl:output><wsdl:fault name="AltinnFaultFault"><soap:fault name="AltinnFaultFault" use="literal"/></wsdl:fault></wsdl:operation><wsdl:operation name="DeleteRightsBasic"><soap:operation soapAction="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/DeleteRightsBasic" style="document"/><wsdl:input><soap:body use="literal"/></wsdl:input><wsdl:output><soap:body use="literal"/></wsdl:output><wsdl:fault name="AltinnFaultFault"><soap:fault name="AltinnFaultFault" use="literal"/></wsdl:fault></wsdl:operation></wsdl:binding><wsdl:service name="RegisterSRRAgencyExternalBasicSF"><wsdl:port name="BasicHttpBinding_IRegisterSRRAgencyExternalBasic" binding="tns:BasicHttpBinding_IRegisterSRRAgencyExternalBasic"><soap:address location="http://www.altinn.no/RegisterExternal/RegisterSRRAgencyExternalBasic.svc"/></wsdl:port></wsdl:service></wsdl:definitions>
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+                  xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex"
+                  xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy"
+                  xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract"
+                  xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:tns="http://www.altinn.no/services/Register/SRR/2015/06"
+                  xmlns:wsa10="http://www.w3.org/2005/08/addressing"
+                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+                  xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="RegisterSRRAgencyExternalBasicSF"
+                  targetNamespace="http://www.altinn.no/services/Register/SRR/2015/06">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.altinn.no/services/2009/10"
+                   elementFormDefault="qualified" targetNamespace="http://www.altinn.no/services/2009/10">
+            <xs:element name="Test">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="TestResponse">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/" attributeFormDefault="qualified"
+                   elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/">
+            <xs:element name="anyType" nillable="true" type="xs:anyType"/>
+            <xs:element name="anyURI" nillable="true" type="xs:anyURI"/>
+            <xs:element name="base64Binary" nillable="true" type="xs:base64Binary"/>
+            <xs:element name="boolean" nillable="true" type="xs:boolean"/>
+            <xs:element name="byte" nillable="true" type="xs:byte"/>
+            <xs:element name="dateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element name="decimal" nillable="true" type="xs:decimal"/>
+            <xs:element name="double" nillable="true" type="xs:double"/>
+            <xs:element name="float" nillable="true" type="xs:float"/>
+            <xs:element name="int" nillable="true" type="xs:int"/>
+            <xs:element name="long" nillable="true" type="xs:long"/>
+            <xs:element name="QName" nillable="true" type="xs:QName"/>
+            <xs:element name="short" nillable="true" type="xs:short"/>
+            <xs:element name="string" nillable="true" type="xs:string"/>
+            <xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte"/>
+            <xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt"/>
+            <xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong"/>
+            <xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort"/>
+            <xs:element name="char" nillable="true" type="tns:char"/>
+            <xs:simpleType name="char">
+                <xs:restriction base="xs:int"/>
+            </xs:simpleType>
+            <xs:element name="duration" nillable="true" type="tns:duration"/>
+            <xs:simpleType name="duration">
+                <xs:restriction base="xs:duration">
+                    <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?"/>
+                    <xs:minInclusive value="-P10675199DT2H48M5.4775808S"/>
+                    <xs:maxInclusive value="P10675199DT2H48M5.4775807S"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="guid" nillable="true" type="tns:guid"/>
+            <xs:simpleType name="guid">
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:attribute name="FactoryType" type="xs:QName"/>
+            <xs:attribute name="Id" type="xs:ID"/>
+            <xs:attribute name="Ref" type="xs:IDREF"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://www.altinn.no/services/common/fault/2009/10" elementFormDefault="qualified"
+                   targetNamespace="http://www.altinn.no/services/common/fault/2009/10">
+            <xs:complexType name="AltinnFault">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Represents a SOAP fault message used by Altinn to convey exception information to the
+                            caller.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="AltinnErrorMessage" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the error message.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="AltinnExtendedErrorMessage" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the verbose version of the error message.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="AltinnLocalizedErrorMessage" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the localized version of the error message.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ErrorGuid" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the unique GUID for the specific fault.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="ErrorID" type="xs:int">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the error type id.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="UserGuid" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the GUID of the user.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="UserId" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the id of the user.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="AltinnFault" nillable="true" type="tns:AltinnFault"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+                   targetNamespace="http://www.altinn.no/services/Register/SRR/2015/06">
+            <xs:import namespace="http://schemas.altinn.no/services/Register/SRR/2015/06"/>
+            <xs:element name="GetRightsBasic">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="1" name="systemUserName" type="xs:string"/>
+                        <xs:element minOccurs="1" name="systemPassword" type="xs:string"/>
+                        <xs:element minOccurs="1" name="serviceCode" type="xs:string"/>
+                        <xs:element minOccurs="1" name="serviceEditionCode" type="xs:int"/>
+                        <xs:element minOccurs="0" name="reportee" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetRightsBasicResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element xmlns:q1="http://schemas.altinn.no/services/Register/SRR/2015/06" minOccurs="0"
+                                    name="GetRightsBasicResult" nillable="true" type="q1:GetRightResponseList"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AddRightsBasic">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="1" name="systemUserName" type="xs:string"/>
+                        <xs:element minOccurs="1" name="systemPassword" type="xs:string"/>
+                        <xs:element minOccurs="1" name="serviceCode" type="xs:string"/>
+                        <xs:element minOccurs="1" name="serviceEditionCode" type="xs:int"/>
+                        <xs:element xmlns:q2="http://schemas.altinn.no/services/Register/SRR/2015/06" minOccurs="1"
+                                    name="insertRightList" type="q2:AddRightRequestList"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AddRightsBasicResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element xmlns:q3="http://schemas.altinn.no/services/Register/SRR/2015/06" minOccurs="0"
+                                    name="AddRightsBasicResult" nillable="true" type="q3:AddRightResponseList"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="DeleteRightsBasic">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="1" name="systemUserName" type="xs:string"/>
+                        <xs:element minOccurs="1" name="systemPassword" type="xs:string"/>
+                        <xs:element minOccurs="1" name="serviceCode" type="xs:string"/>
+                        <xs:element minOccurs="1" name="serviceEditionCode" type="xs:int"/>
+                        <xs:element xmlns:q4="http://schemas.altinn.no/services/Register/SRR/2015/06" minOccurs="1"
+                                    name="deleteRightList" type="q4:DeleteRightRequestList"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="DeleteRightsBasicResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element xmlns:q5="http://schemas.altinn.no/services/Register/SRR/2015/06" minOccurs="0"
+                                    name="DeleteRightsBasicResult" nillable="true" type="q5:DeleteRightResponseList"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.altinn.no/services/Register/SRR/2015/06" elementFormDefault="qualified"
+                   targetNamespace="http://schemas.altinn.no/services/Register/SRR/2015/06">
+            <xs:import namespace="http://schemas.altinn.no/services/Register/2015/06"/>
+            <xs:complexType name="GetRightResponseList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Collection of RegisterSRRGetRightResponseExternalBE objects.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="GetRightResponse" nillable="true"
+                                type="tns:GetRightResponse"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GetRightResponseList" nillable="true" type="tns:GetRightResponseList"/>
+            <xs:complexType name="GetRightResponse">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Entity for representing an entry in the Service Rights Registry.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:RegisterSRRRight">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="ValidTo" type="xs:dateTime">
+                                <xs:annotation>
+                                    <xs:appinfo/>
+                                    <xs:documentation>
+                                        <summary>Gets or sets date to which the right is valid.</summary>
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:element name="GetRightResponse" nillable="true" type="tns:GetRightResponse"/>
+            <xs:complexType name="RegisterSRRRight">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Condition" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the Condition</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="Reportee" nillable="true" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets Identifier used to identify a Reportee.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element xmlns:q1="http://schemas.altinn.no/services/Register/2015/06" name="Right"
+                                type="q1:RegisterSRRRightsType">
+                        <xs:annotation>
+                            <xs:appinfo/>
+                            <xs:documentation>
+                                <summary>Gets or sets the Right.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="RegisterSRRRight" nillable="true" type="tns:RegisterSRRRight"/>
+            <xs:complexType name="AddRightRequestList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Collection of RegisterSRRRightsExternalBE objects.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="AddRightRequest" nillable="true"
+                                type="tns:AddRightRequest"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="AddRightRequestList" nillable="true" type="tns:AddRightRequestList"/>
+            <xs:complexType name="AddRightRequest">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Entity for representing an entry in the Service Rights Registry.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:RegisterSRRRight">
+                        <xs:sequence>
+                            <xs:element name="ValidTo" type="xs:dateTime">
+                                <xs:annotation>
+                                    <xs:appinfo/>
+                                    <xs:documentation>
+                                        <summary>Gets or sets date to which the right is valid.</summary>
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:element name="AddRightRequest" nillable="true" type="tns:AddRightRequest"/>
+            <xs:complexType name="AddRightResponseList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Collection of RegisterSRRAddRightResponseExternalBE objects.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="AddRightResponse" nillable="true"
+                                type="tns:AddRightResponse"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="AddRightResponseList" nillable="true" type="tns:AddRightResponseList"/>
+            <xs:complexType name="AddRightResponse">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Entity for representing an entry in the Service Rights Registry.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:AddRightRequest">
+                        <xs:sequence>
+                            <xs:element xmlns:q2="http://schemas.altinn.no/services/Register/2015/06" minOccurs="0"
+                                        name="OperationResult" nillable="true" type="q2:OperationResult">
+                                <xs:annotation>
+                                    <xs:appinfo/>
+                                    <xs:documentation>
+                                        <summary>Gets or sets a result for the current operation.</summary>
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:element name="AddRightResponse" nillable="true" type="tns:AddRightResponse"/>
+            <xs:complexType name="DeleteRightRequestList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Collection of RegisterSRRDeleteRightRequestExternalBE objects.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="DeleteRightRequest" nillable="true"
+                                type="tns:DeleteRightRequest"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="DeleteRightRequestList" nillable="true" type="tns:DeleteRightRequestList"/>
+            <xs:complexType name="DeleteRightRequest">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Entity for representing an entry in the Service Rights Registry.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:RegisterSRRRight">
+                        <xs:sequence/>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:element name="DeleteRightRequest" nillable="true" type="tns:DeleteRightRequest"/>
+            <xs:complexType name="DeleteRightResponseList">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Collection of RegisterSRRDeleteRightResponseExternalBE objects.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="DeleteRightResponse" nillable="true"
+                                type="tns:DeleteRightResponse"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="DeleteRightResponseList" nillable="true" type="tns:DeleteRightResponseList"/>
+            <xs:complexType name="DeleteRightResponse">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>Entity for representing an entry in the Service Rights Registry.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:DeleteRightRequest">
+                        <xs:sequence>
+                            <xs:element xmlns:q3="http://schemas.altinn.no/services/Register/2015/06" minOccurs="0"
+                                        name="OperationResult" nillable="true" type="q3:OperationResult">
+                                <xs:annotation>
+                                    <xs:appinfo/>
+                                    <xs:documentation>
+                                        <summary>Gets or sets a result for the current operation.</summary>
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:element name="DeleteRightResponse" nillable="true" type="tns:DeleteRightResponse"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.altinn.no/services/Register/2015/06" elementFormDefault="qualified"
+                   targetNamespace="http://schemas.altinn.no/services/Register/2015/06">
+            <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+            <xs:simpleType name="RegisterSRRRightsType">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>The right for a reportee over a Service in Service Rights Registry.</summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="None">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>None has been specified</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Read">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Read right</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Write">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Write right</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Sign">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Sign right</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="ArchiveRead">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>ArchiveRead right</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="ArchiveDelete">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>ArchiveDelete right</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Access">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">8
+                                </EnumerationValue>
+                            </xs:appinfo>
+                            <xs:documentation>
+                                <summary>Access right</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="RegisterSRRRightsType" nillable="true" type="tns:RegisterSRRRightsType"/>
+            <xs:simpleType name="OperationResult">
+                <xs:annotation>
+                    <xs:appinfo/>
+                    <xs:documentation>
+                        <summary>This Enum is used to return appropriate status for a operation on a particular right in
+                            Service Rights Registry.
+                        </summary>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Unknown">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>None has been specified.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Ok">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Rule Successfully Inserted.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RuleNotFound">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Rule was not found to be deleted.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RuleAlreadyExists">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>Rule already exists in the database.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="EmptyOrNotAValidSsnOrOrganisation">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>The current Reportee is not a valid SSN or Organization.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="RightAlreadyExpired">
+                        <xs:annotation>
+                            <xs:documentation>
+                                <summary>The right which is to be assigned has already expired.</summary>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="OperationResult" nillable="true" type="tns:OperationResult"/>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="IRegisterSRRAgencyExternalBasic_Test_InputMessage">
+        <wsdl:part xmlns:q1="http://www.altinn.no/services/2009/10" name="parameters" element="q1:Test"/>
+    </wsdl:message>
+    <wsdl:message name="IRegisterSRRAgencyExternalBasic_Test_OutputMessage">
+        <wsdl:part xmlns:q2="http://www.altinn.no/services/2009/10" name="parameters" element="q2:TestResponse"/>
+    </wsdl:message>
+    <wsdl:message name="IRegisterSRRAgencyExternalBasic_Test_AltinnFaultFault_FaultMessage">
+        <wsdl:part xmlns:q3="http://www.altinn.no/services/common/fault/2009/10" name="detail"
+                   element="q3:AltinnFault"/>
+    </wsdl:message>
+    <wsdl:message name="IRegisterSRRAgencyExternalBasic_GetRightsBasic_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetRightsBasic"/>
+    </wsdl:message>
+    <wsdl:message name="IRegisterSRRAgencyExternalBasic_GetRightsBasic_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetRightsBasicResponse"/>
+    </wsdl:message>
+    <wsdl:message name="IRegisterSRRAgencyExternalBasic_GetRightsBasic_AltinnFaultFault_FaultMessage">
+        <wsdl:part xmlns:q4="http://www.altinn.no/services/common/fault/2009/10" name="detail"
+                   element="q4:AltinnFault"/>
+    </wsdl:message>
+    <wsdl:message name="IRegisterSRRAgencyExternalBasic_AddRightsBasic_InputMessage">
+        <wsdl:part name="parameters" element="tns:AddRightsBasic"/>
+    </wsdl:message>
+    <wsdl:message name="IRegisterSRRAgencyExternalBasic_AddRightsBasic_OutputMessage">
+        <wsdl:part name="parameters" element="tns:AddRightsBasicResponse"/>
+    </wsdl:message>
+    <wsdl:message name="IRegisterSRRAgencyExternalBasic_AddRightsBasic_AltinnFaultFault_FaultMessage">
+        <wsdl:part xmlns:q5="http://www.altinn.no/services/common/fault/2009/10" name="detail"
+                   element="q5:AltinnFault"/>
+    </wsdl:message>
+    <wsdl:message name="IRegisterSRRAgencyExternalBasic_DeleteRightsBasic_InputMessage">
+        <wsdl:part name="parameters" element="tns:DeleteRightsBasic"/>
+    </wsdl:message>
+    <wsdl:message name="IRegisterSRRAgencyExternalBasic_DeleteRightsBasic_OutputMessage">
+        <wsdl:part name="parameters" element="tns:DeleteRightsBasicResponse"/>
+    </wsdl:message>
+    <wsdl:message name="IRegisterSRRAgencyExternalBasic_DeleteRightsBasic_AltinnFaultFault_FaultMessage">
+        <wsdl:part xmlns:q6="http://www.altinn.no/services/common/fault/2009/10" name="detail"
+                   element="q6:AltinnFault"/>
+    </wsdl:message>
+    <wsdl:portType name="IRegisterSRRAgencyExternalBasic">
+        <wsdl:documentation>
+            <summary>Service contract for the Register SRR Agency External Service. It uses the Basic Http Binding.
+            </summary>
+        </wsdl:documentation>
+        <wsdl:operation name="Test">
+            <wsdl:input wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test"
+                        message="tns:IRegisterSRRAgencyExternalBasic_Test_InputMessage"/>
+            <wsdl:output wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestResponse"
+                         message="tns:IRegisterSRRAgencyExternalBasic_Test_OutputMessage"/>
+            <wsdl:fault wsaw:Action="http://www.altinn.no/services/2009/10/IAltinnContractBase/TestAltinnFaultFault"
+                        name="AltinnFaultFault"
+                        message="tns:IRegisterSRRAgencyExternalBasic_Test_AltinnFaultFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetRightsBasic">
+            <wsdl:documentation>
+                <summary>This method calls an internal method which returns rights for a service saved in register
+                    database in Service Rights Registry table for the Service code and Service Edition Code passed on as
+                    inputs.
+                </summary>
+                <param name="systemUserName">The UserName for the calling system.</param>
+                <param name="systemPassword">The password used to authenticate the calling system.</param>
+                <param name="serviceCode">External Service Code of the Service.</param>
+                <param name="serviceEditionCode">External Service Edition Code of the Service.</param>
+                <param name="reportee">Optional reportee, If we want to know right for a reportee for a service.</param>
+                <returns>Returns a list of rights with Reportee for a service using the input parameters.</returns>
+            </wsdl:documentation>
+            <wsdl:input
+                    wsaw:Action="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/GetRightsBasic"
+                    message="tns:IRegisterSRRAgencyExternalBasic_GetRightsBasic_InputMessage"/>
+            <wsdl:output
+                    wsaw:Action="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/GetRightsBasicResponse"
+                    message="tns:IRegisterSRRAgencyExternalBasic_GetRightsBasic_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/GetRightsBasicAltinnFaultFault"
+                    name="AltinnFaultFault"
+                    message="tns:IRegisterSRRAgencyExternalBasic_GetRightsBasic_AltinnFaultFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="AddRightsBasic">
+            <wsdl:documentation>
+                <summary>This method calls an internal method which in turn adds new rights for a service to the Service
+                    Rights Registry table.
+                </summary>
+                <param name="systemUserName">The UserName for the calling system.</param>
+                <param name="systemPassword">The password used to authenticate the calling system.</param>
+                <param name="serviceCode">External Service Code of the Service for which rights are being added.</param>
+                <param name="serviceEditionCode">External Service Edition Code of the Service for which rights are being
+                    added.
+                </param>
+                <param name="insertRightList">Rights to be added into the register.</param>
+                <returns>Returns the same list back with result of each of the operation.</returns>
+            </wsdl:documentation>
+            <wsdl:input
+                    wsaw:Action="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/AddRightsBasic"
+                    message="tns:IRegisterSRRAgencyExternalBasic_AddRightsBasic_InputMessage"/>
+            <wsdl:output
+                    wsaw:Action="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/AddRightsBasicResponse"
+                    message="tns:IRegisterSRRAgencyExternalBasic_AddRightsBasic_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/AddRightsBasicAltinnFaultFault"
+                    name="AltinnFaultFault"
+                    message="tns:IRegisterSRRAgencyExternalBasic_AddRightsBasic_AltinnFaultFault_FaultMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="DeleteRightsBasic">
+            <wsdl:documentation>
+                <summary>This external method calls an internal method which deletes existing rights for a service from
+                    the Service Rights Registry table.
+                </summary>
+                <param name="systemUserName">The UserName for the calling system.</param>
+                <param name="systemPassword">The password used to authenticate the calling system.</param>
+                <param name="serviceCode">External Service Code of the Service for which rights are being deleted.
+                </param>
+                <param name="serviceEditionCode">External Service Edition Code of the Service for which rights are being
+                    deleted.
+                </param>
+                <param name="deleteRightList">Rights to be deleted from the register.</param>
+                <returns>Returns the same list back with result of each of the operation.</returns>
+            </wsdl:documentation>
+            <wsdl:input
+                    wsaw:Action="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/DeleteRightsBasic"
+                    message="tns:IRegisterSRRAgencyExternalBasic_DeleteRightsBasic_InputMessage"/>
+            <wsdl:output
+                    wsaw:Action="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/DeleteRightsBasicResponse"
+                    message="tns:IRegisterSRRAgencyExternalBasic_DeleteRightsBasic_OutputMessage"/>
+            <wsdl:fault
+                    wsaw:Action="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/DeleteRightsBasicAltinnFaultFault"
+                    name="AltinnFaultFault"
+                    message="tns:IRegisterSRRAgencyExternalBasic_DeleteRightsBasic_AltinnFaultFault_FaultMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BasicHttpBinding_IRegisterSRRAgencyExternalBasic" type="tns:IRegisterSRRAgencyExternalBasic">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="Test">
+            <soap:operation soapAction="http://www.altinn.no/services/2009/10/IAltinnContractBase/Test"
+                            style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AltinnFaultFault">
+                <soap:fault use="literal" name="AltinnFaultFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="GetRightsBasic">
+            <soap:operation
+                    soapAction="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/GetRightsBasic"
+                    style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AltinnFaultFault">
+                <soap:fault use="literal" name="AltinnFaultFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="AddRightsBasic">
+            <soap:operation
+                    soapAction="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/AddRightsBasic"
+                    style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AltinnFaultFault">
+                <soap:fault use="literal" name="AltinnFaultFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="DeleteRightsBasic">
+            <soap:operation
+                    soapAction="http://www.altinn.no/services/Register/SRR/2015/06/IRegisterSRRAgencyExternalBasic/DeleteRightsBasic"
+                    style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AltinnFaultFault">
+                <soap:fault use="literal" name="AltinnFaultFault" namespace=""/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="RegisterSRRAgencyExternalBasicSF">
+        <wsdl:port name="BasicHttpBinding_IRegisterSRRAgencyExternalBasic"
+                   binding="tns:BasicHttpBinding_IRegisterSRRAgencyExternalBasic">
+            <soap:address location="https://www.altinn.no/RegisterExternal/RegisterSRRAgencyExternalBasic.svc"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

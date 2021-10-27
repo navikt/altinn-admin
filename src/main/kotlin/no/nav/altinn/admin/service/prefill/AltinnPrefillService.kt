@@ -25,7 +25,8 @@ class AltinnPrefillService(env: Environment, iPrefillExternalBasicV2Factory: () 
                 false,
                 true,
                 null,
-                dueDate
+                dueDate,
+                null
             )
         } catch (e: IPreFillExternalBasicSubmitAndInstantiatePrefilledFormTaskBasicAltinnFaultFaultFaultMessage) {
             logger.warn { "Exception when sending prefill ${e.faultInfo.altinnErrorMessage}" }

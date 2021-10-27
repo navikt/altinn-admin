@@ -22,7 +22,6 @@ buildscript {
     ext.javaxActivationVersion = "1.1.1"
     ext.cxfVersion = "3.4.1"
     ext.unboundidVersion = "6.0.0"
-    ext.tjenestespesifikasjonerVersion = "1.2019.09.25-00.21-49b69f0625e0"
     ext.wiremockVersion = "2.27.2"
 
     ext.swaggerVersion = "3.6.1"
@@ -77,7 +76,12 @@ wsdl2java {
     wsdlsToGenerate = [
             ["-xjc", "-b", "$projectDir/src/main/xjb/binding.xml", "$projectDir/src/main/resources/wsdl/RegisterSRRAgencyExternalBasic.wsdl"],
             ["-xjc", "-b", "$projectDir/src/main/xjb/binding.xml", "$projectDir/src/main/resources/wsdl/ReceiptAgencyExternalBasic.wsdl"],
-            ["-xjc", "-b", "$projectDir/src/main/xjb/binding.xml", "$projectDir/src/main/resources/wsdl/ServiceOwnerArchiveExternalBasic.wsdl"]
+            ["-xjc", "-b", "$projectDir/src/main/xjb/binding.xml", "$projectDir/src/main/resources/wsdl/ServiceOwnerArchiveExternalBasic.wsdl"],
+            ["-xjc", "-b", "$projectDir/src/main/xjb/binding.xml", "$projectDir/src/main/resources/wsdl/CorrespondenceAgencyExternalBasic.wsdl"],
+            ["-xjc", "-b", "$projectDir/src/main/xjb/binding.xml", "$projectDir/src/main/resources/wsdl/DownloadQueueExternalBasic.wsdl"],
+            ["-xjc", "-b", "$projectDir/src/main/xjb/binding.xml", "$projectDir/src/main/resources/wsdl/NotificationAgencyExternalBasic.wsdl"],
+            ["-xjc", "-b", "$projectDir/src/main/xjb/binding.xml", "$projectDir/src/main/resources/wsdl/PreFillBasic.wsdl"],
+            ["-xjc", "-b", "$projectDir/src/main/xjb/binding.xml", "$projectDir/src/main/resources/wsdl/SubscriptionBasic.wsdl"]
     ]
 }
 
@@ -124,9 +128,6 @@ dependencies {
             "com.natpryce:konfig:$konfigVersion",
             "javax.xml.ws:jaxws-api:$jaxwsVersion",
             "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:$kotlinxCoroutinesVersion",
-            "no.nav.tjenestespesifikasjoner:altinn-download-queue-external:$tjenestespesifikasjonerVersion",
-            "no.nav.tjenestespesifikasjoner:altinn-correspondence-agency-external-basic:$tjenestespesifikasjonerVersion",
-            "no.nav.tjenestespesifikasjoner:altinn-pre-fill:$tjenestespesifikasjonerVersion",
             "org.apache.cxf:cxf-rt-frontend-jaxws:$cxfVersion",
             "org.apache.cxf:cxf-rt-features-logging:$cxfVersion",
             "org.apache.cxf:cxf-rt-transports-http:$cxfVersion",
