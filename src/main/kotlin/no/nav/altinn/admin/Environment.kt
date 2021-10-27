@@ -88,10 +88,11 @@ data class Environment(
     )
 
     data class Mock(
+        private val isCloud: Boolean = config[Key("application.profile", stringType)] != "local",
         private val srrAddXmlResponse: String? = config[Key("mock.ssr.add.response", stringType)],
         private val srrDeleteXmlResponse: String? = config[Key("mock.ssr.delete.response", stringType)],
         private val srrGetXmlResponse: String? = config[Key("mock.ssr.get.response", stringType)],
-        var srrAddResponse: AddRightResponseList? = if (srrAddXmlResponse.isNullOrEmpty()) {
+        var srrAddResponse: AddRightResponseList? = if (isCloud) {
             null
         } else {
             AddRightResponseList().apply {
@@ -100,7 +101,7 @@ data class Environment(
                 )
             }
         },
-        var srrDeleteResponse: DeleteRightResponseList? = if (srrDeleteXmlResponse.isNullOrEmpty()) {
+        var srrDeleteResponse: DeleteRightResponseList? = if (isCloud) {
             null
         } else {
             DeleteRightResponseList().apply {
@@ -109,7 +110,7 @@ data class Environment(
                 )
             }
         },
-        var srrGetResponse: GetRightResponseList? = if (srrGetXmlResponse.isNullOrEmpty()) {
+        var srrGetResponse: GetRightResponseList? = if (isCloud) {
             null
         } else {
             GetRightResponseList().apply {
