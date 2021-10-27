@@ -30,9 +30,6 @@ private val config = if (System.getenv("APPLICATION_PROFILE") == "remote" && Sys
         ConfigurationProperties.fromResource("application.properties")
 }
 
-private fun envOrThrow(envVar: String) =
-    System.getenv()[envVar] ?: throw IllegalStateException("$envVar er påkrevd miljøvariabel")
-
 data class Environment(
     val altinn: Altinn = Altinn(),
     val application: Application = Application(),
@@ -53,8 +50,8 @@ data class Environment(
         val altinnNotificationUrl: String = config[Key("altinn.notification.url", stringType)],
         val altinnSubscriptionUrl: String = config[Key("altinn.subscription.url", stringType)],
         val altinnArchiveUrl: String = config[Key("altinn.archive.url", stringType)],
-        val username: String = envOrThrow("ALTINN_USERNAME"),
-        val password: String = envOrThrow("ALTINN_PASSWORD")
+        val username: String = config[Key("altinn.username", stringType)],
+        val password: String = config[Key("altinn.password", stringType)]
     )
 
     data class Application(
