@@ -26,25 +26,23 @@ spec:
     outbound:
       external:
       {{#each outbound-host}}
-         - host: "{{this}}"
+        - host: "{{this}}"
       {{/each}}
   prometheus:
     enabled: true
     path: /internal/prometheus
-  {{#if ingresses}}
   ingresses:
     {{#each ingresses}}
     - "{{this}}"
     {{/each}}
-  {{/if}}
   envFrom:
     - secret: altinn-admin
   env:
     - name: USE_VAULT_ENV
       value: "false"
   {{#each envs}}
-     - name: "{{name}}"
-       value: "{{value}}"
+    - name: "{{name}}"
+      value: "{{value}}"
   {{/each}}
   resources:
     limits:

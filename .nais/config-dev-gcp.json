@@ -1,5 +1,5 @@
 {
-  "ingresses": [ "https://altinn-admin.dev.intern.nav.no" ],
+  "ingresses": ["https://altinn-admin.dev.intern.nav.no"],
   "profile": "preprod",
   "outbound-host": ["tt02.altinn.no"],
   "envs": [
