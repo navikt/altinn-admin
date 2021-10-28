@@ -1,0 +1,15 @@
+{
+  "ingresses": [ "https://altinn-admin.dev.intern.nav.no" ],
+  "profile": "preprod",
+  "outbound-host": ["tt02.altinn.no"],
+  "envs": [
+    { "name": "altinn.rettighetsregister.url", "value": "https://tt02.altinn.no/RegisterExternal/RegisterSRRAgencyExternalBasic.svc" },
+    { "name": "altinn.downloadqueue.url", "value": "https://tt02.altinn.no/ArchiveExternal/DownloadQueueExternalBasic.svc" },
+    { "name": "altinn.notification.url", "value": "https://tt02.altinn.no/ServiceEngineExternal/NotificationAgencyExternalBasic.svc" },
+    { "name": "altinn.correspondence.url", "value": "https://tt02.altinn.no/ServiceEngineExternal/CorrespondenceAgencyExternalBasic.svc" },
+    { "name": "altinn.receipt.url", "value": "https://tt02.altinn.no/IntermediaryExternal/ReceiptAgencyExternalBasic.svc" },
+    { "name": "altinn.prefill.url", "value": "https://tt02.altinn.no/ServiceEngineExternal/PrefillBasic.svc" },
+    { "name": "altinn.subscription.url", "value": "https://tt02.altinn.no/ServiceEngineExternal/SubscriptionBasic.svc" },
+    { "name": "altinn.archive.url", "value": "https://tt02.altinn.no/ArchiveExternal/ServiceOwnerArchiveExternalBasic.svc" }
+  ]
+}
