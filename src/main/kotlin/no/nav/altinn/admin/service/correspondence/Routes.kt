@@ -549,7 +549,7 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.notValidServiceCode(t
         call.respond(HttpStatusCode.BadRequest, AnError("Tjeneste kode kan ikke være tom"))
         return true
     }
-    val corrList = environment.correspondeceService.serviceCodes.split(",")
+    val corrList = environment.correspondenceService.serviceCodes.split(",")
     if (!corrList.contains(tjenesteKode)) {
         call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
         return true
@@ -562,7 +562,7 @@ private fun ApplicationRequest.isFormMultipart(): Boolean {
 }
 
 private fun filterOutServiceCode(environment: Environment, tjenesteKode: String): MutableList<Pair<String, String>> {
-    val scSecList = environment.correspondeceService.serviceCodes.split(",")
+    val scSecList = environment.correspondenceService.serviceCodes.split(",")
     val scList = mutableListOf<Pair<String, String>>()
     scSecList.forEach {
         val sc = it.split(":")

@@ -32,15 +32,15 @@ private val config = if (System.getenv("APPLICATION_PROFILE") == "remote" && Sys
 
 data class Environment(
     val altinn: Altinn = Altinn(),
+    val azure: Azure = Azure(),
     val application: Application = Application(),
     val srrService: SrrService = SrrService(),
     val dqService: DqService = DqService(),
-    val correspondeceService: CorrespondenceService = CorrespondenceService(),
+    val correspondenceService: CorrespondenceService = CorrespondenceService(),
     val prefillService: PrefillService = PrefillService(),
 
     val mock: Mock = Mock()
 ) {
-
     data class Altinn(
         val altinnSrrUrl: String = config[Key("altinn.rettighetsregister.url", stringType)],
         val altinnDqUrl: String = config[Key("altinn.downloadqueue.url", stringType)],
@@ -52,6 +52,13 @@ data class Environment(
         val altinnArchiveUrl: String = config[Key("altinn.archive.url", stringType)],
         val username: String = config[Key("altinn.username", stringType)],
         val password: String = config[Key("altinn.password", stringType)]
+    )
+
+    data class Azure(
+        val azureAppClientId: String = config[Key("azure.app.client.id", stringType)],
+        val azureAppClientSecret: String = config[Key("azure.app.client.secret", stringType)],
+        val azureAppWellKnownUrl: String = config[Key("azure.app.well.known.url", stringType)],
+        val azureOpenidConfigTokenEndpoint: String = config[Key("azure.openid.config.token.endpoint", stringType)]
     )
 
     data class Application(

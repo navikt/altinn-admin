@@ -51,6 +51,7 @@ import no.nav.altinn.admin.service.correspondence.AltinnCorrespondenceService
 import no.nav.altinn.admin.service.correspondence.correspondenceAPI
 import no.nav.altinn.admin.service.dq.AltinnDQService
 import no.nav.altinn.admin.service.dq.dqAPI
+import no.nav.altinn.admin.service.login.loginAPI
 import no.nav.altinn.admin.service.prefill.AltinnPrefillService
 import no.nav.altinn.admin.service.prefill.prefillAPI
 import no.nav.altinn.admin.service.receipt.AltinnReceiptService
@@ -195,5 +196,6 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         prefillAPI(altinnPrefillService = altinnPrefillService, environment = environment)
         receiptsAPI(altinnReceiptService = altinnReceiptService, environment = environment)
         nais(readinessCheck = { applicationState.initialized }, livenessCheck = { applicationState.running })
+        loginAPI(environment = environment)
     }
 }
