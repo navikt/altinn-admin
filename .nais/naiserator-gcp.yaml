@@ -22,6 +22,13 @@ spec:
     initialDelay: 30
     periodSeconds: 20
     failureThreshold: 10
+  azure:
+    application:
+      enabled: true
+      allowAllUsers: true
+      claims:
+        groups:
+          - id: "db95e00b-6176-41c8-9d02-4a40cb75652d"
   accessPolicy:
     outbound:
       external:
