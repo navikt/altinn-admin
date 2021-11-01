@@ -33,9 +33,9 @@ fun Routing.ssrAPI(altinnSrrService: AltinnSRRService, environment: Environment)
     getRightsListServiceEdition(altinnSrrService, environment)
     getRightsForReportee(altinnSrrService, environment)
     getRightsForReporteeServiceEdition(altinnSrrService, environment)
-    addRightsForReportee(altinnSrrService, environment)
-    deleteRightsForReportee(altinnSrrService, environment)
-    deleteRightsForReportee2(altinnSrrService, environment)
+    // addRightsForReportee(altinnSrrService, environment)
+    // deleteRightsForReportee(altinnSrrService, environment)
+    // deleteRightsForReportee2(altinnSrrService, environment)
 }
 
 internal data class AnError(val error: String)

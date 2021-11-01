@@ -49,13 +49,13 @@ import no.nav.altinn.admin.common.toXmlGregorianCalendar
 
 @KtorExperimentalLocationsAPI
 fun Routing.correspondenceAPI(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) {
-    getCorrespondence(altinnCorrespondenceService, environment)
-    getCorrespondenceFiltered(altinnCorrespondenceService, environment)
-    getCorrespondenceFiltered2(altinnCorrespondenceService, environment)
-    getCorrespondence2(altinnCorrespondenceService, environment)
-    getCorrespondenceFiltered3(altinnCorrespondenceService, environment)
-    getCorrespondenceFiltered4(altinnCorrespondenceService, environment)
-    postCorrespondence(altinnCorrespondenceService, environment)
+//    getCorrespondence(altinnCorrespondenceService, environment)
+//    getCorrespondenceFiltered(altinnCorrespondenceService, environment)
+//    getCorrespondenceFiltered2(altinnCorrespondenceService, environment)
+//    getCorrespondence2(altinnCorrespondenceService, environment)
+//    getCorrespondenceFiltered3(altinnCorrespondenceService, environment)
+//    getCorrespondenceFiltered4(altinnCorrespondenceService, environment)
+//    postCorrespondence(altinnCorrespondenceService, environment)
 //    postFile(altinnCorrespondenceService, environment)
 }
 

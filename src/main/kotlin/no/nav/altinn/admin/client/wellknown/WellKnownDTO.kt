@@ -11,3 +11,13 @@ fun WellKnownDTO.toWellKnown() = WellKnown(
     issuer = this.issuer,
     jwksUri = this.jwks_uri,
 )
+
+data class JwtIssuer(
+    val acceptedAudienceList: List<String>,
+    val jwtIssuerType: JwtIssuerType,
+    val wellKnown: WellKnown,
+)
+
+enum class JwtIssuerType {
+    INTERNAL_AZUREAD,
+}

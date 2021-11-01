@@ -18,8 +18,7 @@ private val logger = KotlinLogging.logger { }
 class AzureAdClient(
     private val azureAppClientId: String,
     private val azureAppClientSecret: String,
-    private val azureOpenidConfigTokenEndpoint: String,
-    private val graphApiUrl: String,
+    private val azureOpenidConfigTokenEndpoint: String
 ) {
     private val httpClient = httpClientProxy()
 
@@ -27,11 +26,7 @@ class AzureAdClient(
         scopeClientId: String,
         token: String,
     ): AzureAdToken? {
-        val scope = if (scopeClientId == graphApiUrl) {
-            "$scopeClientId/.default"
-        } else {
-            "api://$scopeClientId/.default"
-        }
+        val scope = "api://$scopeClientId/.default"
         return getAccessToken(
             Parameters.build {
                 append("client_id", azureAppClientId)

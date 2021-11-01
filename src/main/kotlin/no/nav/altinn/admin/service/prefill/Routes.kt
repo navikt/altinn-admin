@@ -40,7 +40,7 @@ import no.nav.altinn.admin.common.toXmlGregorianCalendar
 
 @KtorExperimentalLocationsAPI
 fun Routing.prefillAPI(altinnPrefillService: AltinnPrefillService, environment: Environment) {
-    postPrefill(altinnPrefillService, environment)
+//    postPrefill(altinnPrefillService, environment)
 //    postFile(altinnCorrespondenceService, environment)
 }
 

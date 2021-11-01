@@ -4,8 +4,15 @@ import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
-import io.ktor.auth.UserIdPrincipal
-import io.ktor.auth.basic
+import io.ktor.auth.OAuthAccessTokenResponse
+import io.ktor.auth.OAuthServerSettings
+import io.ktor.auth.authenticate
+import io.ktor.auth.oauth
+import io.ktor.auth.principal
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.utils.CacheControl
 import io.ktor.features.AutoHeadResponse
 import io.ktor.features.CallId
@@ -17,6 +24,7 @@ import io.ktor.features.DefaultHeaders
 import io.ktor.features.StatusPages
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.JacksonConverter
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -28,12 +36,17 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.sessions.Sessions
+import io.ktor.sessions.cookie
+import io.ktor.sessions.sessions
+import io.ktor.sessions.set
 import io.ktor.util.error
 import io.prometheus.client.hotspot.DefaultExports
 import java.util.concurrent.Executors
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.slf4j.MDCContext
+import kotlinx.serialization.SerialName
 import mu.KotlinLogging
 import no.nav.altinn.admin.api.nais
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Contact
@@ -45,7 +58,6 @@ import no.nav.altinn.admin.common.API_V2
 import no.nav.altinn.admin.common.ApplicationState
 import no.nav.altinn.admin.common.objectMapper
 import no.nav.altinn.admin.common.randomUuid
-import no.nav.altinn.admin.ldap.LDAPAuthenticate
 import no.nav.altinn.admin.service.alerts.ExpireAlerts
 import no.nav.altinn.admin.service.correspondence.AltinnCorrespondenceService
 import no.nav.altinn.admin.service.correspondence.correspondenceAPI
@@ -109,6 +121,10 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     logger.info { "Starting server" }
     System.setProperty("javax.xml.soap.SAAJMetaFactory", "com.sun.xml.messaging.saaj.soap.SAAJMetaFactoryImpl")
 
+    install(Sessions) {
+        cookie<UserSession>("user_session")
+    }
+
     install(DefaultHeaders) {
         header(HttpHeaders.CacheControl, CacheControl.NO_CACHE)
     }
@@ -126,22 +142,57 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
             call.respond(HttpStatusCode.InternalServerError)
         }
     }
-    install(Authentication) {
-        basic(name = AUTHENTICATION_BASIC) {
-            realm = "altinn-admin"
-            validate { credentials ->
-                LDAPAuthenticate(environment.application).use { ldap ->
-                    if (ldap.canUserAuthenticate(credentials.name, credentials.password))
-                        UserIdPrincipal(credentials.name)
-                    else
-                        null
-                }
-            }
-        }
-    }
+//    install(Authentication) {
+//        basic(name = AUTHENTICATION_BASIC) {
+//            realm = "altinn-admin"
+//            validate { credentials ->
+//                LDAPAuthenticate(environment.application).use { ldap ->
+//                    if (ldap.canUserAuthenticate(credentials.name, credentials.password))
+//                        UserIdPrincipal(credentials.name)
+//                    else
+//                        null
+//                }
+//            }
+//        }
+//    }
     install(ContentNegotiation) {
         register(ContentType.Application.Json, JacksonConverter(objectMapper))
         register(ContentType.Application.Xml, JacksonConverter(objectMapper))
+    }
+
+//    val wellKnownInternalAzureAd = getWellKnown(
+//        wellKnownUrl = environment.azure.azureAppWellKnownUrl
+//    )
+//    installJwtAuthentication(
+//        jwtIssuerList = listOf(
+//            JwtIssuer(
+//                acceptedAudienceList = listOf(environment.azure.azureAppClientId),
+//                jwtIssuerType = JwtIssuerType.INTERNAL_AZUREAD,
+//                wellKnown = wellKnownInternalAzureAd,
+//            ),
+//        ),
+//    )
+    val httpClient = HttpClient(CIO) {
+        install(JsonFeature) {
+            serializer = KotlinxSerializer()
+        }
+    }
+    install(Authentication) {
+        oauth("auth-oauth-microsoft") {
+            urlProvider = { "http://localhost:8080/callback" }
+            providerLookup = {
+                OAuthServerSettings.OAuth2ServerSettings(
+                    name = "microsoft",
+                    authorizeUrl = "https://login.microsoftonline.com/common/oauth2/authorize",
+                    accessTokenUrl = "https://login.microsoftonline.com/common/oauth2/token",
+                    requestMethod = HttpMethod.Post,
+                    clientId = environment.azure.azureAppClientId,
+                    clientSecret = environment.azure.azureAppClientSecret,
+                    defaultScopes = listOf("openid")
+                )
+            }
+            client = httpClient
+        }
     }
     install(Locations)
     install(CallId) {
@@ -185,6 +236,15 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
             val fileName = call.parameters["fileName"]
             if (fileName == "swagger.json") call.respond(swagger) else swaggerUI.serve(fileName, call)
         }
+        authenticate("auth-oauth-microsoft") {
+            get("/oauth2/login") {}
+            get("/oauth2/callback") {
+                val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
+                logger.info { "access token: ${principal?.accessToken}" }
+                call.sessions.set(UserSession(principal?.accessToken.toString()))
+                call.respondRedirect(SWAGGER_URL_V1)
+            }
+        }
 
         logger.info { "Installing altinn srr api" }
         ssrAPI(altinnSrrService = altinnSRRService, environment = environment)
@@ -199,3 +259,13 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         loginAPI(environment = environment)
     }
 }
+
+data class UserSession(val token: String)
+data class UserInfo(
+    val id: String,
+    val name: String,
+    @SerialName("given_name") val givenName: String,
+    @SerialName("family_name") val familyName: String,
+    val picture: String,
+    val locale: String
+)

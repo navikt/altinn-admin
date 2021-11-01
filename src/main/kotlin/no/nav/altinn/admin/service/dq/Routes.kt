@@ -20,13 +20,13 @@ import no.nav.altinn.admin.common.API_V1
 
 @KtorExperimentalLocationsAPI
 fun Routing.dqAPI(altinnDqService: AltinnDQService, environment: Environment) {
-    getFormMessage(altinnDqService)
-    getDqItems(altinnDqService, environment)
-    getDqItemsSec(altinnDqService, environment)
-    logger.info { "Local env ? ${environment.application.localEnv}" }
-    if (environment.application.localEnv != "prod") {
-        purgeItem(altinnDqService)
-    }
+//    getFormMessage(altinnDqService)
+//    getDqItems(altinnDqService, environment)
+//    getDqItemsSec(altinnDqService, environment)
+//    logger.info { "Local env ? ${environment.application.localEnv}" }
+//    if (environment.application.localEnv != "prod") {
+//        purgeItem(altinnDqService)
+//    }
 }
 
 internal data class AnError(val error: String)
