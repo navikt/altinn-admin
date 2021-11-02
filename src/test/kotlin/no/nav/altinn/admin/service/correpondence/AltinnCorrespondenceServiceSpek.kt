@@ -1,4 +1,3 @@
-/*
 package no.nav.altinn.admin.service.correpondence
 
 import io.ktor.http.HttpHeaders
@@ -213,4 +212,3 @@ object AltinnCorrespondenceServiceSpek : Spek({
 //        }
 //    }
 })
-*/

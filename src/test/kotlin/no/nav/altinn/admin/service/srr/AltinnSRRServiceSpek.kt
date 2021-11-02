@@ -1,4 +1,3 @@
-/*
 package no.nav.altinn.admin.service.srr
 
 import io.ktor.http.HttpHeaders
@@ -45,7 +44,7 @@ object AltinnSRRServiceSpek : Spek({
                         val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
-                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+                            // addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                             setBody(test)
                         }
 
@@ -56,7 +55,7 @@ object AltinnSRRServiceSpek : Spek({
                         val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
-                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+                            // addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                             setBody(test)
                         }
 
@@ -67,7 +66,7 @@ object AltinnSRRServiceSpek : Spek({
                         val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
-                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+                            // addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                             setBody(test)
                         }
 
@@ -229,7 +228,7 @@ object AltinnSRRServiceSpek : Spek({
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
-                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+//                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
@@ -242,7 +241,7 @@ object AltinnSRRServiceSpek : Spek({
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
-                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+//                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
@@ -255,7 +254,7 @@ object AltinnSRRServiceSpek : Spek({
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
-                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+//                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
                         req.response.status() shouldBeEqualTo HttpStatusCode.InternalServerError
                     }
@@ -268,7 +267,7 @@ object AltinnSRRServiceSpek : Spek({
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
-                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+//                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
@@ -281,7 +280,7 @@ object AltinnSRRServiceSpek : Spek({
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
-                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+//                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
                         req.response.status() shouldBeEqualTo HttpStatusCode.OK
                     }
@@ -307,7 +306,7 @@ object AltinnSRRServiceSpek : Spek({
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
-                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+//                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
                         }
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
@@ -320,7 +319,7 @@ object AltinnSRRServiceSpek : Spek({
                         val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
                             addHeader(HttpHeaders.Accept, "application/json")
                             addHeader("Content-Type", "application/json")
-                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("srvp01:dummy".toByteArray())}")
+//                            addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("srvp01:dummy".toByteArray())}")
                         }
                         req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
                     }
@@ -382,4 +381,3 @@ object AltinnSRRServiceSpek : Spek({
         }
     }
 })
-*/

@@ -28,13 +28,12 @@ import no.altinn.schemas.services.serviceengine.subscription._2009._10.Attachmen
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentExternalBEV2List
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentV2
 import no.nav.altinn.admin.Environment
-import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.BasicAuthSecurity
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.badRequest
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.get
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ok
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.post
-import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndReponds
+import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.responds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.common.API_V1
@@ -49,14 +48,14 @@ import no.nav.altinn.admin.common.toXmlGregorianCalendar
 
 @KtorExperimentalLocationsAPI
 fun Routing.correspondenceAPI(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) {
-//    getCorrespondence(altinnCorrespondenceService, environment)
-//    getCorrespondenceFiltered(altinnCorrespondenceService, environment)
-//    getCorrespondenceFiltered2(altinnCorrespondenceService, environment)
-//    getCorrespondence2(altinnCorrespondenceService, environment)
-//    getCorrespondenceFiltered3(altinnCorrespondenceService, environment)
-//    getCorrespondenceFiltered4(altinnCorrespondenceService, environment)
-//    postCorrespondence(altinnCorrespondenceService, environment)
-//    postFile(altinnCorrespondenceService, environment)
+    getCorrespondence(altinnCorrespondenceService, environment)
+    getCorrespondenceFiltered(altinnCorrespondenceService, environment)
+    getCorrespondenceFiltered2(altinnCorrespondenceService, environment)
+    getCorrespondence2(altinnCorrespondenceService, environment)
+    getCorrespondenceFiltered3(altinnCorrespondenceService, environment)
+    getCorrespondenceFiltered4(altinnCorrespondenceService, environment)
+    postCorrespondence(altinnCorrespondenceService, environment)
+    // postFile(altinnCorrespondenceService, environment)
 }
 
 internal data class AnError(val error: String)
@@ -73,9 +72,8 @@ data class MeldingsFilter(val tjeneste: CorrespondenceType, val fraDato: String,
 @KtorExperimentalLocationsAPI
 fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     get<MeldingsFilter>(
-        "Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(
-            BasicAuthSecurity(), ok<CorrespondenceDetails>(),
-            serviceUnavailable<AnError>(), badRequest<AnError>()
+        "Hent status på filtrerte meldinger fra en meldingstjeneste".responds(
+            ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) { param ->
 
@@ -127,8 +125,8 @@ data class MeldingsFilter3(val tjenesteKode: String, val utgaveKode: String, val
 @KtorExperimentalLocationsAPI
 fun Routing.getCorrespondenceFiltered3(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     get<MeldingsFilter3>(
-        "Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(
-            BasicAuthSecurity(), ok<CorrespondenceDetails>(),
+        "Hent status på filtrerte meldinger fra en meldingstjeneste".responds(
+            ok<CorrespondenceDetails>(),
             serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) { param ->
@@ -191,8 +189,8 @@ data class MeldingsFilter2(val tjeneste: CorrespondenceType, val fraDato: String
 @KtorExperimentalLocationsAPI
 fun Routing.getCorrespondenceFiltered2(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     get<MeldingsFilter2>(
-        "Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(
-            BasicAuthSecurity(), ok<CorrespondenceDetails>(),
+        "Hent status på filtrerte meldinger fra en meldingstjeneste".responds(
+            ok<CorrespondenceDetails>(),
             serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) { param ->
@@ -240,8 +238,8 @@ data class MeldingsFilter4(val tjenesteKode: String, val utgaveKode: String, val
 @KtorExperimentalLocationsAPI
 fun Routing.getCorrespondenceFiltered4(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     get<MeldingsFilter4>(
-        "Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndReponds(
-            BasicAuthSecurity(), ok<CorrespondenceDetails>(),
+        "Hent status på filtrerte meldinger fra en meldingstjeneste".responds(
+            ok<CorrespondenceDetails>(),
             serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) { param ->
@@ -299,8 +297,8 @@ data class TjenesteKode(val tjeneste: CorrespondenceType)
 @KtorExperimentalLocationsAPI
 fun Routing.getCorrespondence(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     get<TjenesteKode>(
-        "Hent status meldinger fra en meldingstjeneste".securityAndReponds(
-            BasicAuthSecurity(), ok<CorrespondenceDetails>(),
+        "Hent status meldinger fra en meldingstjeneste".responds(
+            ok<CorrespondenceDetails>(),
             serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) { param ->
@@ -331,8 +329,8 @@ data class TjenesteKode2(val tjenesteKode: String, val utgaveKode: String)
 @KtorExperimentalLocationsAPI
 fun Routing.getCorrespondence2(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     get<TjenesteKode2>(
-        "Hent status meldinger fra en meldingstjeneste".securityAndReponds(
-            BasicAuthSecurity(), ok<CorrespondenceDetails>(),
+        "Hent status meldinger fra en meldingstjeneste".responds(
+            ok<CorrespondenceDetails>(),
             serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) { param ->
@@ -374,8 +372,8 @@ class SendMelding
 @KtorExperimentalLocationsAPI
 fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     post<SendMelding, PostCorrespondenceBody>(
-        "Send melding til virksomhet".securityAndReponds(
-            BasicAuthSecurity(), ok<CorrespondenceResponse>(),
+        "Send melding til virksomhet".responds(
+            ok<CorrespondenceResponse>(),
             serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>()
         )
     ) { _, body ->

@@ -1,9 +1,6 @@
 package no.nav.altinn.admin.service.srr
 
-import io.ktor.application.application
 import io.ktor.application.call
-import io.ktor.auth.UserIdPrincipal
-import io.ktor.auth.principal
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
@@ -13,16 +10,13 @@ import mu.KotlinLogging
 import no.altinn.schemas.services.register._2015._06.RegisterSRRRightsType
 import no.altinn.services.register.srr._2015._06.IRegisterSRRAgencyExternalBasicGetRightsBasicAltinnFaultFaultFaultMessage
 import no.nav.altinn.admin.Environment
-import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.BasicAuthSecurity
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
-import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ParameterInputType
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.badRequest
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.delete
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.get
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ok
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.post
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.responds
-import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndReponds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.common.API_V1
@@ -33,9 +27,9 @@ fun Routing.ssrAPI(altinnSrrService: AltinnSRRService, environment: Environment)
     getRightsListServiceEdition(altinnSrrService, environment)
     getRightsForReportee(altinnSrrService, environment)
     getRightsForReporteeServiceEdition(altinnSrrService, environment)
-    // addRightsForReportee(altinnSrrService, environment)
-    // deleteRightsForReportee(altinnSrrService, environment)
-    // deleteRightsForReportee2(altinnSrrService, environment)
+    addRightsForReportee(altinnSrrService, environment)
+    deleteRightsForReportee(altinnSrrService, environment)
+    deleteRightsForReportee2(altinnSrrService, environment)
 }
 
 internal data class AnError(val error: String)
@@ -237,21 +231,21 @@ class PostLeggTilRettighet
 @KtorExperimentalLocationsAPI
 fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) = post<PostLeggTilRettighet, PostLeggTilRettighetBody>(
     "Legg til rettighet for en virksomhet"
-        .securityAndReponds(BasicAuthSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
+        .responds(ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
 ) { _, body ->
-    val currentUser = call.principal<UserIdPrincipal>()!!.name
+//    val currentUser = call.principal<UserIdPrincipal>()!!.name
+//
+//    val approvedUsers = environment.application.users.split(",")
+//    val userExist = approvedUsers.contains(currentUser)
+//    if (!userExist) {
+//        val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
+//        application.environment.log.warn(msg)
+//        call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
+//        return@post
+//    }
 
-    val approvedUsers = environment.application.users.split(",")
-    val userExist = approvedUsers.contains(currentUser)
-    if (!userExist) {
-        val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
-        application.environment.log.warn(msg)
-        call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
-        return@post
-    }
-
-    val logEntry = "Bruker $currentUser forsøker å legge til rettighet til virksomhet  - ${ParameterInputType.body}"
-    application.environment.log.info(logEntry)
+//    val logEntry = "Bruker $currentUser forsøker å legge til rettighet til virksomhet  - ${ParameterInputType.body}"
+//    application.environment.log.info(logEntry)
 
     val scList = filterOutServiceCode(environment, body.tjenesteKode)
     if (scList.size == 0) {
@@ -301,20 +295,20 @@ data class DeleteRettighet(val tjeneste: SrrType, val orgnr: String, val lesElle
 fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
     delete<DeleteRettighet>(
         "Slett rettighet for en virksomhet"
-            .securityAndReponds(BasicAuthSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
+            .responds(ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
     ) { param ->
-        val currentUser = call.principal<UserIdPrincipal>()!!.name
-        val approvedUsers = environment.application.users.split(",")
-        val userExist = approvedUsers.contains(currentUser)
-        if (!userExist) {
-            val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
-            application.environment.log.warn(msg)
-            call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
-            return@delete
-        }
+//        val currentUser = call.principal<UserIdPrincipal>()!!.name
+//        val approvedUsers = environment.application.users.split(",")
+//        val userExist = approvedUsers.contains(currentUser)
+//        if (!userExist) {
+//            val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
+//            application.environment.log.warn(msg)
+//            call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
+//            return@delete
+//        }
 
-        val logEntry = "Forsøker å slette en rettighet for en virksomhet $currentUser - $param"
-        application.environment.log.info(logEntry)
+//        val logEntry = "Forsøker å slette en rettighet for en virksomhet $currentUser - $param"
+//        application.environment.log.info(logEntry)
 
         val scList = filterOutServiceCode(environment, param.tjeneste.servicecode)
         if (scList.size == 0) {
@@ -365,20 +359,20 @@ data class DeleteRettighet2(val tjeneste: String = "sc:sec", val orgnr: String, 
 fun Routing.deleteRightsForReportee2(altinnSrrService: AltinnSRRService, environment: Environment) =
     delete<DeleteRettighet2>(
         "Slett rettighet for en virksomhet"
-            .securityAndReponds(BasicAuthSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
+            .responds(ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
     ) { param ->
-        val currentUser = call.principal<UserIdPrincipal>()!!.name
-        val approvedUsers = environment.application.users.split(",")
-        val userExist = approvedUsers.contains(currentUser)
-        if (!userExist) {
-            val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
-            application.environment.log.warn(msg)
-            call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
-            return@delete
-        }
+//        val currentUser = call.principal<UserIdPrincipal>()!!.name
+//        val approvedUsers = environment.application.users.split(",")
+//        val userExist = approvedUsers.contains(currentUser)
+//        if (!userExist) {
+//            val msg = "Autentisert bruker $currentUser eksisterer ikke i listen for godkjente brukere."
+//            application.environment.log.warn(msg)
+//            call.respond(HttpStatusCode.ServiceUnavailable, AnError(msg))
+//            return@delete
+//        }
 
-        val logEntry = "Forsøker å slette en rettighet for en virksomhet $currentUser - $param"
-        application.environment.log.info(logEntry)
+//        val logEntry = "Forsøker å slette en rettighet for en virksomhet $currentUser - $param"
+//        application.environment.log.info(logEntry)
 
         val scSec = param.tjeneste.split(":")
         if (scSec.size != 2) {
