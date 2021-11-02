@@ -179,7 +179,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     }
     install(Authentication) {
         oauth("auth-oauth-microsoft") {
-            urlProvider = { "http://localhost:8080/callback" }
+            urlProvider = { "https://altinn-admin.dev.intern.nav.no/oauth2/callback" }
             providerLookup = {
                 OAuthServerSettings.OAuth2ServerSettings(
                     name = "microsoft",
@@ -188,7 +188,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
                     requestMethod = HttpMethod.Post,
                     clientId = environment.azure.azureAppClientId,
                     clientSecret = environment.azure.azureAppClientSecret,
-                    defaultScopes = listOf("openid")
+                    defaultScopes = listOf("openid"),
                 )
             }
             client = httpClient
