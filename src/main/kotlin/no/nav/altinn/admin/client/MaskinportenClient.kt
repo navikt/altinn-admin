@@ -38,7 +38,7 @@ class MaskinportenClient(val environment: Environment) {
     }
 
     suspend fun tokenString(url: String, assertion: String): String {
-        logger.info { "Request Accesstoken $url" }
+        logger.info { "Request Accesstoken $url with client ${environment.maskinporten.clientId}" }
         return defaultHttpClient.submitForm<AccessTokenResponse>(
             url,
             formParameters = parametersOf(
