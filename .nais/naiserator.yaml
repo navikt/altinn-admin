@@ -25,6 +25,12 @@ spec:
   prometheus:
     enabled: true
     path: /internal/prometheus
+  accessPolicy:
+    outbound:
+      external:
+      {{#each outbound-host}}
+        - host: "{{this}}"
+      {{/each}}
   maskinporten:
     enabled: {{use-maskinporten}}
     scopes:
