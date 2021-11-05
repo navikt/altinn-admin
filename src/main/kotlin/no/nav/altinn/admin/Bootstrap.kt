@@ -40,6 +40,7 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Contact
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Information
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Swagger
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.SwaggerUi
+import no.nav.altinn.admin.client.MaskinportenClient
 import no.nav.altinn.admin.common.API_V1
 import no.nav.altinn.admin.common.API_V2
 import no.nav.altinn.admin.common.ApplicationState
@@ -51,6 +52,7 @@ import no.nav.altinn.admin.service.correspondence.AltinnCorrespondenceService
 import no.nav.altinn.admin.service.correspondence.correspondenceAPI
 import no.nav.altinn.admin.service.dq.AltinnDQService
 import no.nav.altinn.admin.service.dq.dqAPI
+import no.nav.altinn.admin.service.owner.ownerApi
 import no.nav.altinn.admin.service.prefill.AltinnPrefillService
 import no.nav.altinn.admin.service.prefill.prefillAPI
 import no.nav.altinn.admin.service.receipt.AltinnReceiptService
@@ -245,5 +247,10 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         prefillAPI(altinnPrefillService = altinnPrefillService, environment = environment)
         receiptsAPI(altinnReceiptService = altinnReceiptService, environment = environment)
         nais(readinessCheck = { applicationState.initialized }, livenessCheck = { applicationState.running })
+        if (environment.application.localEnv == "preprod") {
+            val maskinporten = MaskinportenClient(environment)
+            logger.info { "Installing routes for altinn/api/serviceowner/" }
+            ownerApi(maskinporten, environment)
+        }
     }
 }

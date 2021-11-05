@@ -25,6 +25,12 @@ spec:
   prometheus:
     enabled: true
     path: /internal/prometheus
+  maskinporten:
+    enabled: {{use-maskinporten}}
+    scopes:
+      consumes:
+        - name: "altinn:serviceowner"
+  webproxy: true
   {{#if ingresses}}
   ingresses:
     {{#each ingresses}}

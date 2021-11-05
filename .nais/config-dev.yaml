@@ -1,1 +1,2 @@
 ingresses: ["https://altinn-admin.nais.preprod.local/"]
+use-maskinporten: "true"

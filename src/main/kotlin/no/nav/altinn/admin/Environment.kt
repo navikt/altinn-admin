@@ -33,6 +33,7 @@ private val config = if (System.getenv("APPLICATION_PROFILE") == "remote" && Sys
 data class Environment(
     val stsUrl: String = config[Key("sts.url", stringType)],
     val altinn: Altinn = Altinn(),
+    val maskinporten: Maskinporten = Maskinporten(),
     val application: Application = Application(),
     val srrService: SrrService = SrrService(),
     val dqService: DqService = DqService(),
@@ -50,6 +51,16 @@ data class Environment(
         val altinnReceiptUrl: String = config[Key("altinn.receipt.url", stringType)],
         val username: String = config[Key("altinn.username", stringType)],
         val password: String = config[Key("altinn.password", stringType)]
+    )
+
+    data class Maskinporten(
+        val baseUrl: String = config.getOrElse(Key("maskinporten.url", stringType), "tull.no"),
+        val wellKnownUrl: String = config.getOrElse(Key("maskinporten.well.known.url", stringType), "tull.no"),
+        val clientId: String = config.getOrElse(Key("maskinporten.client.id", stringType), "en-id-key-her"),
+        val clientJwk: String = config.getOrElse(Key("maskinporten.client.jwk", stringType), "tull-jwk"),
+        val scopes: String = config.getOrElse(Key("maskinporten.scopes", stringType), "altinn:scope"),
+        val issuer: String = config.getOrElse(Key("maskinporten.issuer", stringType), "maskinporten"),
+        var token: String = config.getOrElse(Key("maskinporten.token", stringType), "maskinporten")
     )
 
     data class Application(

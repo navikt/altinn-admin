@@ -1,0 +1,4414 @@
+openapi: 3.0.0
+info:
+  title: Altinn
+  version: 1.0.0
+servers:
+  - url: http://{{envurl}}
+  - url: http://{{envurl}}api
+components:
+  securitySchemes:
+    noauthAuth:
+      type: http
+      scheme: noauth
+tags:
+  - name: user
+  - name: user > Attachments
+  - name: user > Authentication
+  - name: user > BrokerService
+  - name: user > ConsentRequests
+  - name: user > DelegationRequests
+  - name: user > Delegations
+  - name: user > Forms
+  - name: user > LookUp
+  - name: user > Messages
+  - name: user > Metadata
+  - name: user > Organizations
+  - name: user > Profile
+  - name: user > Reportee
+  - name: user > Rights
+  - name: user > Roles
+  - name: user > RoleDefinitions
+  - name: user > Token
+  - name: service owner
+  - name: service owner > Consents
+  - name: service owner > DelegationRequests
+  - name: service owner > Events
+    description: >-
+      Actions for retrieving the status of Correspondence elements. The
+      information is presented in a feed that holds all events related to
+      Correspondece items. The users of this API are responsible for keeping
+      track of what events they have already read. If the id of the last read
+      event is provided as an offset, the feed will return up to the 10 000 next
+      events registered (the last read event will not be included).
+  - name: service owner > Organizations
+  - name: service owner > Reportees
+  - name: service owner > Rights
+  - name: service owner > Roles
+  - name: service owner > RoleDefinitions
+  - name: service owner > SrrRight
+  - name: service owner > Notifications
+paths:
+  /api/{who}/messages/{messageId}/attachments/streamedattachment:
+    post:
+      tags:
+        - user > Attachments
+      summary: >-
+        {who}/messages/{messageId}/attachments/streamedattachment?fileName={fileName}&attachmentType={attachmentType}&language={language}
+      description: >-
+        Add an attachment to an existing message defined by the message id by
+        uploading the data as a stream
+      requestBody:
+        content: {}
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: fileName
+          in: query
+          schema:
+            type: string
+        - name: attachmentType
+          in: query
+          schema:
+            type: string
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/messages/{messageId}/attachments/{attachmentId}:
+    delete:
+      tags:
+        - user > Attachments
+      summary: '{who}/messages/{messageId}/attachments/{attachmentId}'
+      description: >-
+        Delete a specific attachment and remove it from its parent message. Only
+        works for FormTask messages.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: attachmentId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - user > Attachments
+      summary: >-
+        {who}/messages/{messageId}/attachments/{attachmentId}?language={language}
+      description: Add an attachment to an existing message defined by the message id.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                FileName: attachment.pdf
+                AttachmentType: pdf
+                Data: base64 encoded
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: attachmentId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/messages/{messageId}/attachments:
+    get:
+      tags:
+        - user > Attachments
+      summary: '{who}/messages/{messageId}/attachments'
+      description: Get all attachments related to the given message.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - user > Attachments
+      summary: '{who}/messages/{messageId}/attachments?language={language}'
+      description: Add an attachment to an existing message defined by the message id.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                FileName: attachment.pdf
+                AttachmentType: pdf
+                Data: base64 encoded
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/authorization/Attachments/{receiverId}:
+    get:
+      tags:
+        - user > Attachments
+      summary: >-
+        {who}/authorization/Attachments/{receiverId}?messageId={messageId}&attachmentId={attachmentId}
+      description: >-
+        Gets an attachment based on attachmentId. Note that the messageId and
+        attachmentId must be related.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: messageId
+          in: query
+          schema:
+            type: string
+        - name: attachmentId
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: receiverId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/authentication/authenticatewithpassword:
+    post:
+      tags:
+        - user > Authentication
+      summary: authentication/authenticatewithpassword
+      description: >-
+        Attempts to authenticate the user with the provided social security
+        number or username, and password. The password and username can be
+        configured on the portal profile page. This method also supports
+        authentication using client certificates. To enable client certificate
+        authentication, include the URL-parameter ?ForceEIAuthentication.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                UserName: olanordmann
+                UserPassword: passord123
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: ForceEIAuthentication
+          in: query
+          schema:
+            type: string
+          description: >-
+            Needed to force certificate exchange for autentication with an
+            enterprice certificate user (Can be excluded if authenticating with
+            username/password for a private user)
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{reportee}/BrokerService/files/{fileReference}:
+    get:
+      tags:
+        - user > BrokerService
+      summary: '{reportee}/BrokerService/files/{fileReference}'
+      description: Gets the broker service file
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: reportee
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: fileReference
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/consentRequests/{authCode}:
+    get:
+      tags:
+        - user > ConsentRequests
+      summary: consentRequests/{authCode}
+      description: Get a specific Consent request from the AuthorizationRequest table
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+          example: '{{Cert}}'
+        - name: ForceEIAuthentication
+          in: query
+          schema:
+            type: string
+        - name: authCode
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - user > ConsentRequests
+      summary: consentRequests/{authCode}
+      description: Delete a specific consent request from the AuthorizationRequest table
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+          example: '{{Cert}}'
+        - name: ForceEIAuthentication
+          in: query
+          schema:
+            type: string
+        - name: authCode
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/consentRequests:
+    post:
+      tags:
+        - user > ConsentRequests
+      summary: consentRequests
+      description: Adds a new Consent request into the AuthorizationRequest table
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                CoveredBy: '999888777'
+                OfferedBy: '999888777'
+                OfferedByName: bedriftsnavn
+                HandledBy: '999888777'
+                RequiredDelegator: '12018211111'
+                RequiredDelegatorName: olsen
+                ValidTo: '2019-06-25T13:17:31.495Z'
+                RedirectUrl: https://example.com/example
+                RequestResources:
+                  - ServiceCode: x1234
+                    ServiceEditionCode: 1112
+                    Metadata:
+                      inntektsaar: 2019
+                RequestMessage:
+                  no-nb: string
+                  no-nn: string
+                  en: string
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+          example: '{{Cert}}'
+        - name: ForceEIAuthentication
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    get:
+      tags:
+        - user > ConsentRequests
+      summary: >-
+        consentRequests?serviceCode={serviceCode}&serviceEditionCode={serviceEditionCode}&direction={direction}&status[0]={status[0]}&status[1]={status[1]}&continuation={continuation}
+      description: >-
+        Gets all consent requests for authenticated part, optionally filtered by
+        service or pagination
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+          example: '{{Cert}}'
+        - name: serviceEditionCode
+          in: query
+          schema:
+            type: string
+        - name: ForceEIAuthentication
+          in: query
+          schema:
+            type: string
+        - name: serviceCode
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/delegationRequests/{authCode}:
+    get:
+      tags:
+        - user > DelegationRequests
+      summary: delegationRequests/{authCode}
+      description: Get a specific delegation request from the AuthorizationRequest table
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+          example: '{{Cert}}'
+        - name: ForceEIAuthentication
+          in: query
+          schema:
+            type: string
+        - name: authCode
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - user > DelegationRequests
+      summary: delegationRequests/{authCode}
+      description: Delete a specific delegation request from the AuthorizationRequest table
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+          example: '{{Cert}}'
+        - name: ForceEIAuthentication
+          in: query
+          schema:
+            type: string
+        - name: authCode
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/delegationRequests:
+    post:
+      tags:
+        - user > DelegationRequests
+      summary: delegationRequests
+      description: Adds a new delegation request into the AuthorizationRequest table
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                CoveredBy: '777888999'
+                OfferedBy: '999888777'
+                RequestResources:
+                  - ServiceCode: x1234
+                    ServiceEditionCode: 1112
+                RequestMessage: >-
+                  Need this right in order to complete the daily task on the
+                  service
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+          example: '{{Cert}}'
+        - name: ForceEIAuthentication
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    get:
+      tags:
+        - user > DelegationRequests
+      summary: >-
+        delegationRequests?serviceCode={serviceCode}&serviceEditionCode={serviceEditionCode}&direction={direction}&status[0]={status[0]}&status[1]={status[1]}&continuation={continuation}
+      description: >-
+        Gets all delegation requests for authenticated part, optionally filtered
+        by service or pagination
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+          example: '{{Cert}}'
+        - name: serviceCode
+          in: query
+          schema:
+            type: string
+        - name: ForceEIAuthentication
+          in: query
+          schema:
+            type: string
+        - name: serviceEditionCode
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/authorization/Delegations/{receiverId}/rights:
+    get:
+      tags:
+        - user > Delegations
+      summary: '{who}/authorization/Delegations/{receiverId}/rights'
+      description: "Gets all rights for a given right holder\r\n\r\n"
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: receiverId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/authorization/Delegations/{receiverId}/roles:
+    get:
+      tags:
+        - user > Delegations
+      summary: '{who}/authorization/Delegations/{receiverId}/roles?language={language}'
+      description: Gets all roles for a given receiver
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: receiverId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/authorization/Delegations/{receiverId}:
+    get:
+      tags:
+        - user > Delegations
+      summary: '{who}/authorization/Delegations/{receiverId}?language={language}'
+      description: >-
+        Gets a right holder by its id. Will include all rights and roles
+        delegated to the right holder
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: receiverId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/authorization/Delegations:
+    get:
+      tags:
+        - user > Delegations
+      summary: '{who}/authorization/Delegations?receiverId={receiverId}'
+      description: Gets all rights for a given right holder
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: receiverId
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - user > Delegations
+      summary: '{who}/authorization/Delegations'
+      description: >-
+        Delegate roles and/or rights to a given party identified by username,
+        organization number and/or ssn. When delegating to a user, last name
+        must also be given - and when delegating to an organization the
+        organization name must be given.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                Type: Email
+                SocialSecurityNumber: '01023456789'
+                LastName: Nordmann
+                _embedded:
+                  Roles:
+                    - RoleDefinitionId: 64
+                  Rights:
+                    - ServiceCode: '2308'
+                      ServiceEditionCode: 64
+                      Action: read
+                    - MessageID: 64
+                      ServiceCode: '2308'
+                      ServiceEditionCode: 64
+                      Action: read
+                    - SystemResourceID: '12345'
+                      Action: read
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - user > Delegations
+      summary: >-
+        {who}/authorization/Delegations?receiverId={receiverId}&authzRuleId={authzRuleId}
+      description: This method deletes a right delegated by the given reportee ID (who)
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: receiverId
+          in: query
+          schema:
+            type: string
+        - name: authzRuleId
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/authorization/Delegations/{receiverId}/roles/{roleId}:
+    delete:
+      tags:
+        - user > Delegations
+      summary: '{who}/authorization/Delegations/{receiverId}/roles/{roleId}'
+      description: >-
+        This method deletes a role (Single) delegated by the given reportee ID
+        (who)
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: receiverId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: roleId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/authorization/Delegations/{receiverId}/rights/{authzRuleId}:
+    delete:
+      tags:
+        - user > Delegations
+      summary: '{who}/authorization/Delegations/{receiverId}/rights/{authzRuleId}'
+      description: This method deletes a right delegated by the given reportee ID (who)
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: receiverId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: authzRuleId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/messages/{messageId}/forms:
+    get:
+      tags:
+        - user > Forms
+      summary: '{who}/messages/{messageId}/forms?language={language}'
+      description: Gets all forms related to the given message.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - user > Forms
+      summary: '{who}/messages/{messageId}/forms'
+      description: Add a new form to an existing message.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                Type: SubForm
+                DataFormatId: '1243'
+                DataFormatVersion: '10656'
+                FormData: >-
+                  <Skjema
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"...>...</Skjema>
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/messages/{messageId}/forms/{formId}:
+    get:
+      tags:
+        - user > Forms
+      summary: '{who}/messages/{messageId}/forms/{formId}?language={language}'
+      description: >-
+        Gets the specific form based on the given combination of message and
+        form id.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: formId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    put:
+      tags:
+        - user > Forms
+      summary: '{who}/messages/{messageId}/forms/{formId}'
+      description: >-
+        Put operation for a existing form on a message. Performs only XSD
+        Validation of the form. Use this to change the content of an existing
+        form.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                Type: SubForm
+                DataFormatId: '1243'
+                DataFormatVersion: '10656'
+                FormData: >-
+                  <Skjema
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"...>...</Skjema>
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: formId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - user > Forms
+      summary: '{who}/messages/{messageId}/forms/{formId}'
+      description: "\t\r\nDelete operation for a existing form on a message. Use this to remove a form from a message."
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: formId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/messages/{messageId}/forms/{formId}/formdata:
+    get:
+      tags:
+        - user > Forms
+      summary: '{who}/messages/{messageId}/forms/{formId}/formdata?language={language}'
+      description: Gets the xml for a form based on and
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: formId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/messages/{messageId}/forms/{formId}/print:
+    get:
+      tags:
+        - user > Forms
+      summary: '{who}/messages/{messageId}/forms/{formId}/print?language={language}'
+      description: Gets the PDF representation of the message with the given messageId
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: formId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/lookup/{serviceCode}/{serviceEdition}:
+    get:
+      tags:
+        - user > LookUp
+      summary: >-
+        {who}/lookup/{serviceCode}/{serviceEdition}?authorizationCode={authorizationCode}
+      description: >-
+        This operation performs a call to a LookUp service defined by the input
+        parameters ServiceCode and ServiceEditionCode.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: authorizationCode
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: serviceCode
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: serviceEdition
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/Messages/{messageId}:
+    get:
+      tags:
+        - user > Messages
+      summary: '{who}/Messages/{messageId}?language={language}'
+      description: Gets a specific message by its messageId.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    put:
+      tags:
+        - user > Messages
+      summary: >-
+        {who}/Messages/{messageId}?language={language}&complete={complete}&sign={sign}
+      description: >-
+        Attempts to update existing message instance already registered in
+        Altinn.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                Type: FormTask
+                ServiceCode: '2308'
+                ServiceEdition: 64
+                _embedded:
+                  forms:
+                    - Type: MainForm
+                      DataFormatId: '1243'
+                      DataFormatVersion: '10656'
+                      FormData: >-
+                        <Skjema
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"...>...</Skjema>
+                  attachments:
+                    - FileName: attachment.pdf
+                      AttachmentType: pdf
+                      Data: base64 encoded
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: complete
+          in: query
+          schema:
+            type: string
+        - name: sign
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - user > Messages
+      summary: '{who}/Messages/{messageId}'
+      description: >-
+        Performs a delete of the identified message if possible. If the user has
+        access to the system resource 'rolleadministrator', this action will
+        permanently delete any correspondences or achived elements for
+        organizations. In all other use cases, this action will perform a soft
+        delete of any correspondences or archived elements for organizations.
+        Additionally selected elements might be protected in a way that prevents
+        deletion.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/Messages:
+    get:
+      tags:
+        - user > Messages
+      summary: '{who}/Messages?language={language}'
+      description: >-
+        Gets all messages for the given 'who'. These can optionally be retrieved
+        in the language specified.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - user > Messages
+      summary: '{who}/Messages?language={language}&complete={complete}&sign={sign}'
+      description: Attempts to instantiate, sign and archive the message for the given who.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                Type: FormTask
+                ServiceCode: '2308'
+                ServiceEdition: 64
+                _embedded:
+                  forms:
+                    - Type: MainForm
+                      DataFormatId: '1243'
+                      DataFormatVersion: '10656'
+                      FormData: >-
+                        <Skjema
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"...>...</Skjema>
+                  attachments:
+                    - FileName: attachment.pdf
+                      AttachmentType: pdf
+                      Data: base64 encoded
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: complete
+          in: query
+          schema:
+            type: string
+        - name: sign
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/Messages/{messageId}/Print:
+    get:
+      tags:
+        - user > Messages
+      summary: >-
+        {who}/Messages/{messageId}/Print?language={language}&dataFormatId={dataFormatId}&dataFormatVersion={dataFormatVersion}
+      description: Gets the PDF representation of the message with the given messageId
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: dataFormatId
+          in: query
+          schema:
+            type: string
+        - name: dataFormatVersion
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/Messages/{messageId}/Archive:
+    put:
+      tags:
+        - user > Messages
+      summary: '{who}/Messages/{messageId}/Archive?language={language}'
+      description: Attempts to archive an existing Correspondence in Altinn.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                Type: FormTask
+                ServiceCode: '2308'
+                ServiceEdition: 64
+                _embedded:
+                  forms:
+                    - Type: MainForm
+                      DataFormatId: '1243'
+                      DataFormatVersion: '10656'
+                      FormData: >-
+                        <Skjema
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"...>...</Skjema>
+                  attachments:
+                    - FileName: attachment.pdf
+                      AttachmentType: pdf
+                      Data: base64 encoded
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/Messages/{messageId}/Confirm:
+    put:
+      tags:
+        - user > Messages
+      summary: '{who}/Messages/{messageId}/Confirm?language={language}'
+      description: Attempts to confirm an existing Correspondence in Altinn.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                Type: FormTask
+                ServiceCode: '2308'
+                ServiceEdition: 64
+                _embedded:
+                  forms:
+                    - Type: MainForm
+                      DataFormatId: '1243'
+                      DataFormatVersion: '10656'
+                      FormData: >-
+                        <Skjema
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"...>...</Skjema>
+                  attachments:
+                    - FileName: attachment.pdf
+                      AttachmentType: pdf
+                      Data: base64 encoded
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/Messages/{messageId}/Validate:
+    get:
+      tags:
+        - user > Messages
+      summary: '{who}/Messages/{messageId}/Validate?language={language}'
+      description: Attempts to validate an existing reporting service in Altinn.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/Messages/{messageId}/signingtext:
+    get:
+      tags:
+        - user > Messages
+      summary: '{who}/Messages/{messageId}/signingtext?language={language}'
+      description: >-
+        Get the signing text that will be used when a person signs the message.
+        The message need to be based on a service with a process step for
+        signing and be at the correct step. Otherwise there will be no signing
+        text to be found and 404 is returned.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/messages/{messageId}/custommessagedata:
+    get:
+      tags:
+        - user > Messages
+      summary: '{who}/messages/{messageId}/custommessagedata'
+      description: >-
+        Gets the custom message data content of a specific message by its
+        messageId.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: messageId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/Messages/trashbin:
+    get:
+      tags:
+        - user > Messages
+      summary: '{who}/Messages/trashbin?language={language}'
+      description: >-
+        Gets all soft deleted messages for the given 'who'. These can optionally
+        be retrieved in the language specified.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/metadata:
+    get:
+      tags:
+        - user > Metadata
+      summary: metadata?language={language}
+      description: Gets the list of available services in Altinn.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/metadata/correspondence/{serviceCode}/{serviceEditionCode}:
+    get:
+      tags:
+        - user > Metadata
+      summary: >-
+        metadata/correspondence/{serviceCode}/{serviceEditionCode}?language={language}
+      description: >-
+        Get more details for a specific correspondence service by its service
+        code and service edition version.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: serviceCode
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: serviceEditionCode
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/metadata/formtask/{serviceCode}/{serviceEditionCode}:
+    get:
+      tags:
+        - user > Metadata
+      summary: metadata/formtask/{serviceCode}/{serviceEditionCode}?language={language}
+      description: >-
+        Get more details for a specific form task (Reporting) service by its
+        service code and service edition version.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: serviceCode
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: serviceEditionCode
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/metadata/lookup/{serviceCode}/{serviceEditionCode}/schemas/{schema}:
+    get:
+      tags:
+        - user > Metadata
+      summary: metadata/lookup/{serviceCode}/{serviceEditionCode}?language={language}
+      description: >-
+        Get more details for a specific lookup service by its service code and
+        service edition version.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: serviceCode
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: serviceEditionCode
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: schema
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /metadata/formtask/{serviceCode}/{serviceEditionCode}/attachmentrules/{ruleId}/xsd:
+    get:
+      tags:
+        - user > Metadata
+      summary: metadata/lookup/{serviceCode}/{serviceEditionCode}/schemas/{schema}
+      description: >-
+        Get schema data for a lookup service, either the response schema or the
+        request schema. These schemas are used to validate input or output for
+        the service.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: serviceCode
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: serviceEditionCode
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: ruleId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/metadata/formtask/{serviceCode}/{serviceEditionCode}/forms/{dataFormatId}/{dataFormatVersion}/xsd:
+    get:
+      tags:
+        - user > Metadata
+      summary: >-
+        metadata/formtask/{serviceCode}/{serviceEditionCode}/forms/{dataFormatId}/{dataFormatVersion}/xsd
+      description: >-
+        Get the XSD for a form specified by service identifiers, and the
+        DataFormatId and DataFormatVersion for the logical form.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: serviceCode
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: serviceEditionCode
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: dataFormatId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: dataFormatVersion
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/metadata/formtask/{serviceCode}/{serviceEditionCode}/attachmentrules/{ruleId}/xsd:
+    get:
+      tags:
+        - user > Metadata
+      summary: >-
+        metadata/formtask/{serviceCode}/{serviceEditionCode}/attachmentrules/{ruleId}/xsd
+      description: >-
+        Get the attachment rule validation file for attachments with xml
+        content. Very few services require xml attachments and perform xsd
+        validation.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: serviceCode
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: serviceEditionCode
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: ruleId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/metadata/codelists:
+    get:
+      tags:
+        - user > Metadata
+      summary: metadata/codelists?language={language}
+      description: >-
+        Retrieve a complete overview of all code lists available in the given
+        language.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/metadata/codelists/{name}/{version}:
+    get:
+      tags:
+        - user > Metadata
+      summary: metadata/codelists/{name}/{version}?language={language}
+      description: Retrieve a specific code list in the given language if available.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: name
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: version
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/metadata/rolerequirements:
+    get:
+      tags:
+        - user > Metadata
+      summary: /metadata/rolerequirements?app=&language=1044
+      security:
+        - noauthAuth: []
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: app
+          in: query
+          schema:
+            type: string
+          description: 'The App identifier from AltinnIII in the format: org/appname'
+          example: org/appname
+        - name: language
+          in: query
+          schema:
+            type: integer
+          description: '1044: bokmål, 1033: english, 2068: nynorsk'
+          example: '1044'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/organizations:
+    get:
+      tags:
+        - user > Organizations
+      summary: >-
+        organizations?showConsentReportees={showConsentReportees}&includeInactiveReportees={includeInactiveReportees}
+      description: >-
+        Gets a list of all organizations the currently logged in user can
+        represent.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: showConsentReportees
+          in: query
+          schema:
+            type: string
+        - name: includeInactiveReportees
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/organizations/{organizationId}:
+    get:
+      tags:
+        - user > Organizations
+      summary: organizations/{organizationId}
+      description: Gets an organization by its organization number.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: organizationId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/my/profile:
+    get:
+      tags:
+        - user > Profile
+      summary: my/profile
+      description: Gets the user profile of the currently authenticated user.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{orgno}/profile:
+    get:
+      tags:
+        - user > Profile
+      summary: '{orgno}/profile'
+      description: Gets profile of the given organization number.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: orgno
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{orgno}/profile/contactinformation:
+    get:
+      tags:
+        - user > Profile
+      summary: '{orgno}/profile/contactinformation'
+      description: >-
+        Get a list of contacts for an organization. The contacts are the people
+        Altinn will send notifications to when the organization receives
+        messages.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: orgno
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - user > Profile
+      summary: '{orgno}/profile/contactinformation'
+      description: >-
+        Create a new contact address for an organization. The contacts are the
+        people Altinn will send notifications to when the organization receives
+        messages. The only field that can contain any values are either Email or
+        MobileNumber. You can not supply both at the same time. All other fields
+        should be default/null.
+      requestBody:
+        content: {}
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: orgno
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{orgno}/profile/contactinformation/{id}:
+    get:
+      tags:
+        - user > Profile
+      summary: '{orgno}/profile/contactinformation/{id}'
+      description: Delete the details for a specified contact from the list of contacts.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: orgno
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/reportees:
+    get:
+      tags:
+        - user > Reportee
+      summary: >-
+        reportees?serviceCode={serviceCode}&serviceEdition={serviceEdition}&showConsentReportees={showConsentReportees}
+      description: >-
+        Gets all entities with access to the given service (identified by
+        ServiceCode and ServiceEdition
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: serviceCode
+          in: query
+          schema:
+            type: string
+        - name: serviceEdition
+          in: query
+          schema:
+            type: string
+        - name: showConsentReportees
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/reportees/{reporteeId}:
+    get:
+      tags:
+        - user > Reportee
+      summary: reportees/{reporteeId}
+      description: Gets a reportee entity by its id.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: reporteeId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/authorization/Reportee/{receiverId}:
+    get:
+      tags:
+        - user > Reportee
+      summary: '{who}/authorization/Reportee/{receiverId}?reporteeId={reporteeId}'
+      description: Gets a reportee entity by its id.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: reporteeId
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: receiverId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/reportees/ReporteeConversion:
+    post:
+      tags:
+        - user > Reportee
+      summary: reportees/ReporteeConversion
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                SocialSecurityNumber: ''
+                LastName: ''
+                OrganizationNumber: ''
+                OrganizationName: ''
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/authorization/rights:
+    get:
+      tags:
+        - user > Rights
+      summary: '{who}/authorization/rights'
+      description: Gets the rights.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/authorization/rights/{rightID}:
+    delete:
+      tags:
+        - user > Rights
+      summary: '{who}/authorization/rights/{rightID}'
+      description: Deletes the specified right.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: rightID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/authorization/Rights/{receiverId}/rights/{authzRuleID}:
+    delete:
+      tags:
+        - user > Rights
+      summary: >-
+        {who}/authorization/Rights/{receiverId}/rights/{authzRuleID}?rightID={rightID}
+      description: Deletes the specified right.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: rightID
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: receiverId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: authzRuleID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/authorization/roles:
+    get:
+      tags:
+        - user > Roles
+      summary: '{who}/authorization/roles?language={language}'
+      description: Gets the role list.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/authorization/roles/{roleID}:
+    delete:
+      tags:
+        - user > Roles
+      summary: '{who}/authorization/roles/{roleID}'
+      description: Deletes the specified role for the user.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: roleID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/authorization/RoleDefinitions/roleTypeID:
+    get:
+      tags:
+        - user > RoleDefinitions
+      summary: '{who}/authorization/RoleDefinitions/{roleTypeID}?language={language}'
+      description: >-
+        Gets the role type. This operation will retrieve details specific to the
+        role type given in the url.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/authorization/RoleDefinitions/{roleTypeID}:
+    delete:
+      tags:
+        - user > RoleDefinitions
+      summary: '{who}/authorization/RoleDefinitions/{roleTypeID}'
+      description: >-
+        This method deletes a role definition delegated for given reportee ID
+        (who)
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: roleTypeID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    put:
+      tags:
+        - user > RoleDefinitions
+      summary: '{who}/authorization/RoleDefinitions/{roleTypeID}?language={language}'
+      description: Attempts to update role type
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                RoleName: string example 34
+                RoleDescription: 64
+                RoleType: string example 34
+                _embedded:
+                  Rights:
+                    - ServiceCode: '2308'
+                      ServiceEditionCode: '38'
+                      Action: read
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: roleTypeID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/{who}/authorization/RoleDefinitions:
+    get:
+      tags:
+        - user > RoleDefinitions
+      summary: '{who}/authorization/RoleDefinitions?language={language}'
+      description: Gets the role types.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - user > RoleDefinitions
+      summary: '{who}/authorization/RoleDefinitions?language={language}'
+      description: Attempts to create role type
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                RoleName: string example 34
+                RoleDescription: 64
+                RoleType: string example 34
+                _embedded:
+                  Rights:
+                    - ServiceCode: '2308'
+                      ServiceEditionCode: 64
+                      Action: read
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/authorization/token/{authCode}/loguse:
+    post:
+      tags:
+        - user > Token
+      summary: authorization/token/{authCode}/loguse
+      description: >-
+        Use this to register that you have used the right given to you with the
+        consent.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ServiceCode: '2308'
+                ServiceEditionCode: 64
+                UsageDateTime: datetime, ISO 8601
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: ForceEIAuthentication
+          in: query
+          schema:
+            type: string
+        - name: authCode
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/authorization/token/{authCode}:
+    get:
+      tags:
+        - user > Token
+      summary: authorization/token/{authCode}
+      description: >-
+        Use this to obtain a JSON web token with claims associated with your
+        authorization code.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: ForceEIAuthentication
+          in: query
+          schema:
+            type: string
+        - name: authCode
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - user > Token
+      summary: authorization/token/{authCode}
+      description: "\t\r\nUse this to discard the rights you obtained with a consent, based on an authorization code."
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKey}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: ForceEIAuthentication
+          in: query
+          schema:
+            type: string
+        - name: authCode
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/serviceowner/consents:
+    get:
+      tags:
+        - service owner > Consents
+      summary: >-
+        {{envUrl}}/api/serviceowner/consents?serviceCode&serviceEditionCode=&status=&continuation=
+      description: >-
+        Get all the consents for a service. The serviceCode and
+        serviceEditionCode specifies which service to retrieve consents for. It
+        is possible to specify the consent status that should be included in the
+        list. By default, both active and revoked status will be included. The
+        continuation parameter will allow user to only include new consents or
+        consents that have changed status since last request.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: serviceCode
+          in: query
+          schema:
+            type: string
+        - name: serviceEditionCode
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: continuation
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/serviceowner/delegationRequests:
+    get:
+      tags:
+        - service owner > DelegationRequests
+      summary: >-
+        serviceowner/delegationRequests?serviceCode&serviceEditionCode=&status=&continuation=
+      description: >-
+        Get all the created delegation requests service by the serviceOwner. The
+        serviceCode and serviceEditionCode specifies which service to retrieve
+        delegation requests for. The continuation parameter will allow user to
+        only include new delegation requests or delegation requests that have
+        changed status since last request.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: ForceEIAuthentication
+          in: query
+          schema:
+            type: boolean
+          example: 'true'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - service owner > DelegationRequests
+      summary: serviceowner/delegationRequests/{id}
+      description: Posting a new delegation request for services owned by the service owner
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                CoveredBy: '10055051041'
+                OfferedBy: '810475552'
+                RequestResources:
+                  - ServiceCode: x1337
+                    ServiceEditionCode: 1234567
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: ForceEIAuthentication
+          in: query
+          schema:
+            type: boolean
+          example: 'true'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/serviceowner/delegationRequests/{id}:
+    get:
+      tags:
+        - service owner > DelegationRequests
+      summary: serviceowner/delegationRequests/{id}
+      description: Get a spesific delegation request by its GUID
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: ForceEIAuthentication
+          in: query
+          schema:
+            type: boolean
+          example: 'true'
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - service owner > DelegationRequests
+      summary: serviceowner/delegationRequests/{id}
+      description: Deleting a delegation request by its GUID
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: ForceEIAuthentication
+          in: query
+          schema:
+            type: boolean
+          example: 'true'
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/serviceowner/events/feed:
+    get:
+      tags:
+        - service owner > Events
+      summary: serviceowner/events/feed?eventOffset={eventOffset}&fetch={fetch}
+      description: >-
+        Get all saved events for Correspondence items. The eventOffset parameter
+        is used to offset the start of the feed. The feed will return up to 10
+        000 events starting with the first available event after the
+        eventOffset. If no eventOffset is provided, the feed will start from the
+        first event available. The fetch parameter is used to limit the number
+        of results. If no fetch parameter is provided, the feed returns up to 10
+        000 events. It is not possible to get more than 10 000 elements by
+        setting a higher value for the fetch parameter
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: ForceEIAuthentication
+          in: query
+          schema:
+            type: string
+        - name: eventOffset
+          in: query
+          schema:
+            type: string
+        - name: fetch
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/serviceowner/organizations:
+    get:
+      tags:
+        - service owner > Organizations
+      summary: serviceowner/organizations?email={email}&phoneNumber={phoneNumber}
+      description: "Get a list of organizations that match the provided filters.\r\n\r\nThe special email and phone number parameters can be used to search for all organizations that have those values as their official or personal contact point.\r\n\r\nThere are support for OData, but with some limitations:\r\n\r\n$top - Number of organizations to retrieve. The value can be from 1 to 1000. Values outside this range will be adjusted automatically.\r\n$skip - Number of organizations to skip. (Use this together with $top to create paging functionality.) The value can be 0 or higher. Negative values will be ignored.\r\n$orderby - Can be used to change sorting. It is possible to sort by Name or OrganizationNumber. The default is OrganizationNumber.\r\n$filter - Can be used to filter the result. Currently limited to filtering on Type with exact value. Eg: $filter=Type eq 'ENK'\r\n$expand - Can be used to include official contacts of each organization in the list. Use: $expand=OfficialContacts"
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: email
+          in: query
+          schema:
+            type: string
+        - name: phoneNumber
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/serviceowner/organizations/{organizationNumber}:
+    get:
+      tags:
+        - service owner > Organizations
+      summary: serviceowner/organizations/{organizationNumber}
+      description: >-
+        Gets information about a single organization. The operation supports the
+        OData keyword $expand. Example: "$expand=OfficialContacts".
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: organizationNumber
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/serviceowner/organizations/{organizationNumber}/officialcontacts:
+    get:
+      tags:
+        - service owner > Organizations
+      summary: serviceowner/organizations/{organizationNumber}/officialcontacts
+      description: Gets a list of official contacts for a specific organization.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: organizationNumber
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/serviceowner/organizations/{organizationNumber}/personalcontacts:
+    get:
+      tags:
+        - service owner > Organizations
+      summary: >-
+        serviceowner/organizations/{organizationNumber}/personalcontacts?roleDefinitionCode={roleDefinitionCode}&serviceCode={serviceCode}&serviceEdition={serviceEdition}
+      description: "Gets a list of all personal contacts for an organization. If no parameters are given for filtering, all personal contacts will be returned.\r\n\r\nIf roleTypeCode is set, the returned list will be filtered based on the role which the creators of the endpoints has.\r\nIf serviceCode and serviceEdition is set, the returned list will be filtered based on whether the creator of the endpoint has access to the service identified by the parameters, and if the creator has opted to receive notification for it."
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: roleDefinitionCode
+          in: query
+          schema:
+            type: string
+        - name: serviceCode
+          in: query
+          schema:
+            type: string
+        - name: serviceEdition
+          in: query
+          schema:
+            type: string
+        - name: organizationNumber
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/serviceowner/organizations/{organizationNumber}/personalcontacts/{who}/roles:
+    get:
+      tags:
+        - service owner > Organizations
+      summary: >-
+        serviceowner/organizations/{organizationNumber}/personalcontacts/{who}/roles
+      description: >-
+        Gets a list of all roles a given personal contact / reportee has on
+        behalf of the given organization
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: organizationNumber
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: who
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/serviceowner/reportees:
+    get:
+      tags:
+        - service owner > Reportees
+      summary: >-
+        serviceowner/reportees?subject={subject}&serviceCode={serviceCode}&serviceEdition={serviceEdition}&roleDefinitionId={roleDefinitionId}&showConsentReportees={showConsentReportees}
+      description: >-
+        Gets a list of entities that the current user can represent. The list
+        can optionally be filtered to only display entities by a specific
+        service (identified by ServiceCode and ServiceEdition) or role
+        definition (identified by RoleDefinitionId).
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: subject
+          in: query
+          schema:
+            type: string
+        - name: serviceCode
+          in: query
+          schema:
+            type: string
+        - name: serviceEdition
+          in: query
+          schema:
+            type: string
+        - name: roleDefinitionId
+          in: query
+          schema:
+            type: string
+        - name: showConsentReportees
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/serviceowner/authorization/rights:
+    get:
+      tags:
+        - service owner > Rights
+      summary: serviceowner/authorization/rights?subject={subject}&reportee={reportee}
+      description: Gets the rights the subject has for the specified reportee.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: subject
+          in: query
+          schema:
+            type: string
+        - name: reportee
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/serviceowner/authorization/roles:
+    get:
+      tags:
+        - service owner > Roles
+      summary: >-
+        serviceowner/authorization/roles?subject={subject}&reportee={reportee}&language={language}
+      description: Gets the roles the subject has for the specified reportee.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: subject
+          in: query
+          schema:
+            type: string
+        - name: reportee
+          in: query
+          schema:
+            type: string
+        - name: language
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/serviceowner/roledefinitions:
+    get:
+      tags:
+        - service owner > RoleDefinitions
+      summary: serviceowner/roledefinitions?language={language}
+      description: Get all general role definitions.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: language
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/serviceowner/roledefinitions/{roleDefinitionId}:
+    get:
+      tags:
+        - service owner > RoleDefinitions
+      summary: serviceowner/roledefinitions/{roleDefinitionId}?language={language}
+      description: Get a specific role definition.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: roleDefinitionId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/serviceowner/srr:
+    get:
+      tags:
+        - service owner > SrrRight
+      summary: >-
+        serviceowner/srr?serviceCode={serviceCode}&serviceEditionCode={serviceEditionCode}&reportee={reportee}
+      description: >-
+        Gets all SRR rights for a specific service (specified by ServiceCode and
+        ServiceEditionCode), with an optional parameter of reportee. If OK this
+        action returns a list with all SRR rights for the service. Authenticated
+        service owner must be the owner of the service.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: serviceCode
+          in: query
+          schema:
+            type: string
+        - name: serviceEditionCode
+          in: query
+          schema:
+            type: string
+        - name: reportee
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - service owner > SrrRight
+      summary: serviceowner/srr
+      description: "\t\r\nCreates one or more new SRR rights for a specific service. The service's ServiceCode and ServiceEditionCode are specified as part of each SrrRight object in the input. If OK this action returns a list with of SrrRight objects with the added rights and the result of the operation in the OperationStatus field for each object. Authenticated service owner must be the owner of the service."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                - ServiceCode: sample string 19
+                  ServiceEditionCode: 2
+                  Reportee: string sample
+                  Right: Write
+                  ValidTo: '2019-04-29T07:56:20.0590584+02:00'
+                  Condition:
+                    HandledBy: '901234567'
+                    IsRecipient: true
+                    IsSender: true
+                    KeepSessionAlive: true
+                    AllowedRedirectDomain:
+                      - '*.vg.no'
+                      - www.nrk.no
+                - ServiceCode: sample string 19
+                  ServiceEditionCode: 2
+                  Reportee: string sample
+                  Right: Read
+                  ValidTo: '2019-04-29T07:56:20.0590584+02:00'
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/serviceowner/srr/{id}:
+    get:
+      tags:
+        - service owner > SrrRight
+      summary: serviceowner/srr/{id}
+      description: >-
+        Gets the SRR rule with the specified id. If OK this action returns the
+        specified SRR right. Authenticated service owner must be the owner of
+        the service.
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    put:
+      tags:
+        - service owner > SrrRight
+      summary: serviceowner/srr/{id}
+      description: >-
+        Updates an SRR rule based on the rule id. The id is specified as part of
+        the url, and a SrrRight object with the changed value(s) is passed in
+        the request body. The response will indicate the result of the operation
+        in the OperationStatus field. Authenticated service owner must be the
+        owner of the service.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                ServiceCode: sample string 19
+                ServiceEditionCode: 2
+                Reportee: 24129845645/901234567
+                Right: Write
+                ValidTo: '2019-04-29T07:56:20.0590584+02:00'
+                Condition:
+                  HandledBy: '901234567'
+                  IsRecipient: true
+                  IsSender: true
+                  KeepSessionAlive: true
+                  AllowedRedirectDomain:
+                    - '*.vg.no'
+                    - www.nrk.no
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - service owner > SrrRight
+      summary: serviceowner/srr/{id}
+      description: "Deletes an SRR right based on the right id. The id is passed as part of the url. Authenticated service owner must be the owner of the service.\r\n\r\n"
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/serviceowner/notifications/validaterecipient:
+    get:
+      tags:
+        - service owner > Notifications
+      summary: serviceowner/notifications/validaterecipient
+      parameters:
+        - name: ApiKey
+          in: header
+          schema:
+            type: string
+          example: '{{ApiKeyServiceOwner}}'
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: application/hal+json
+        - name: X-ENV-SSL_CLIENT_CERTIFICATE
+          in: header
+          schema:
+            type: string
+          example: '{{Cert}}'
+        - name: ForceEIAuthentication
+          in: query
+          schema:
+            type: string
+          description: >-
+            Needed to force certificate exchange for autentication (Excluded if
+            using Bearer token autentication)
+        - name: organizationNumber
+          in: query
+          schema:
+            type: string
+          description: The organization to be checked (Excluded if validating for a user)
+        - name: socialSecurityNumber
+          in: query
+          schema:
+            type: string
+          description: >-
+            The social security number of the user to be checked, must be paired
+            with a last name (Excluded if validating for an organization)
+        - name: lastName
+          in: query
+          schema:
+            type: string
+          description: >-
+            The last name of user, must be given when socialSecurityNumber is
+            filled and correspond to socialSecurityNumber (Excluded if
+            validating for an organization)
+        - name: serviceCode
+          in: query
+          schema:
+            type: string
+          description: >-
+            Optional: ServiceCode if validating notification for a specific
+            service
+        - name: serviceEditionCode
+          in: query
+          schema:
+            type: string
+          description: >-
+            Optional: ServiceEditionCode if validating notification for a
+            specific service
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
