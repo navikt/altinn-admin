@@ -20,6 +20,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
 import io.ktor.response.respond
 import io.ktor.routing.Routing
+import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
@@ -73,7 +74,10 @@ fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environm
             call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig subject"))
             return@get
         }
-        val token = maskinporten.tokenRequest()
+        var token = ""
+        runBlocking {
+            token = maskinporten.tokenRequest()
+        }
         if (token.isNullOrEmpty()) {
             call.respond(HttpStatusCode.Unauthorized, AnError("No access token"))
             return@get
