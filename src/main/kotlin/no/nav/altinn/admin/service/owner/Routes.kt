@@ -74,7 +74,12 @@ fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environm
             return@get
         }
         val token = maskinporten.tokenRequest()
+        if (token.isNullOrEmpty()) {
+            call.respond(HttpStatusCode.Unauthorized, AnError("No access token"))
+            return@get
+        }
         var output = ""
+        logger.info { "Try so api..." }
         defaultHttpClient.request<HttpStatement>(ALTINN_BASE_URL + "/api/serviceowner/reportees?") {
             method = HttpMethod.Get
             header("ApiKey", param.apikey)
