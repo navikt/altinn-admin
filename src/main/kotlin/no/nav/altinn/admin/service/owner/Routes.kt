@@ -25,8 +25,8 @@ import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.badRequest
-import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.get
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ok
+import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.post
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.responds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.client.MaskinportenClient
@@ -55,24 +55,25 @@ internal val defaultHttpClient = HttpClient(CIO) {
 }
 
 @Group(GROUP_NAME)
-@Location("$API_V1/serviceowner/reportee/{apikey}/{subject}/{sc}/{sec}")
-data class Filter(val apikey: String, val subject: String, val sc: String?, val sec: String?)
+@Location("$API_V1/serviceowner/reportee")
+class Filter
+data class FilterBody(val apikey: String, val subject: String, val sc: String?, val sec: String?)
 
 // subject={subject}&serviceCode={serviceCode}&serviceEition={serviceEdition}&roleDefinitionId={roleDefinitionId}&showConsentReportees={showConsentReportees}
 fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environment) =
-    get<Filter>(
+    post<Filter, FilterBody>(
         "Hent reportees på subject".responds(
             ok<ReporteeList>(), serviceUnavailable<AnError>(), badRequest<AnError>()
         )
-    ) { param ->
+    ) { param, body ->
 
-        if (param.apikey.isEmpty()) {
+        if (body.apikey.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig apikey"))
-            return@get
+            return@post
         }
-        if (param.subject.isEmpty() || param.subject.length != 11) {
+        if (body.subject.isEmpty() || body.subject.length != 11) {
             call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig subject"))
-            return@get
+            return@post
         }
         var token = ""
         runBlocking {
@@ -80,21 +81,21 @@ fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environm
         }
         if (token.isNullOrEmpty()) {
             call.respond(HttpStatusCode.Unauthorized, AnError("No access token"))
-            return@get
+            return@post
         }
         var output = ""
         logger.info { "Try so api..." }
         defaultHttpClient.request<HttpStatement>(ALTINN_BASE_URL + "/api/serviceowner/reportees?") {
             method = HttpMethod.Get
-            header("ApiKey", param.apikey)
+            header("ApiKey", body.apikey)
             header("Authorization", "Bearer $token")
             header("Accept", "application/hal+json")
-            parameter("subject", param.subject)
-            if (!param.sc.isNullOrBlank()) {
-                parameter("serviceCode", param.sc)
+            parameter("subject", body.subject)
+            if (!body.sc.isNullOrBlank()) {
+                parameter("serviceCode", body.sc)
             }
-            if (!param.sec.isNullOrBlank()) {
-                parameter("serviceEdition", param.sec)
+            if (!body.sec.isNullOrBlank()) {
+                parameter("serviceEdition", body.sec)
             }
         }.execute { response: HttpResponse ->
 
