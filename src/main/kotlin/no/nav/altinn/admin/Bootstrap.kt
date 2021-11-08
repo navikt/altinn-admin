@@ -229,10 +229,10 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     var maskinporten: MaskinportenClient? = null
     if (environment.application.localEnv == "preprod") {
         maskinporten = MaskinportenClient(environment)
-        runBlocking {
-            val test = maskinporten.tokenRequest()
-            logger.info { "Got a token from maskinporten: $test" }
-        }
+//        runBlocking {
+//            val test = maskinporten.tokenRequest()
+//            logger.info { "Got a token from maskinporten: $test" }
+//        }
     }
 
     logger.info { "Installing routes" }
