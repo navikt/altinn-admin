@@ -33,7 +33,6 @@ import io.prometheus.client.hotspot.DefaultExports
 import java.util.concurrent.Executors
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.slf4j.MDCContext
 import mu.KotlinLogging
 import no.nav.altinn.admin.api.nais
