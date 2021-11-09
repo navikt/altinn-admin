@@ -1,1 +1,2 @@
 ingresses: ["https://altinn-admin.nais.adeo.no"]
+use-maskinporten: "false"

@@ -3,6 +3,7 @@ package no.nav.altinn.admin.service.srr
 import java.time.ZonedDateTime
 import java.util.GregorianCalendar
 import javax.xml.datatype.DatatypeFactory
+import javax.xml.datatype.XMLGregorianCalendar
 import mu.KotlinLogging
 import no.altinn.schemas.services.register._2015._06.OperationResult
 import no.altinn.schemas.services.register._2015._06.RegisterSRRRightsType
@@ -17,6 +18,7 @@ import no.altinn.services.register.srr._2015._06.IRegisterSRRAgencyExternalBasic
 import no.altinn.services.register.srr._2015._06.IRegisterSRRAgencyExternalBasicDeleteRightsBasicAltinnFaultFaultFaultMessage
 import no.altinn.services.register.srr._2015._06.IRegisterSRRAgencyExternalBasicGetRightsBasicAltinnFaultFaultFaultMessage
 import no.nav.altinn.admin.Environment
+import no.nav.altinn.admin.common.dateToXmlGregorianCalendar
 import no.nav.altinn.admin.metrics.Metrics
 
 private val logger = KotlinLogging.logger { }
@@ -27,14 +29,26 @@ class AltinnSRRService(private val env: Environment, iRegisterSRRAgencyExternalB
     private val altinnUserPassword = env.altinn.password
     private val iRegisterSRRAgencyExternalBasic: IRegisterSRRAgencyExternalBasic by lazy(iRegisterSRRAgencyExternalBasicFactory)
 
-    fun addRights(serviceCode: String, editionCode: String, reportee: String, redirectDomain: String, type: RegisterSRRRightsType): RightsResponse {
+    fun addRights(
+        serviceCode: String,
+        editionCode: String,
+        reportee: String,
+        redirectDomain: String,
+        type: RegisterSRRRightsType,
+        dato: String?
+    ): RightsResponse {
         logger.info { "Adding $type rights for business number $reportee with redirect url $redirectDomain." }
+        var xmlDato: XMLGregorianCalendar? = null
+        if (dato != null) {
+            xmlDato = dateToXmlGregorianCalendar(dato)
+        }
+
         try {
             Metrics.addRightsRequest.labels(serviceCode).inc()
             val response = env.mock.srrAddResponse
                 ?: iRegisterSRRAgencyExternalBasic.addRightsBasic(
                     altinnUsername, altinnUserPassword, serviceCode, editionCode.toInt(),
-                    createAddRightsList(reportee, redirectDomain, type)
+                    createAddRightsList(reportee, redirectDomain, type, xmlDato)
                 )
 
             return createAddResponseMessage(serviceCode, response, type, reportee)
@@ -61,6 +75,31 @@ class AltinnSRRService(private val env: Environment, iRegisterSRRAgencyExternalB
                 ?: iRegisterSRRAgencyExternalBasic.deleteRightsBasic(
                     altinnUsername, altinnUserPassword, serviceCode, editionCode.toInt(),
                     createDeleteRightsList(reportee, redirectDomain, type)
+                )
+            return createDeleteResponseMessage(serviceCode, response, type, reportee)
+        } catch (e: IRegisterSRRAgencyExternalBasicDeleteRightsBasicAltinnFaultFaultFaultMessage) {
+            logger.error {
+                "IRegisterSRRAgencyExternalBasic.deleteRightsBasic feilet \n" +
+                    "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
+                    "\n ExtendedErrorMessage  ${e.faultInfo.altinnExtendedErrorMessage}" +
+                    "\n LocalizedErrorMessage  ${e.faultInfo.altinnLocalizedErrorMessage}" +
+                    "\n ErrorGuid  ${e.faultInfo.errorGuid}" +
+                    "\n UserGuid  ${e.faultInfo.userGuid}" +
+                    "\n UserId  ${e.faultInfo.userId}"
+            }
+        }
+        Metrics.deleteRightsFailed.labels(serviceCode).inc()
+        return RightsResponse("Failed", "Unknown error occurred when removing $type rights, check logger")
+    }
+
+    fun deleteRights2(serviceCode: String, editionCode: String, reportee: String, redirectDomain: String, type: RegisterSRRRightsType): RightsResponse {
+        logger.info { "Removing $type rights for business number $reportee with redirect url $redirectDomain." }
+        try {
+            Metrics.deleteRightsRequest.labels(serviceCode).inc()
+            val response = env.mock.srrDeleteResponse
+                ?: iRegisterSRRAgencyExternalBasic.deleteRightsBasic(
+                    altinnUsername, altinnUserPassword, serviceCode, editionCode.toInt(),
+                    createDeleteRightsListNoPrependRule(reportee, redirectDomain, type)
                 )
             return createDeleteResponseMessage(serviceCode, response, type, reportee)
         } catch (e: IRegisterSRRAgencyExternalBasicDeleteRightsBasicAltinnFaultFaultFaultMessage) {
@@ -138,7 +177,12 @@ class AltinnSRRService(private val env: Environment, iRegisterSRRAgencyExternalB
         return RightsResponseWithList("Failed", "Unknown error occurred when getting rights registry, check logger", RegistryResponse(emptyList()))
     }
 
-    private fun createAddRightsList(orgNr: String, domain: String, type: RegisterSRRRightsType): AddRightRequestList {
+    private fun createAddRightsList(
+        orgNr: String,
+        domain: String,
+        type: RegisterSRRRightsType,
+        xmlDato: XMLGregorianCalendar?
+    ): AddRightRequestList {
 
         return AddRightRequestList().apply {
             addRightRequest.add(
@@ -146,7 +190,7 @@ class AltinnSRRService(private val env: Environment, iRegisterSRRAgencyExternalB
                     condition = "ALLOWEDREDIRECTDOMAIN:$domain"
                     reportee = orgNr
                     right = type
-                    validTo = DatatypeFactory.newInstance().newXMLGregorianCalendar(GregorianCalendar.from(ZonedDateTime.now().plusYears(2)))
+                    validTo = xmlDato ?: DatatypeFactory.newInstance().newXMLGregorianCalendar(GregorianCalendar.from(ZonedDateTime.now().plusYears(2)))
                 }
             )
         }
@@ -158,6 +202,19 @@ class AltinnSRRService(private val env: Environment, iRegisterSRRAgencyExternalB
             deleteRightRequest.add(
                 DeleteRightRequest().apply {
                     condition = "ALLOWEDREDIRECTDOMAIN:$domain"
+                    reportee = orgNr
+                    right = type
+                }
+            )
+        }
+    }
+
+    private fun createDeleteRightsListNoPrependRule(orgNr: String, domain: String, type: RegisterSRRRightsType): DeleteRightRequestList {
+
+        return DeleteRightRequestList().apply {
+            deleteRightRequest.add(
+                DeleteRightRequest().apply {
+                    condition = domain
                     reportee = orgNr
                     right = type
                 }

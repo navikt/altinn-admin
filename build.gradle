@@ -23,6 +23,7 @@ buildscript {
     ext.cxfVersion = "3.4.1"
     ext.unboundidVersion = "6.0.0"
     ext.wiremockVersion = "2.27.2"
+    ext.joseJwtVersion = "9.0.1"
 
     ext.swaggerVersion = "3.6.1"
 
@@ -115,14 +116,17 @@ dependencies {
             "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
             "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion",
             "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion",
+            "com.nimbusds:nimbus-jose-jwt:$joseJwtVersion",
             "io.ktor:ktor-server-netty:$ktorVersion",
             "io.ktor:ktor-auth:$ktorVersion",
             "io.ktor:ktor-auth-jwt:$ktorVersion",
             "io.ktor:ktor-jackson:$ktorVersion",
             "io.ktor:ktor-client-core:$ktorVersion",
             "io.ktor:ktor-client-serialization:$ktorVersion",
-            "io.ktor:ktor-client-apache:$ktorVersion",
             "io.ktor:ktor-client-cio:$ktorVersion",
+            "io.ktor:ktor-client-logging-jvm:$ktorVersion",
+            "io.ktor:ktor-client-apache:$ktorVersion",
+            "io.ktor:ktor-jackson:$ktorVersion",
             "io.ktor:ktor-client-jackson:$ktorVersion",
             "io.ktor:ktor-locations:$ktorVersion",
             "io.prometheus:simpleclient_common:$prometheusVersion",
@@ -141,7 +145,7 @@ dependencies {
     implementation("com.sun.xml.ws:jaxws-tools:$jaxwsToolsVersion") {
         exclude group: 'com.sun.xml.ws', module: 'policy'
     }
-    
+
     implementation("javax.activation:activation:$javaxActivationVersion")
     implementation("org.webjars:swagger-ui:$swaggerVersion")
     implementation("com.unboundid:unboundid-ldapsdk:$unboundidVersion")

@@ -33,6 +33,7 @@ private val config = if (System.getenv("APPLICATION_PROFILE") == "remote" && Sys
 data class Environment(
     val altinn: Altinn = Altinn(),
     val azure: Azure = Azure(),
+    val maskinporten: Maskinporten = Maskinporten(),
     val application: Application = Application(),
     val srrService: SrrService = SrrService(),
     val dqService: DqService = DqService(),
@@ -59,6 +60,15 @@ data class Environment(
         val azureAppClientSecret: String = config.getOrElse(Key("azure.app.client.secret", stringType), "dummyForUnitTest"),
         val azureAppWellKnownUrl: String = config.getOrElse(Key("azure.app.well.known.url", stringType), "dummyForUnitTest"),
         val azureOpenidConfigTokenEndpoint: String = config.getOrElse(Key("azure.openid.config.token.endpoint", stringType), "dummyForUnitTest")
+        
+    data class Maskinporten(
+        val baseUrl: String = config.getOrElse(Key("maskinporten.url", stringType), "tull.no"),
+        val wellKnownUrl: String = config.getOrElse(Key("maskinporten.well.known.url", stringType), "tull.no"),
+        val clientId: String = config.getOrElse(Key("maskinporten.client.id", stringType), "en-id-key-her"),
+        val clientJwk: String = config.getOrElse(Key("maskinporten.client.jwk", stringType), "tull-jwk"),
+        val scopes: String = config.getOrElse(Key("maskinporten.scopes", stringType), "altinn:scope"),
+        val issuer: String = config.getOrElse(Key("maskinporten.issuer", stringType), "maskinporten"),
+        var token: String = config.getOrElse(Key("maskinporten.token", stringType), "maskinporten")
     )
 
     data class Application(
