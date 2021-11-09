@@ -1,4 +1,4 @@
-ingresses: ["https://altinn-admin.nais.preprod.local/"]
+ingresses: ["https://altinn-admin.dev.intern.nav.no/"]
 use-maskinporten: "true"
 outbound-host:
   - ver2.maskinporten.no

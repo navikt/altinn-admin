@@ -33,6 +33,7 @@ import io.prometheus.client.hotspot.DefaultExports
 import java.util.concurrent.Executors
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.slf4j.MDCContext
 import mu.KotlinLogging
 import no.nav.altinn.admin.api.nais
@@ -228,10 +229,10 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     var maskinporten: MaskinportenClient? = null
     if (environment.application.localEnv == "preprod") {
         maskinporten = MaskinportenClient(environment)
-//        runBlocking {
-//            val test = maskinporten.tokenRequest()
-//            logger.info { "Got a token from maskinporten: $test" }
-//        }
+        runBlocking {
+            val test = maskinporten.tokenRequest()
+            logger.info { "Got a token from maskinporten: $test" }
+        }
     }
 
     logger.info { "Installing routes" }
