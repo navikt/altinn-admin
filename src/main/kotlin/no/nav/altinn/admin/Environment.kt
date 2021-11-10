@@ -60,7 +60,8 @@ data class Environment(
         val azureAppClientSecret: String = config.getOrElse(Key("azure.app.client.secret", stringType), "dummyForUnitTest"),
         val azureAppWellKnownUrl: String = config.getOrElse(Key("azure.app.well.known.url", stringType), "dummyForUnitTest"),
         val azureOpenidConfigTokenEndpoint: String = config.getOrElse(Key("azure.openid.config.token.endpoint", stringType), "dummyForUnitTest")
-        
+    )
+
     data class Maskinporten(
         val baseUrl: String = config.getOrElse(Key("maskinporten.url", stringType), "tull.no"),
         val wellKnownUrl: String = config.getOrElse(Key("maskinporten.well.known.url", stringType), "tull.no"),
