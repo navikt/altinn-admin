@@ -1,6 +1,7 @@
 {
   "ingresses": ["https://altinn-admin.dev.intern.nav.no"],
   "profile": "preprod",
+  "use-maskinporten": "true",
   "outbound-host": ["tt02.altinn.no"],
   "envs": [
     { "name": "ALTINN_RETTIGHETSREGISTER_URL", "value": "https://tt02.altinn.no/RegisterExternal/RegisterSRRAgencyExternalBasic.svc" },

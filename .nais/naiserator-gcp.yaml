@@ -35,6 +35,11 @@ spec:
       {{#each outbound-host}}
         - host: "{{this}}"
       {{/each}}
+  maskinporten:
+    enabled: {{use-maskinporten}}
+    scopes:
+      consumes:
+        - name: "altinn:serviceowner"
   prometheus:
     enabled: true
     path: /internal/prometheus
