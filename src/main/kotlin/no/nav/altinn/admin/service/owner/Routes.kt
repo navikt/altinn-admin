@@ -85,7 +85,7 @@ fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environm
         }
         var output = ""
         logger.info { "Try so api..." }
-        defaultHttpClient.request<HttpStatement>(ALTINN_BASE_URL + "/api/serviceowner/reportees?") {
+        defaultHttpClient.request<HttpStatement>(ALTINN_BASE_URL + "/api/serviceowner/reportees") {
             method = HttpMethod.Get
             header("ApiKey", body.apikey)
             header("Authorization", "Bearer $token")
