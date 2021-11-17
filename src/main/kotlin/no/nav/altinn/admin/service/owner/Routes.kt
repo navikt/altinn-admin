@@ -103,7 +103,8 @@ fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environm
                 logger.warn { "Error response from $ALTINN_BASE_URL request: $response" }
                 output = "Failed"
             } else {
-                output = objectMapper.readValue(response.readBytes(), String::class.java)
+                val outputt = objectMapper.readValue(response.readBytes(), ReporteeList::class.java)
+                output = objectMapper.writeValueAsString(outputt)
                 logger.debug { "Is this a token (length): ${output.length}" }
             }
         }
