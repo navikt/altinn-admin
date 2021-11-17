@@ -113,7 +113,7 @@ fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environm
     }
 
 @Group(GROUP_NAME)
-@Location("$API_V1/serviceowner/rights")
+@Location("$API_V1/serviceowner/authorization/rights")
 class Rights
 data class RightsBody(val apikey: String, val subject: String, val repotee: String)
 
@@ -146,7 +146,7 @@ fun Routing.getRights(maskinporten: MaskinportenClient, environment: Environment
             return@post
         }
         var output = ""
-        defaultHttpClient.request<HttpStatement>(ALTINN_BASE_URL + "api/serviceowner/rights") {
+        defaultHttpClient.request<HttpStatement>(ALTINN_BASE_URL + "api/serviceowner/authorization/rights") {
             method = HttpMethod.Get
             header("ApiKey", body.apikey)
             header("Authorization", "Bearer $token")
