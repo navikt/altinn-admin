@@ -14,7 +14,6 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.HttpStatement
-import io.ktor.client.statement.readBytes
 import io.ktor.client.statement.readText
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
@@ -104,8 +103,8 @@ fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environm
                 logger.warn { "Error response from $ALTINN_BASE_URL request: $response" }
                 output = "Failed"
             } else {
-                val outputt = objectMapper.readValue(response.readBytes(), ReporteeList::class.java)
-                output = objectMapper.writeValueAsString(outputt)
+                // val outputt = objectMapper.readValue(response.readBytes(), ReporteeList::class.java)
+                output = response.readText()
                 logger.debug { "Is this a token (length): ${output.length}" }
             }
         }
