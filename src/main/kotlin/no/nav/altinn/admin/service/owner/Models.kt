@@ -16,6 +16,8 @@ data class Reportee(
     val socialsecuritynumber: String?,
     @JsonProperty("organizationnumber")
     val organizationnumber: String?,
+    @JsonProperty("parentorganizationnumber")
+    val parentorganizationnumber: String?,
     @JsonProperty("organizationform")
     val organizationform: String?,
     @JsonProperty("status")

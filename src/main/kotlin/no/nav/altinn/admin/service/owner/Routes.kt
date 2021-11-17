@@ -15,6 +15,7 @@ import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.HttpStatement
 import io.ktor.client.statement.readBytes
+import io.ktor.client.statement.readText
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
@@ -35,6 +36,7 @@ import no.nav.altinn.admin.common.objectMapper
 
 fun Routing.ownerApi(maskinporten: MaskinportenClient, environment: Environment) {
     getReportees(maskinporten, environment)
+    getRights(maskinporten, environment)
 }
 
 internal data class AnError(val error: String)
@@ -84,7 +86,6 @@ fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environm
             return@post
         }
         var output = ""
-        logger.info { "Try so api..." }
         defaultHttpClient.request<HttpStatement>(ALTINN_BASE_URL + "api/serviceowner/reportees") {
             method = HttpMethod.Get
             header("ApiKey", body.apikey)
@@ -105,6 +106,61 @@ fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environm
             } else {
                 val outputt = objectMapper.readValue(response.readBytes(), ReporteeList::class.java)
                 output = objectMapper.writeValueAsString(outputt)
+                logger.debug { "Is this a token (length): ${output.length}" }
+            }
+        }
+        call.respond(output)
+    }
+
+@Group(GROUP_NAME)
+@Location("$API_V1/serviceowner/rights")
+class Rights
+data class RightsBody(val apikey: String, val subject: String, val repotee: String)
+
+// subject={subject}&serviceCode={serviceCode}&serviceEition={serviceEdition}&roleDefinitionId={roleDefinitionId}&showConsentReportees={showConsentReportees}
+fun Routing.getRights(maskinporten: MaskinportenClient, environment: Environment) =
+    post<Rights, RightsBody>(
+        "Hent rights på subject og reportee".responds(
+            ok<ReporteeList>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+        )
+    ) { param, body ->
+
+        if (body.apikey.isEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig apikey"))
+            return@post
+        }
+        if (body.subject.isEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig subject"))
+            return@post
+        }
+        if (body.repotee.isEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig reportee"))
+            return@post
+        }
+        var token = ""
+        runBlocking {
+            token = maskinporten.tokenRequest()
+        }
+        if (token.isEmpty()) {
+            call.respond(HttpStatusCode.Unauthorized, AnError("No access token"))
+            return@post
+        }
+        var output = ""
+        defaultHttpClient.request<HttpStatement>(ALTINN_BASE_URL + "api/serviceowner/rights") {
+            method = HttpMethod.Get
+            header("ApiKey", body.apikey)
+            header("Authorization", "Bearer $token")
+            header("Accept", "application/hal+json")
+            parameter("subject", body.subject)
+            parameter("reportee", body.repotee)
+        }.execute { response: HttpResponse ->
+
+            if (response.status != HttpStatusCode.OK) {
+                logger.warn { "Error response from $ALTINN_BASE_URL request: $response" }
+                output = "Failed"
+            } else {
+                // val outputt = objectMapper.readValue(response.readBytes(), ReporteeList::class.java)
+                output = response.readText()
                 logger.debug { "Is this a token (length): ${output.length}" }
             }
         }
