@@ -1,0 +1,352 @@
+[
+  {
+    "Name": "ANSNES OG ONA",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910761536",
+    "OrganizationForm": "SPA",
+    "Status": "Active"
+  },
+  {
+    "Name": "ANTONIO MALIK",
+    "Type": "Person",
+    "SocialSecurityNumber": "20015001543"
+  },
+  {
+    "Name": "BAREKSTAD OG YTTERVÅG",
+    "Type": "Enterprise",
+    "OrganizationNumber": "810514442",
+    "OrganizationForm": "AS",
+    "Status": "Active"
+  },
+  {
+    "Name": "BLIKSVÆR OG BOKN REVISJON",
+    "Type": "Business",
+    "OrganizationNumber": "910257242",
+    "ParentOrganizationNumber": "810257202",
+    "OrganizationForm": "BEDR",
+    "Status": "Active"
+  },
+  {
+    "Name": "DAVIK OG OPPAKER",
+    "Type": "Business",
+    "OrganizationNumber": "811319872",
+    "ParentOrganizationNumber": "811319082",
+    "OrganizationForm": "BEDR",
+    "Status": "Active"
+  },
+  {
+    "Name": "EIDE OG KVITSØY",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910747304",
+    "OrganizationForm": "FLI",
+    "Status": "Active"
+  },
+  {
+    "Name": "EIDSVÅGNESET OG LANGØY GRUVER",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910073710",
+    "OrganizationForm": "AS",
+    "Status": "Active"
+  },
+  {
+    "Name": "EIKSMARKA OG SKOTSELV",
+    "Type": "Business",
+    "OrganizationNumber": "910532278",
+    "ParentOrganizationNumber": "910532235",
+    "OrganizationForm": "BEDR",
+    "Status": "Active"
+  },
+  {
+    "Name": "ENEBAKKNESET OG GRANVIN",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910747282",
+    "OrganizationForm": "FLI",
+    "Status": "Active"
+  },
+  {
+    "Name": "FLÅ OG HUSBY",
+    "Type": "Enterprise",
+    "OrganizationNumber": "810888512",
+    "OrganizationForm": "SPA",
+    "Status": "Active"
+  },
+  {
+    "Name": "FREKHAUG OG BJØRKELANGEN",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910747207",
+    "OrganizationForm": "FLI",
+    "Status": "Active"
+  },
+  {
+    "Name": "GIMSØYSAND OG HOMBORSUND REGNSKAP",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910404377",
+    "OrganizationForm": "AS",
+    "Status": "Active"
+  },
+  {
+    "Name": "GRONG OG KVAMSØY",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910418173",
+    "ParentOrganizationNumber": "810888512",
+    "OrganizationForm": "AS",
+    "Status": "Active"
+  },
+  {
+    "Name": "HALTDALEN OG SELVÆR",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910514458",
+    "OrganizationForm": "AS",
+    "Status": "Active"
+  },
+  {
+    "Name": "HERMANSEN OLE",
+    "Type": "Person",
+    "SocialSecurityNumber": "13046901112"
+  },
+  {
+    "Name": "HJELSETH STORM",
+    "Type": "Person",
+    "SocialSecurityNumber": "30100100335"
+  },
+  {
+    "Name": "HJORT PETRA PSA",
+    "Type": "Person",
+    "SocialSecurityNumber": "08074900276"
+  },
+  {
+    "Name": "JESSHEIM OG BRIKSDALSBRE",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910787489",
+    "OrganizationForm": "FLI",
+    "Status": "Active"
+  },
+  {
+    "Name": "KENT SKÅR",
+    "Type": "Person",
+    "SocialSecurityNumber": "16120100983"
+  },
+  {
+    "Name": "KJEVIK OG SELBU",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910646117",
+    "OrganizationForm": "AS",
+    "Status": "Active"
+  },
+  {
+    "Name": "LANGANGEN OG FAUSKE",
+    "Type": "Business",
+    "OrganizationNumber": "910042939",
+    "ParentOrganizationNumber": "910532235",
+    "OrganizationForm": "BEDR",
+    "Status": "Active"
+  },
+  {
+    "Name": "LARKOLLEN OG HØYHEIMSVIK",
+    "Type": "Business",
+    "OrganizationNumber": "910521594",
+    "ParentOrganizationNumber": "910514415",
+    "OrganizationForm": "BEDR",
+    "Status": "Active"
+  },
+  {
+    "Name": "LAVIK OG STRUSSHAMN",
+    "Type": "Business",
+    "OrganizationNumber": "910532251",
+    "ParentOrganizationNumber": "910532235",
+    "OrganizationForm": "BEDR",
+    "Status": "Active"
+  },
+  {
+    "Name": "LEINESFJORD OG STATHELLE",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910747053",
+    "OrganizationForm": "FLI",
+    "Status": "Active"
+  },
+  {
+    "Name": "LOEN OG BOTNHAMN REVISJON",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910222082",
+    "OrganizationForm": "AS",
+    "Status": "Active"
+  },
+  {
+    "Name": "LUNDE OG GIMSØYSAND",
+    "Type": "Enterprise",
+    "OrganizationNumber": "810747102",
+    "OrganizationForm": "FLI",
+    "Status": "Active"
+  },
+  {
+    "Name": "MARLIN TORLAND",
+    "Type": "Person",
+    "SocialSecurityNumber": "01125301440"
+  },
+  {
+    "Name": "MARVIK KAJSA FOS",
+    "Type": "Person",
+    "SocialSecurityNumber": "29126000233"
+  },
+  {
+    "Name": "MIKKELSEN ULRIK",
+    "Type": "Person",
+    "SocialSecurityNumber": "01012602355"
+  },
+  {
+    "Name": "NESTTUN OG BRIMSE",
+    "Type": "Business",
+    "OrganizationNumber": "910043196",
+    "ParentOrganizationNumber": "910532235",
+    "OrganizationForm": "BEDR",
+    "Status": "Active"
+  },
+  {
+    "Name": "NITTEDAL OG MALM",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910514415",
+    "OrganizationForm": "AS",
+    "Status": "Active"
+  },
+  {
+    "Name": "NORANGSFJORDEN OG FLISA REVISJON",
+    "Type": "Business",
+    "OrganizationNumber": "910257250",
+    "ParentOrganizationNumber": "810257202",
+    "OrganizationForm": "BEDR",
+    "Status": "Active"
+  },
+  {
+    "Name": "OPPHAUG OG TYSVÆRVÅG",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910747142",
+    "OrganizationForm": "FLI",
+    "Status": "Active"
+  },
+  {
+    "Name": "RAULAND OG FOSSLANDSOSEN",
+    "Type": "Business",
+    "OrganizationNumber": "910516655",
+    "ParentOrganizationNumber": "910623966",
+    "OrganizationForm": "BEDR",
+    "Status": "Active"
+  },
+  {
+    "Name": "RUGSUND OG RASTA REVISJON",
+    "Type": "Enterprise",
+    "OrganizationNumber": "810257202",
+    "OrganizationForm": "AS",
+    "Status": "Active"
+  },
+  {
+    "Name": "RØLDAL OG ANSNES REVISJON",
+    "Type": "Business",
+    "OrganizationNumber": "910257218",
+    "ParentOrganizationNumber": "810257202",
+    "OrganizationForm": "AAFY",
+    "Status": "Active"
+  },
+  {
+    "Name": "SANDHORNØY OG JAR",
+    "Type": "Enterprise",
+    "OrganizationNumber": "810747072",
+    "OrganizationForm": "FLI",
+    "Status": "Active"
+  },
+  {
+    "Name": "SANDØYBOTN OG LESJA",
+    "Type": "Business",
+    "OrganizationNumber": "910532308",
+    "ParentOrganizationNumber": "910532235",
+    "OrganizationForm": "BEDR",
+    "Status": "Active"
+  },
+  {
+    "Name": "SANDØYBOTN OG SISTRANDA",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910747177",
+    "OrganizationForm": "FLI",
+    "Status": "Active"
+  },
+  {
+    "Name": "SAUØY OG SJERNARØY",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910114387",
+    "OrganizationForm": "KBO",
+    "Status": "Active"
+  },
+  {
+    "Name": "SEKKEN OG AUKRA",
+    "Type": "Business",
+    "OrganizationNumber": "910521624",
+    "ParentOrganizationNumber": "910514458",
+    "OrganizationForm": "BEDR",
+    "Status": "Active"
+  },
+  {
+    "Name": "SELSØYVIK OG RAMBERG",
+    "Type": "Business",
+    "OrganizationNumber": "910712187",
+    "ParentOrganizationNumber": "910712144",
+    "OrganizationForm": "BEDR",
+    "Status": "Active"
+  },
+  {
+    "Name": "SEM OG BYGLANDSFJORD",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910747126",
+    "OrganizationForm": "FLI",
+    "Status": "Active"
+  },
+  {
+    "Name": "SETSKOG OG SØR-AUDNEDAL REGNSKAP",
+    "Type": "Business",
+    "OrganizationNumber": "910825429",
+    "ParentOrganizationNumber": "910825399",
+    "OrganizationForm": "BEDR",
+    "Status": "Active"
+  },
+  {
+    "Name": "SIGGERUD OG HOKKSUND",
+    "Type": "Business",
+    "OrganizationNumber": "910042947",
+    "ParentOrganizationNumber": "910532235",
+    "OrganizationForm": "BEDR",
+    "Status": "Active"
+  },
+  {
+    "Name": "SKJERSTAD OG BYREMO",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910050117",
+    "OrganizationForm": "AS",
+    "Status": "Active"
+  },
+  {
+    "Name": "SKJØLBERG ISABELLE",
+    "Type": "Person",
+    "SocialSecurityNumber": "03026400464"
+  },
+  {
+    "Name": "SPONGDAL OG FLEKKEFJORD",
+    "Type": "Business",
+    "OrganizationNumber": "910793756",
+    "ParentOrganizationNumber": "910646117",
+    "OrganizationForm": "BEDR",
+    "Status": "Active"
+  },
+  {
+    "Name": "STANGVIK OG RØYSE",
+    "Type": "Business",
+    "OrganizationNumber": "910804928",
+    "ParentOrganizationNumber": "810888512",
+    "OrganizationForm": "BEDR",
+    "Status": "Active"
+  },
+  {
+    "Name": "STØREN OG BEKKJARVIK",
+    "Type": "Enterprise",
+    "OrganizationNumber": "910532235",
+    "OrganizationForm": "AS",
+    "Status": "Active"
+  }
+]
