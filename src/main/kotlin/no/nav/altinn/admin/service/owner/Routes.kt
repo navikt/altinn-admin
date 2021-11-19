@@ -54,7 +54,7 @@ internal val defaultHttpClient = HttpClient(CIO) {
     }
     install(Logging) {
         logger = Logger.DEFAULT
-        level = LogLevel.NONE
+        level = LogLevel.HEADERS
     }
 }
 
@@ -114,7 +114,7 @@ fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environm
                     val outputt = objectMapper.readValue<List<Reportee>>(response.readBytes())
                     skip += outputt.size
                     output.addAll(outputt)
-                    // logger.debug { "Is this a token (length): ${output.length}" }
+                    logger.info { "Got a response, size is $skip" }
                 }
             }
         } while (skip > 0 && skip % PAGE == 0)
