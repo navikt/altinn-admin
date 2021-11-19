@@ -44,7 +44,7 @@ internal data class AnError(val error: String)
 
 internal const val GROUP_NAME = "Serviceowner api"
 internal const val ALTINN_BASE_URL = "https://tt02.altinn.no/"
-internal const val PAGE = 500
+internal const val PAGE = 50
 
 private val logger = KotlinLogging.logger { }
 
