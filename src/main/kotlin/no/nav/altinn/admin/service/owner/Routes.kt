@@ -102,8 +102,8 @@ fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environm
                 if (!body.sec.isNullOrBlank()) {
                     parameter("serviceEdition", body.sec)
                 }
-                parameter("top", PAGE)
-                parameter("skip", skip)
+                parameter("\$top", PAGE)
+                parameter("\$skip", skip)
             }.execute { response: HttpResponse ->
 
                 if (response.status != HttpStatusCode.OK) {
