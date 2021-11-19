@@ -19,6 +19,7 @@ import io.ktor.client.statement.readBytes
 import io.ktor.client.statement.readText
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.parseQueryString
 import io.ktor.locations.Location
 import io.ktor.response.respond
 import io.ktor.routing.Routing
@@ -102,7 +103,7 @@ fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environm
                 if (!body.sec.isNullOrBlank()) {
                     parameter("serviceEdition", body.sec)
                 }
-                parameter("top", PAGE)
+                parameter("top", "$PAGE")
                 if (skip != 0) {
                     parameter("skip", skip)
                 }
