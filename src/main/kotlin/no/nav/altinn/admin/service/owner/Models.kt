@@ -8,51 +8,50 @@ data class ReporteeList(
 )
 
 open class Reportee(
-    @JsonProperty("name")
+    @JsonProperty("Name")
     val name: String,
-    @JsonProperty("type")
-    val type: ReporteeType
-)
-
-data class PersonReportee(
-    @JsonProperty("name")
-    val name: String,
-    @JsonProperty("type")
-    val type: ReporteeType = ReporteeType.PERSON,
-    @JsonProperty("socialsecuritynumber")
-    val socialsecuritynumber: String
-)
-
-data class EnterpriseReportee(
-    @JsonProperty("name")
-    val name: String,
-    @JsonProperty("type")
-    val type: ReporteeType = ReporteeType.ENTERPRISE,
-    @JsonProperty("organizationnumber")
+    @JsonProperty("Type")
+    val type: ReporteeType,
+    @JsonProperty("SocialSecurityNumber")
+    val socialsecuritynumber: String?,
+    @JsonProperty("OrganizationNumber")
     val organizationnumber: String?,
-    @JsonProperty("organizationform")
-    val organizationform: String?,
-    @JsonProperty("status")
-    val status: String?
-)
-
-data class BusinessReportee(
-    @JsonProperty("name")
-    val name: String,
-    @JsonProperty("type")
-    val type: ReporteeType = ReporteeType.BUSINESS,
-    @JsonProperty("organizationnumber")
-    val organizationnumber: String?,
-    @JsonProperty("parentorganizationnumber")
+    @JsonProperty("ParentOrganizationNumber")
     val parentorganizationnumber: String?,
-    @JsonProperty("organizationform")
+    @JsonProperty("OrganizationForm")
     val organizationform: String?,
-    @JsonProperty("status")
+    @JsonProperty("Status")
     val status: String?
 )
 
-enum class ReporteeType(val type: String) {
-    ENTERPRISE("Enterprise"),
-    PERSON("Person"),
-    BUSINESS("Business")
+data class RightsRespons(
+    @JsonProperty("Subject")
+    val subject: Reportee,
+    @JsonProperty("Reportee")
+    val reportee: Reportee,
+    @JsonProperty("Rights")
+    val rights: List<Right>
+)
+
+data class Right(
+    @JsonProperty("RightID")
+    val rightId: Int,
+    @JsonProperty("RightType")
+    val rightType: String,
+    @JsonProperty("ServiceCode")
+    val serviceCode: String,
+    @JsonProperty("ServiceEditionCode")
+    val serviceEditionCode: Int,
+    @JsonProperty("Action")
+    val action: String,
+    @JsonProperty("RightSourceType")
+    val rightSourceType: String,
+    @JsonProperty("IsDelegatable")
+    val isDelegatable: Boolean
+)
+
+enum class ReporteeType {
+    Enterprise,
+    Person,
+    Business
 }

@@ -1,5 +1,6 @@
 package no.nav.altinn.admin.service.owner
 
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.ktor.application.call
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -14,6 +15,7 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.HttpStatement
+import io.ktor.client.statement.readBytes
 import io.ktor.client.statement.readText
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
@@ -42,6 +44,7 @@ internal data class AnError(val error: String)
 
 internal const val GROUP_NAME = "Serviceowner api"
 internal const val ALTINN_BASE_URL = "https://tt02.altinn.no/"
+internal const val PAGE = 50
 
 private val logger = KotlinLogging.logger { }
 
@@ -64,7 +67,7 @@ data class FilterBody(val apikey: String, val subject: String, val sc: String?, 
 fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environment) =
     post<Filter, FilterBody>(
         "Hent reportees på subject".responds(
-            ok<ReporteeList>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+            ok<List<Reportee>>(), serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) { param, body ->
 
@@ -84,30 +87,37 @@ fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environm
             call.respond(HttpStatusCode.Unauthorized, AnError("No access token"))
             return@post
         }
-        var output = ""
-        defaultHttpClient.request<HttpStatement>(ALTINN_BASE_URL + "api/serviceowner/reportees") {
-            method = HttpMethod.Get
-            header("ApiKey", body.apikey)
-            header("Authorization", "Bearer $token")
-            header("Accept", "application/hal+json")
-            parameter("subject", body.subject)
-            if (!body.sc.isNullOrBlank()) {
-                parameter("serviceCode", body.sc)
-            }
-            if (!body.sec.isNullOrBlank()) {
-                parameter("serviceEdition", body.sec)
-            }
-        }.execute { response: HttpResponse ->
+        var output = mutableListOf<Reportee>()
+        var skip = 0
+        do {
+            defaultHttpClient.request<HttpStatement>(ALTINN_BASE_URL + "api/serviceowner/reportees") {
+                method = HttpMethod.Get
+                header("ApiKey", body.apikey)
+                header("Authorization", "Bearer $token")
+                header("Accept", "application/hal+json")
+                parameter("subject", body.subject)
+                if (!body.sc.isNullOrBlank()) {
+                    parameter("serviceCode", body.sc)
+                }
+                if (!body.sec.isNullOrBlank()) {
+                    parameter("serviceEdition", body.sec)
+                }
+                parameter("top", PAGE)
+                if (skip != 0) {
+                    parameter("skip", skip)
+                }
+            }.execute { response: HttpResponse ->
 
-            if (response.status != HttpStatusCode.OK) {
-                logger.warn { "Error response from $ALTINN_BASE_URL request: $response" }
-                output = "Failed"
-            } else {
-                // val outputt = objectMapper.readValue(response.readBytes(), ReporteeList::class.java)
-                output = response.readText()
-                logger.debug { "Is this a token (length): ${output.length}" }
+                if (response.status != HttpStatusCode.OK) {
+                    logger.warn { "Error response from $ALTINN_BASE_URL request: $response" }
+                } else {
+                    val outputt = objectMapper.readValue<List<Reportee>>(response.readBytes())
+                    skip += outputt.size
+                    output.addAll(outputt)
+                    // logger.debug { "Is this a token (length): ${output.length}" }
+                }
             }
-        }
+        } while (skip > 0 && skip % PAGE == 0)
         call.respond(output)
     }
 

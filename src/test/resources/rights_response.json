@@ -1,0 +1,464 @@
+{
+  "Subject": {
+    "Name": "TORKIL SÆTRAN",
+    "Type": "Person",
+    "SocialSecurityNumber": "15105400958"
+  },
+  "Reportee": {
+    "Name": "TORKIL SÆTRAN",
+    "Type": "Person",
+    "SocialSecurityNumber": "15105400958"
+  },
+  "Rights": [
+    {
+      "RightID": 1604314,
+      "RightType": "Service",
+      "ServiceCode": "4584",
+      "ServiceEditionCode": 2016,
+      "Action": "Read",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 1604315,
+      "RightType": "Service",
+      "ServiceCode": "4584",
+      "ServiceEditionCode": 2016,
+      "Action": "Write",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 1604316,
+      "RightType": "Service",
+      "ServiceCode": "4584",
+      "ServiceEditionCode": 2016,
+      "Action": "ArchiveRead",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 1604317,
+      "RightType": "Service",
+      "ServiceCode": "4584",
+      "ServiceEditionCode": 2016,
+      "Action": "ArchiveDelete",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 1977886,
+      "RightType": "Service",
+      "ServiceCode": "4711",
+      "ServiceEditionCode": 1,
+      "Action": "Read",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 1977887,
+      "RightType": "Service",
+      "ServiceCode": "4711",
+      "ServiceEditionCode": 1,
+      "Action": "Write",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 1977888,
+      "RightType": "Service",
+      "ServiceCode": "4711",
+      "ServiceEditionCode": 1,
+      "Action": "ArchiveRead",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 1977889,
+      "RightType": "Service",
+      "ServiceCode": "4711",
+      "ServiceEditionCode": 1,
+      "Action": "ArchiveDelete",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 1983469,
+      "RightType": "Service",
+      "ServiceCode": "2913",
+      "ServiceEditionCode": 2,
+      "Action": "Read",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 1983470,
+      "RightType": "Service",
+      "ServiceCode": "2913",
+      "ServiceEditionCode": 2,
+      "Action": "Write",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 1983471,
+      "RightType": "Service",
+      "ServiceCode": "2913",
+      "ServiceEditionCode": 2,
+      "Action": "ArchiveRead",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 1983472,
+      "RightType": "Service",
+      "ServiceCode": "2913",
+      "ServiceEditionCode": 2,
+      "Action": "ArchiveDelete",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 1983686,
+      "RightType": "Service",
+      "ServiceCode": "2913",
+      "ServiceEditionCode": 3,
+      "Action": "Read",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 1983687,
+      "RightType": "Service",
+      "ServiceCode": "2913",
+      "ServiceEditionCode": 3,
+      "Action": "Write",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 1983688,
+      "RightType": "Service",
+      "ServiceCode": "2913",
+      "ServiceEditionCode": 3,
+      "Action": "ArchiveRead",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 1983689,
+      "RightType": "Service",
+      "ServiceCode": "2913",
+      "ServiceEditionCode": 3,
+      "Action": "ArchiveDelete",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 2274945,
+      "RightType": "Service",
+      "ServiceCode": "4979",
+      "ServiceEditionCode": 1,
+      "Action": "Read",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 2274946,
+      "RightType": "Service",
+      "ServiceCode": "4979",
+      "ServiceEditionCode": 1,
+      "Action": "Write",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 2274949,
+      "RightType": "Service",
+      "ServiceCode": "4979",
+      "ServiceEditionCode": 1,
+      "Action": "Sign",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 2274950,
+      "RightType": "Service",
+      "ServiceCode": "4979",
+      "ServiceEditionCode": 1,
+      "Action": "ArchiveRead",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 2274951,
+      "RightType": "Service",
+      "ServiceCode": "4979",
+      "ServiceEditionCode": 1,
+      "Action": "ArchiveDelete",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 2531193,
+      "RightType": "Service",
+      "ServiceCode": "4979",
+      "ServiceEditionCode": 2,
+      "Action": "Read",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 2531194,
+      "RightType": "Service",
+      "ServiceCode": "4979",
+      "ServiceEditionCode": 2,
+      "Action": "Write",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 2531195,
+      "RightType": "Service",
+      "ServiceCode": "4979",
+      "ServiceEditionCode": 2,
+      "Action": "Sign",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 2531196,
+      "RightType": "Service",
+      "ServiceCode": "4979",
+      "ServiceEditionCode": 2,
+      "Action": "ArchiveRead",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 2531197,
+      "RightType": "Service",
+      "ServiceCode": "4979",
+      "ServiceEditionCode": 2,
+      "Action": "ArchiveDelete",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 2939751,
+      "RightType": "Service",
+      "ServiceCode": "5111",
+      "ServiceEditionCode": 2,
+      "Action": "Read",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 2939752,
+      "RightType": "Service",
+      "ServiceCode": "5111",
+      "ServiceEditionCode": 2,
+      "Action": "Write",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 2939753,
+      "RightType": "Service",
+      "ServiceCode": "5111",
+      "ServiceEditionCode": 2,
+      "Action": "ArchiveRead",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 2939754,
+      "RightType": "Service",
+      "ServiceCode": "5111",
+      "ServiceEditionCode": 2,
+      "Action": "ArchiveDelete",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3221268,
+      "RightType": "Service",
+      "ServiceCode": "5224",
+      "ServiceEditionCode": 1,
+      "Action": "Read",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3221269,
+      "RightType": "Service",
+      "ServiceCode": "5224",
+      "ServiceEditionCode": 1,
+      "Action": "Write",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3221270,
+      "RightType": "Service",
+      "ServiceCode": "5224",
+      "ServiceEditionCode": 1,
+      "Action": "ArchiveRead",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3221271,
+      "RightType": "Service",
+      "ServiceCode": "5224",
+      "ServiceEditionCode": 1,
+      "Action": "ArchiveDelete",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3296300,
+      "RightType": "Service",
+      "ServiceCode": "5111",
+      "ServiceEditionCode": 1,
+      "Action": "Read",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3296301,
+      "RightType": "Service",
+      "ServiceCode": "5111",
+      "ServiceEditionCode": 1,
+      "Action": "Write",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3296302,
+      "RightType": "Service",
+      "ServiceCode": "5111",
+      "ServiceEditionCode": 1,
+      "Action": "ArchiveRead",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3296303,
+      "RightType": "Service",
+      "ServiceCode": "5111",
+      "ServiceEditionCode": 1,
+      "Action": "ArchiveDelete",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3328142,
+      "RightType": "Service",
+      "ServiceCode": "5152",
+      "ServiceEditionCode": 1,
+      "Action": "Read",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3328143,
+      "RightType": "Service",
+      "ServiceCode": "5152",
+      "ServiceEditionCode": 1,
+      "Action": "Write",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3328144,
+      "RightType": "Service",
+      "ServiceCode": "5152",
+      "ServiceEditionCode": 1,
+      "Action": "ArchiveRead",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3328145,
+      "RightType": "Service",
+      "ServiceCode": "5152",
+      "ServiceEditionCode": 1,
+      "Action": "ArchiveDelete",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3447225,
+      "RightType": "Service",
+      "ServiceCode": "5235",
+      "ServiceEditionCode": 1,
+      "Action": "Read",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3447226,
+      "RightType": "Service",
+      "ServiceCode": "5235",
+      "ServiceEditionCode": 1,
+      "Action": "Write",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3447227,
+      "RightType": "Service",
+      "ServiceCode": "5235",
+      "ServiceEditionCode": 1,
+      "Action": "ArchiveRead",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3447228,
+      "RightType": "Service",
+      "ServiceCode": "5235",
+      "ServiceEditionCode": 1,
+      "Action": "ArchiveDelete",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3501594,
+      "RightType": "Service",
+      "ServiceCode": "4765",
+      "ServiceEditionCode": 3,
+      "Action": "Read",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3501595,
+      "RightType": "Service",
+      "ServiceCode": "4765",
+      "ServiceEditionCode": 3,
+      "Action": "Write",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3501596,
+      "RightType": "Service",
+      "ServiceCode": "4765",
+      "ServiceEditionCode": 3,
+      "Action": "ArchiveRead",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    },
+    {
+      "RightID": 3501597,
+      "RightType": "Service",
+      "ServiceCode": "4765",
+      "ServiceEditionCode": 3,
+      "Action": "ArchiveDelete",
+      "RightSourceType": "RoleTypeRights",
+      "IsDelegatable": true
+    }
+  ]
+}
