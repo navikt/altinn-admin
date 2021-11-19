@@ -44,7 +44,7 @@ internal data class AnError(val error: String)
 
 internal const val GROUP_NAME = "Serviceowner api"
 internal const val ALTINN_BASE_URL = "https://tt02.altinn.no/"
-internal const val PAGE = 50
+internal const val PAGE = 500
 
 private val logger = KotlinLogging.logger { }
 
@@ -114,10 +114,10 @@ fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environm
                     val outputt = objectMapper.readValue<List<Reportee>>(response.readBytes())
                     skip += outputt.size
                     output.addAll(outputt)
-                    logger.info { "Got a response, size is $skip" }
+                    logger.info { "Got a response, size is ${outputt.size}, skip is $skip" }
                 }
             }
-        } while (skip > 0 && skip % PAGE == 0)
+        } while (skip > 0 && skip % PAGE == 0 && skip < 5000)
         call.respond(output)
     }
 
