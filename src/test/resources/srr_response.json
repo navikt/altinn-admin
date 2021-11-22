@@ -1,0 +1,71 @@
+[
+  {
+    "Id": 17783,
+    "ServiceCode": "5252",
+    "ServiceEditionCode": 2,
+    "Reportee": "914782007",
+    "Right": "Read",
+    "ValidTo": "2021-11-14T06:34:46.137",
+    "Condition": {
+      "AllowedRedirectDomain": [
+        "*.DNB.NO"
+      ]
+    }
+  },
+  {
+    "Id": 18404,
+    "ServiceCode": "5252",
+    "ServiceEditionCode": 2,
+    "Reportee": "959922659",
+    "Right": "Read",
+    "ValidTo": "2022-02-24T14:13:31.237",
+    "Condition": {
+      "AllowedRedirectDomain": [
+        "*.LIVLI.PREPROD.NORDEALIV.NO/PD",
+        "*.LIV.PREPROD.NORDEA.NO/PD"
+      ]
+    }
+  },
+  {
+    "Id": 19660,
+    "ServiceCode": "5252",
+    "ServiceEditionCode": 2,
+    "Reportee": "988343773",
+    "Right": "Read",
+    "ValidTo": "2022-08-13T14:38:15.777",
+    "Condition": {
+      "AllowedRedirectDomain": [
+        "*.DEVGJENSIDIGE.NO"
+      ]
+    }
+  },
+  {
+    "Id": 19661,
+    "ServiceCode": "5252",
+    "ServiceEditionCode": 2,
+    "Reportee": "988343773",
+    "Right": "Read",
+    "ValidTo": "2022-08-13T14:40:32.947",
+    "Condition": {
+      "AllowedRedirectDomain": [
+        "*.DEVGJENSIDIGE.NO",
+        "*.TESTGJENSIDIGE.NO"
+      ]
+    }
+  },
+  {
+    "Id": 40191,
+    "ServiceCode": "5252",
+    "ServiceEditionCode": 2,
+    "Reportee": "958995369",
+    "Right": "Read",
+    "ValidTo": "2030-01-01T00:00:00",
+    "Condition": {
+      "AllowedRedirectDomain": [
+        "WWW2-T.STOREBRAND.NO",
+        "WWW2-TS.STOREBRAND.NO",
+        "*.STOREBRAND.NO"
+      ]
+    }
+  }
+]

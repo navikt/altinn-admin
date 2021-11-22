@@ -67,12 +67,33 @@ data class Right(
 )
 
 data class SrrResponse(
-    @JsonProperty("Subject")
-    val subject: Reportee,
+    @JsonProperty("Id")
+    val id: Int,
+    @JsonProperty("ServiceCode")
+    val serviceCode: String,
+    @JsonProperty("ServiceEditionCode")
+    val serviceEditionCode: Int,
     @JsonProperty("Reportee")
-    val reportee: Reportee,
-    @JsonProperty("Rights")
-    val rights: MutableList<Right>
+    val reportee: String,
+    @JsonProperty("Right")
+    val right: String,
+    @JsonProperty("ValidTo")
+    val validTo: String?,
+    @JsonProperty("Condition")
+    val condition: Condition,
+)
+
+data class Condition(
+    @JsonProperty("HandledBy")
+    val handledBy: String?,
+    @JsonProperty("IsRecipient")
+    val isRecipient: Boolean?,
+    @JsonProperty("IsSender")
+    val isSender: Boolean?,
+    @JsonProperty("KeepSessionAlive")
+    val keepSessionAlive: Boolean?,
+    @JsonProperty("AllowedRedirectDomain")
+    val allowedRedirectDomain: List<String>
 )
 
 enum class ReporteeType {

@@ -16,7 +16,6 @@ import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.HttpStatement
 import io.ktor.client.statement.readBytes
-import io.ktor.client.statement.readText
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
@@ -123,7 +122,7 @@ fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environm
 @Group(GROUP_NAME)
 @Location("$API_V1/serviceowner/authorization/rights")
 class Rights
-data class RightsBody(val apikey: String, val subject: String, val repotee: String)
+data class RightsBody(val apikey: String, val subject: String, val reportee: String)
 
 fun Routing.getRights(maskinporten: MaskinportenClient, environment: Environment) =
     post<Rights, RightsBody>(
@@ -140,7 +139,7 @@ fun Routing.getRights(maskinporten: MaskinportenClient, environment: Environment
             call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig subject"))
             return@post
         }
-        if (body.repotee.isEmpty()) {
+        if (body.reportee.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig reportee"))
             return@post
         }
@@ -161,7 +160,7 @@ fun Routing.getRights(maskinporten: MaskinportenClient, environment: Environment
                 header("Authorization", "Bearer $token")
                 header("Accept", "application/hal+json")
                 parameter("subject", body.subject)
-                parameter("reportee", body.repotee)
+                parameter("reportee", body.reportee)
                 parameter("\$top", PAGE)
                 parameter("\$skip", skip)
             }.execute { response: HttpResponse ->
@@ -192,7 +191,7 @@ data class SrrBody(val apikey: String, val srr: SrrType, val reportee: String?)
 fun Routing.getSrr(maskinporten: MaskinportenClient, environment: Environment) =
     post<SRR, SrrBody>(
         "Hent info fra tjenesteeier styrt rettighetsregister på tjenesten".responds(
-            ok<SrrResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+            ok<List<SrrResponse>>(), serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) { param, body ->
 
@@ -216,7 +215,7 @@ fun Routing.getSrr(maskinporten: MaskinportenClient, environment: Environment) =
             call.respond(HttpStatusCode.Unauthorized, AnError("No access token"))
             return@post
         }
-        var output = ""
+        val output = mutableListOf<SrrResponse>()
         var skip = 0
         do {
             defaultHttpClient.request<HttpStatement>(ALTINN_BASE_URL + "api/serviceowner/Srr") {
@@ -236,16 +235,11 @@ fun Routing.getSrr(maskinporten: MaskinportenClient, environment: Environment) =
                 if (response.status != HttpStatusCode.OK) {
                     logger.warn { "Error response from $ALTINN_BASE_URL request: $response" }
                 } else {
-                    // val outputt = objectMapper.readValue(response.readBytes(), ReporteeList::class.java)
-                    // val rightsResponse = objectMapper.readValue<RightsResponse>(response.readBytes())
-                    // skip += rightsResponse.rights.size
-                    // if (output == null) {
-                    //    output = rightsResponse
-                    // } else {
-                    //    output?.rights?.addAll(rightsResponse.rights)
-                    // }
-                    output = response.readText()
-                    // logger.info { "Got a response, size is ${rightsResponse.rights.size}, skip is $skip" }
+
+                    val srrResponse = objectMapper.readValue<List<SrrResponse>>(response.readBytes())
+                    skip += srrResponse.size
+                    output.addAll(srrResponse)
+                    logger.info { "Got a response, size is ${srrResponse.size}, skip is $skip" }
                 }
             }
         } while (skip > 0 && skip % PAGE == 0 && skip < 5000)

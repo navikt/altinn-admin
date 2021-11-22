@@ -9,6 +9,7 @@ import org.amshove.kluent.`should be equal to`
 class OwnerModelTest {
     val reporteeRespons = "/reportee_response.json".getResource()
     val rightsRespons = "/rights_response.json".getResource()
+    val srrResponse = "/srr_response.json".getResource()
 
     @Test
     fun testReporteesRespons() {
@@ -20,5 +21,11 @@ class OwnerModelTest {
     fun testRightsRespons() {
         val rights = objectMapper.readValue<RightsResponse>(rightsRespons)
         rights.rights.size `should be equal to` 50
+    }
+
+    @Test
+    fun testSrrResponse() {
+        val srrResponse = objectMapper.readValue<List<SrrResponse>>(srrResponse)
+        srrResponse.size `should be equal to` 5
     }
 }
