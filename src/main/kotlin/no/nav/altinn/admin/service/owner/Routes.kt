@@ -16,7 +16,6 @@ import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.HttpStatement
 import io.ktor.client.statement.readBytes
-import io.ktor.client.statement.readText
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
@@ -128,7 +127,7 @@ data class RightsBody(val apikey: String, val subject: String, val repotee: Stri
 fun Routing.getRights(maskinporten: MaskinportenClient, environment: Environment) =
     post<Rights, RightsBody>(
         "Hent rights på subject og reportee".responds(
-            ok<ReporteeList>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+            ok<RightsRespons>(), serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) { param, body ->
 
@@ -152,24 +151,34 @@ fun Routing.getRights(maskinporten: MaskinportenClient, environment: Environment
             call.respond(HttpStatusCode.Unauthorized, AnError("No access token"))
             return@post
         }
-        var output = ""
-        defaultHttpClient.request<HttpStatement>(ALTINN_BASE_URL + "api/serviceowner/authorization/rights") {
-            method = HttpMethod.Get
-            header("ApiKey", body.apikey)
-            header("Authorization", "Bearer $token")
-            header("Accept", "application/hal+json")
-            parameter("subject", body.subject)
-            parameter("reportee", body.repotee)
-        }.execute { response: HttpResponse ->
+        var output: RightsRespons? = null
+        var skip = 0
+        do {
+            defaultHttpClient.request<HttpStatement>(ALTINN_BASE_URL + "api/serviceowner/authorization/rights") {
+                method = HttpMethod.Get
+                header("ApiKey", body.apikey)
+                header("Authorization", "Bearer $token")
+                header("Accept", "application/hal+json")
+                parameter("subject", body.subject)
+                parameter("reportee", body.repotee)
+                parameter("\$top", PAGE)
+                parameter("\$skip", skip)
+            }.execute { response: HttpResponse ->
 
-            if (response.status != HttpStatusCode.OK) {
-                logger.warn { "Error response from $ALTINN_BASE_URL request: $response" }
-                output = "Failed"
-            } else {
-                // val outputt = objectMapper.readValue(response.readBytes(), ReporteeList::class.java)
-                output = response.readText()
-                logger.debug { "Is this a token (length): ${output.length}" }
+                if (response.status != HttpStatusCode.OK) {
+                    logger.warn { "Error response from $ALTINN_BASE_URL request: $response" }
+                } else {
+                    // val outputt = objectMapper.readValue(response.readBytes(), ReporteeList::class.java)
+                    val rightsRespons = objectMapper.readValue<RightsRespons>(response.readBytes())
+                    skip += rightsRespons.rights.size
+                    if (output == null) {
+                        output = rightsRespons
+                    } else {
+                        output?.rights?.addAll(rightsRespons.rights)
+                    }
+                    logger.info { "Got a response, size is ${rightsRespons.rights.size}, skip is $skip" }
+                }
             }
-        }
-        call.respond(output)
+        } while (skip > 0 && skip % PAGE == 0 && skip < 5000)
+        call.respond(output!!)
     }

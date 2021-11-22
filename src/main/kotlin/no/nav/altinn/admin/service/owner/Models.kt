@@ -30,7 +30,7 @@ data class RightsRespons(
     @JsonProperty("Reportee")
     val reportee: Reportee,
     @JsonProperty("Rights")
-    val rights: List<Right>
+    val rights: MutableList<Right>
 )
 
 data class Right(
