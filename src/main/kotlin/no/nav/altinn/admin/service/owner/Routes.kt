@@ -16,6 +16,7 @@ import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.HttpStatement
 import io.ktor.client.statement.readBytes
+import io.ktor.client.statement.readText
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
@@ -33,6 +34,7 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.client.MaskinportenClient
 import no.nav.altinn.admin.common.API_V1
 import no.nav.altinn.admin.common.objectMapper
+import no.nav.altinn.admin.service.srr.SrrType
 
 fun Routing.ownerApi(maskinporten: MaskinportenClient, environment: Environment) {
     getReportees(maskinporten, environment)
@@ -54,7 +56,7 @@ internal val defaultHttpClient = HttpClient(CIO) {
     }
     install(Logging) {
         logger = Logger.DEFAULT
-        level = LogLevel.HEADERS
+        level = LogLevel.NONE
     }
 }
 
@@ -63,7 +65,6 @@ internal val defaultHttpClient = HttpClient(CIO) {
 class Filter
 data class FilterBody(val apikey: String, val subject: String, val sc: String?, val sec: String?)
 
-// subject={subject}&serviceCode={serviceCode}&serviceEition={serviceEdition}&roleDefinitionId={roleDefinitionId}&showConsentReportees={showConsentReportees}
 fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environment) =
     post<Filter, FilterBody>(
         "Hent reportees på subject".responds(
@@ -124,7 +125,6 @@ fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environm
 class Rights
 data class RightsBody(val apikey: String, val subject: String, val repotee: String)
 
-// subject={subject}&serviceCode={serviceCode}&serviceEition={serviceEdition}&roleDefinitionId={roleDefinitionId}&showConsentReportees={showConsentReportees}
 fun Routing.getRights(maskinporten: MaskinportenClient, environment: Environment) =
     post<Rights, RightsBody>(
         "Hent rights på subject og reportee".responds(
@@ -185,9 +185,9 @@ fun Routing.getRights(maskinporten: MaskinportenClient, environment: Environment
     }
 
 @Group(GROUP_NAME)
-@Location("$API_V1/serviceowner/Srr")
+@Location("$API_V1/serviceowner/srr")
 class SRR
-data class SrrBody(val apikey: String, val subject: String, val repotee: String)
+data class SrrBody(val apikey: String, val srr: SrrType, val reportee: String?)
 
 fun Routing.getSrr(maskinporten: MaskinportenClient, environment: Environment) =
     post<SRR, SrrBody>(
@@ -200,12 +200,12 @@ fun Routing.getSrr(maskinporten: MaskinportenClient, environment: Environment) =
             call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig apikey"))
             return@post
         }
-        if (body.subject.isEmpty()) {
-            call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig subject"))
+        if (body.srr.servicecode.isEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig serviceCode"))
             return@post
         }
-        if (body.repotee.isEmpty()) {
-            call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig reportee"))
+        if (body.srr.serviceeditioncode.isEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig serviceEditionCode"))
             return@post
         }
         var token = ""
@@ -216,7 +216,7 @@ fun Routing.getSrr(maskinporten: MaskinportenClient, environment: Environment) =
             call.respond(HttpStatusCode.Unauthorized, AnError("No access token"))
             return@post
         }
-        var output: RightsResponse? = null
+        var output = ""
         var skip = 0
         do {
             defaultHttpClient.request<HttpStatement>(ALTINN_BASE_URL + "api/serviceowner/Srr") {
@@ -224,8 +224,11 @@ fun Routing.getSrr(maskinporten: MaskinportenClient, environment: Environment) =
                 header("ApiKey", body.apikey)
                 header("Authorization", "Bearer $token")
                 header("Accept", "application/hal+json")
-                parameter("subject", body.subject)
-                parameter("reportee", body.repotee)
+                parameter("serviceCode", body.srr.servicecode)
+                parameter("serviceEditionCode", body.srr.serviceeditioncode)
+                if (!body.reportee.isNullOrEmpty()) {
+                    parameter("reportee", body.reportee)
+                }
                 parameter("\$top", PAGE)
                 parameter("\$skip", skip)
             }.execute { response: HttpResponse ->
@@ -234,14 +237,15 @@ fun Routing.getSrr(maskinporten: MaskinportenClient, environment: Environment) =
                     logger.warn { "Error response from $ALTINN_BASE_URL request: $response" }
                 } else {
                     // val outputt = objectMapper.readValue(response.readBytes(), ReporteeList::class.java)
-                    val rightsResponse = objectMapper.readValue<RightsResponse>(response.readBytes())
-                    skip += rightsResponse.rights.size
-                    if (output == null) {
-                        output = rightsResponse
-                    } else {
-                        output?.rights?.addAll(rightsResponse.rights)
-                    }
-                    logger.info { "Got a response, size is ${rightsResponse.rights.size}, skip is $skip" }
+                    // val rightsResponse = objectMapper.readValue<RightsResponse>(response.readBytes())
+                    // skip += rightsResponse.rights.size
+                    // if (output == null) {
+                    //    output = rightsResponse
+                    // } else {
+                    //    output?.rights?.addAll(rightsResponse.rights)
+                    // }
+                    output = response.readText()
+                    // logger.info { "Got a response, size is ${rightsResponse.rights.size}, skip is $skip" }
                 }
             }
         } while (skip > 0 && skip % PAGE == 0 && skip < 5000)
