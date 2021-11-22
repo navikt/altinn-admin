@@ -18,7 +18,7 @@ class OwnerModelTest {
 
     @Test
     fun testRightsRespons() {
-        val rights = objectMapper.readValue<RightsRespons>(rightsRespons)
+        val rights = objectMapper.readValue<RightsResponse>(rightsRespons)
         rights.rights.size `should be equal to` 50
     }
 }

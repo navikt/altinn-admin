@@ -37,6 +37,7 @@ import no.nav.altinn.admin.common.objectMapper
 fun Routing.ownerApi(maskinporten: MaskinportenClient, environment: Environment) {
     getReportees(maskinporten, environment)
     getRights(maskinporten, environment)
+    getSrr(maskinporten, environment)
 }
 
 internal data class AnError(val error: String)
@@ -127,7 +128,7 @@ data class RightsBody(val apikey: String, val subject: String, val repotee: Stri
 fun Routing.getRights(maskinporten: MaskinportenClient, environment: Environment) =
     post<Rights, RightsBody>(
         "Hent rights på subject og reportee".responds(
-            ok<RightsRespons>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+            ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) { param, body ->
 
@@ -151,7 +152,7 @@ fun Routing.getRights(maskinporten: MaskinportenClient, environment: Environment
             call.respond(HttpStatusCode.Unauthorized, AnError("No access token"))
             return@post
         }
-        var output: RightsRespons? = null
+        var output: RightsResponse? = null
         var skip = 0
         do {
             defaultHttpClient.request<HttpStatement>(ALTINN_BASE_URL + "api/serviceowner/authorization/rights") {
@@ -169,14 +170,78 @@ fun Routing.getRights(maskinporten: MaskinportenClient, environment: Environment
                     logger.warn { "Error response from $ALTINN_BASE_URL request: $response" }
                 } else {
                     // val outputt = objectMapper.readValue(response.readBytes(), ReporteeList::class.java)
-                    val rightsRespons = objectMapper.readValue<RightsRespons>(response.readBytes())
-                    skip += rightsRespons.rights.size
+                    val rightsResponse = objectMapper.readValue<RightsResponse>(response.readBytes())
+                    skip += rightsResponse.rights.size
                     if (output == null) {
-                        output = rightsRespons
+                        output = rightsResponse
                     } else {
-                        output?.rights?.addAll(rightsRespons.rights)
+                        output?.rights?.addAll(rightsResponse.rights)
                     }
-                    logger.info { "Got a response, size is ${rightsRespons.rights.size}, skip is $skip" }
+                    logger.info { "Got a response, size is ${rightsResponse.rights.size}, skip is $skip" }
+                }
+            }
+        } while (skip > 0 && skip % PAGE == 0 && skip < 5000)
+        call.respond(output!!)
+    }
+
+@Group(GROUP_NAME)
+@Location("$API_V1/serviceowner/Srr")
+class SRR
+data class SrrBody(val apikey: String, val subject: String, val repotee: String)
+
+fun Routing.getSrr(maskinporten: MaskinportenClient, environment: Environment) =
+    post<SRR, SrrBody>(
+        "Hent info fra tjenesteeier styrt rettighetsregister på tjenesten".responds(
+            ok<SrrResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+        )
+    ) { param, body ->
+
+        if (body.apikey.isEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig apikey"))
+            return@post
+        }
+        if (body.subject.isEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig subject"))
+            return@post
+        }
+        if (body.repotee.isEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig reportee"))
+            return@post
+        }
+        var token = ""
+        runBlocking {
+            token = maskinporten.tokenRequest()
+        }
+        if (token.isEmpty()) {
+            call.respond(HttpStatusCode.Unauthorized, AnError("No access token"))
+            return@post
+        }
+        var output: RightsResponse? = null
+        var skip = 0
+        do {
+            defaultHttpClient.request<HttpStatement>(ALTINN_BASE_URL + "api/serviceowner/Srr") {
+                method = HttpMethod.Get
+                header("ApiKey", body.apikey)
+                header("Authorization", "Bearer $token")
+                header("Accept", "application/hal+json")
+                parameter("subject", body.subject)
+                parameter("reportee", body.repotee)
+                parameter("\$top", PAGE)
+                parameter("\$skip", skip)
+            }.execute { response: HttpResponse ->
+
+                if (response.status != HttpStatusCode.OK) {
+                    logger.warn { "Error response from $ALTINN_BASE_URL request: $response" }
+                } else {
+                    // val outputt = objectMapper.readValue(response.readBytes(), ReporteeList::class.java)
+                    val rightsResponse = objectMapper.readValue<RightsResponse>(response.readBytes())
+                    skip += rightsResponse.rights.size
+                    if (output == null) {
+                        output = rightsResponse
+                    } else {
+                        output?.rights?.addAll(rightsResponse.rights)
+                    }
+                    logger.info { "Got a response, size is ${rightsResponse.rights.size}, skip is $skip" }
                 }
             }
         } while (skip > 0 && skip % PAGE == 0 && skip < 5000)

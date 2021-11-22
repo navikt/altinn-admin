@@ -24,7 +24,7 @@ open class Reportee(
     val status: String?
 )
 
-data class RightsRespons(
+data class RightsResponse(
     @JsonProperty("Subject")
     val subject: Reportee,
     @JsonProperty("Reportee")
@@ -38,16 +38,41 @@ data class Right(
     val rightId: Int,
     @JsonProperty("RightType")
     val rightType: String,
+    @JsonProperty("SystemResourceID")
+    val systemResourceID: String?,
     @JsonProperty("ServiceCode")
     val serviceCode: String,
     @JsonProperty("ServiceEditionCode")
     val serviceEditionCode: Int,
+    @JsonProperty("ServiceOwner")
+    val serviceOwner: String?,
+    @JsonProperty("ServiceOwnerCode")
+    val serviceOwnerCode: String?,
+    @JsonProperty("MessageID")
+    val messageID: String?,
+    @JsonProperty("Delegator")
+    val delegator: String?,
+    @JsonProperty("DelegatedTime")
+    val delegatedTime: String?,
     @JsonProperty("Action")
     val action: String,
     @JsonProperty("RightSourceType")
     val rightSourceType: String,
     @JsonProperty("IsDelegatable")
-    val isDelegatable: Boolean
+    val isDelegatable: Boolean,
+    @JsonProperty("ValidToDate")
+    val validToDate: String?,
+    @JsonProperty("IsConsentDelegation")
+    val isConsentDelegation: Boolean?
+)
+
+data class SrrResponse(
+    @JsonProperty("Subject")
+    val subject: Reportee,
+    @JsonProperty("Reportee")
+    val reportee: Reportee,
+    @JsonProperty("Rights")
+    val rights: MutableList<Right>
 )
 
 enum class ReporteeType {
