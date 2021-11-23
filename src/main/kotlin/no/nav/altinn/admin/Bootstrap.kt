@@ -50,7 +50,7 @@ import java.util.concurrent.Executors
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.slf4j.MDCContext
-import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import mu.KotlinLogging
 import no.nav.altinn.admin.api.nais
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Contact
@@ -292,11 +292,20 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
 }
 
 data class UserSession(val token: String)
+
+@Serializable
 data class UserInfo(
-    val id: String,
+    val aio: String,
+    val amr: String,
+    val family_name: String,
+    val given_name: String,
+    val ipaddr: String,
     val name: String,
-    @SerialName("given_name") val givenName: String,
-    @SerialName("family_name") val familyName: String,
-    val picture: String,
-    val locale: String
+    val oid: String,
+    val sub: String,
+    val tid: String,
+    val unique_name: String,
+    val upn: String,
+    val uti: String,
+    val ver: String
 )
