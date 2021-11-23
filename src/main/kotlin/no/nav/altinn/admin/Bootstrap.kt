@@ -13,6 +13,10 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.features.logging.DEFAULT
+import io.ktor.client.features.logging.LogLevel
+import io.ktor.client.features.logging.Logger
+import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.utils.CacheControl
@@ -182,6 +186,10 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         install(JsonFeature) {
             serializer = KotlinxSerializer()
         }
+        install(Logging) {
+            logger = Logger.DEFAULT
+            level = LogLevel.ALL
+        }
     }
     install(Authentication) {
         oauth("auth-oauth-microsoft") {
@@ -254,7 +262,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
             get("/oauth2/login") {}
             get("/oauth2/callback") {
                 val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
-                logger.info { "access token: ${principal?.accessToken}" }
+                logger.debug { "access token: ${principal?.accessToken}" }
                 call.sessions.set(UserSession(principal?.accessToken.toString()))
                 call.respondRedirect(SWAGGER_URL_V1)
             }
