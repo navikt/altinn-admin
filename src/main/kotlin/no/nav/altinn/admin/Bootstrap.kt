@@ -13,6 +13,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.request.get
+import io.ktor.client.request.headers
 import io.ktor.client.utils.CacheControl
 import io.ktor.features.AutoHeadResponse
 import io.ktor.features.CallId
@@ -32,12 +34,14 @@ import io.ktor.locations.Locations
 import io.ktor.request.path
 import io.ktor.response.respond
 import io.ktor.response.respondRedirect
+import io.ktor.response.respondText
 import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.sessions.Sessions
 import io.ktor.sessions.cookie
+import io.ktor.sessions.get
 import io.ktor.sessions.sessions
 import io.ktor.sessions.set
 import io.ktor.util.error
@@ -253,6 +257,19 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
                 logger.info { "access token: ${principal?.accessToken}" }
                 call.sessions.set(UserSession(principal?.accessToken.toString()))
                 call.respondRedirect(SWAGGER_URL_V1)
+            }
+        }
+        get("/hello") {
+            val userSession: UserSession? = call.sessions.get<UserSession>()
+            if (userSession != null) {
+                val userInfo: UserInfo = httpClient.get("https://login.microsoftonline.com/common/oauth2/v2/userinfo") {
+                    headers {
+                        append(HttpHeaders.Authorization, "Bearer ${userSession.token}")
+                    }
+                }
+                call.respondText("Hello, ${userInfo.name}!")
+            } else {
+                call.respondRedirect("/")
             }
         }
 
