@@ -262,7 +262,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         get("/hello") {
             val userSession: UserSession? = call.sessions.get<UserSession>()
             if (userSession != null) {
-                val userInfo: UserInfo = httpClient.get("https://login.microsoftonline.com/common/oauth2/v2/userinfo") {
+                val userInfo: UserInfo = httpClient.get("https://login.microsoftonline.com/common/openid/userinfo") {
                     headers {
                         append(HttpHeaders.Authorization, "Bearer ${userSession.token}")
                     }
