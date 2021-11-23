@@ -231,11 +231,9 @@ fun Routing.getSrr(maskinporten: MaskinportenClient, environment: Environment) =
                 parameter("\$top", PAGE)
                 parameter("\$skip", skip)
             }.execute { response: HttpResponse ->
-
                 if (response.status != HttpStatusCode.OK) {
                     logger.warn { "Error response from $ALTINN_BASE_URL request: $response" }
                 } else {
-
                     val srrResponse = objectMapper.readValue<List<SrrResponse>>(response.readBytes())
                     skip += srrResponse.size
                     output.addAll(srrResponse)
@@ -243,5 +241,5 @@ fun Routing.getSrr(maskinporten: MaskinportenClient, environment: Environment) =
                 }
             }
         } while (skip > 0 && skip % PAGE == 0 && skip < 5000)
-        call.respond(output!!)
+        call.respond(output)
     }
