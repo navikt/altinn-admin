@@ -189,7 +189,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         }
         install(Logging) {
             logger = Logger.DEFAULT
-            level = LogLevel.ALL
+            level = LogLevel.NONE
         }
     }
     install(Authentication) {
