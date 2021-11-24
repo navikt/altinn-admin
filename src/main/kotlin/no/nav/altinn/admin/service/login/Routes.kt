@@ -42,10 +42,12 @@ fun Routing.getLogin(environment: Environment, httpClient: HttpClient) =
             ok<String>(), serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) {
-        httpClient.get<Any>("/oauth2/login")
+        httpClient.get<Any>("https://altinn-admin.dev.intern.nav.no/oauth2/login")
         val userSession: UserSession? = call.sessions.get<UserSession>()
         if (userSession != null) {
             logger.info { "Got usersession here" }
+        } else {
+            logger.info { "usersession is null, too soon" }
         }
         call.respond(HttpStatusCode.OK, "Token: MAYBE HERE...")
     }
