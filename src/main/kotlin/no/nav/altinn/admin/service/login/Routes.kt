@@ -17,6 +17,7 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.get
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ok
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.responds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
+import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.client.azuread.AzureAdClient
 import no.nav.altinn.admin.client.wellknown.getWellKnown
 import no.nav.altinn.admin.common.API_V1
@@ -39,17 +40,18 @@ class Test
 fun Routing.getLogin(environment: Environment, httpClient: HttpClient) =
     get<Test> (
         "Login".responds(
-            ok<String>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+            ok<String>(), serviceUnavailable<AnError>(), unAuthorized<AnError>()
         )
     ) {
         httpClient.get<Any>("https://altinn-admin.dev.intern.nav.no/oauth2/login")
         val userSession: UserSession? = call.sessions.get<UserSession>()
         if (userSession != null) {
             logger.info { "Got usersession here" }
+            call.respond(HttpStatusCode.OK, "{ \"Info\": \"Copy token and paste it at bearer token \"\n \"Token\": \"${userSession.token}\" }")
         } else {
-            logger.info { "usersession is null, too soon" }
+            logger.info { "usersession is null" }
+            call.respond(HttpStatusCode.Unauthorized, AnError("Could not authorize, try again"))
         }
-        call.respond(HttpStatusCode.OK, "Token: MAYBE HERE...")
     }
 
 @Group(GROUP_NAME)
