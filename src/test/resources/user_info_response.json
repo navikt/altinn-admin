@@ -1,0 +1,17 @@
+{
+  "amr": ["pwd","rsa","mfa"],
+  "family_name": "Nordmann",
+  "given_name": "Nordmann",
+  "ipaddr": "84.212.144.193",
+  "name": "Nordmann, Nordmann",
+  "oid": "0b2d664b-1234-1234-1234-c24ef80e86ad",
+  "onprem_sid": "233572-1751686-4194434-605608",
+  "rh": "0.ASAANGU2VNSedC47i-Ufxew9AvA_z3MmWwVogAC8.",
+  "sub": "jbJwNyY3-zkcAUTt-7rf9_rS1_6_ilq4ZHmk",
+  "tid": "62366534-1234-1234-1234-9b5535279d0b",
+  "unique_name": "Nordmann.Nordmann@nav.no",
+  "upn": "Nordmann.Nordmann@nav.no",
+  "uti": "4higfsdt6wa5wAA",
+  "ver": "1.0",
+  "groups": ["2d7f1c0d-1234-1234-8bb2-8f3a79f8f949","db95e00b-1234-1234-1234-4a40cb75652d"]
+}

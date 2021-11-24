@@ -4,11 +4,8 @@ import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
-import io.ktor.auth.OAuthAccessTokenResponse
 import io.ktor.auth.OAuthServerSettings
-import io.ktor.auth.authenticate
 import io.ktor.auth.oauth
-import io.ktor.auth.principal
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.features.json.JsonFeature
@@ -54,7 +51,6 @@ import java.util.concurrent.Executors
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.slf4j.MDCContext
-import kotlinx.serialization.Serializable
 import mu.KotlinLogging
 import no.nav.altinn.admin.api.nais
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Contact
@@ -72,6 +68,8 @@ import no.nav.altinn.admin.service.correspondence.AltinnCorrespondenceService
 import no.nav.altinn.admin.service.correspondence.correspondenceAPI
 import no.nav.altinn.admin.service.dq.AltinnDQService
 import no.nav.altinn.admin.service.dq.dqAPI
+import no.nav.altinn.admin.service.login.UserInfo
+import no.nav.altinn.admin.service.login.UserSession
 import no.nav.altinn.admin.service.login.loginAPI
 import no.nav.altinn.admin.service.owner.ownerApi
 import no.nav.altinn.admin.service.prefill.AltinnPrefillService
@@ -258,15 +256,15 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
             val fileName = call.parameters["fileName"]
             if (fileName == "swagger.json") call.respond(swagger) else swaggerUI.serve(fileName, call)
         }
-        authenticate("auth-oauth-microsoft") {
-            get("/oauth2/login") {}
-            get("/oauth2/callback") {
-                val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
-                logger.debug { "access token: ${principal?.accessToken}" }
-                call.sessions.set(UserSession(principal?.accessToken.toString()))
-                call.respondRedirect(SWAGGER_URL_V1)
-            }
-        }
+//        authenticate("auth-oauth-microsoft") {
+//            get("/oauth2/login") {}
+//            get("/oauth2/callback") {
+//                val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
+//                logger.debug { "access token: ${principal?.accessToken}" }
+//                call.sessions.set(UserSession(principal?.accessToken.toString()))
+//                call.respondRedirect(SWAGGER_URL_V1)
+//            }
+//        }
         get("/hello") {
             val userSession: UserSession? = call.sessions.get<UserSession>()
             if (userSession != null) {
@@ -298,22 +296,3 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         }
     }
 }
-
-data class UserSession(val token: String)
-
-@Serializable
-data class UserInfo(
-    val aio: String,
-    val amr: String,
-    val family_name: String,
-    val given_name: String,
-    val ipaddr: String,
-    val name: String,
-    val oid: String,
-    val sub: String,
-    val tid: String,
-    val unique_name: String,
-    val upn: String,
-    val uti: String,
-    val ver: String
-)
