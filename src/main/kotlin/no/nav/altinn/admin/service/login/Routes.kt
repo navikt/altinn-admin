@@ -1,20 +1,16 @@
 package no.nav.altinn.admin.service.login
 
 import io.ktor.application.call
-import io.ktor.auth.OAuthAccessTokenResponse
-import io.ktor.auth.authenticate
-import io.ktor.auth.principal
+import io.ktor.client.HttpClient
+import io.ktor.client.request.get
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
 import io.ktor.response.respond
-import io.ktor.response.respondRedirect
 import io.ktor.routing.Routing
-import io.ktor.routing.get
+import io.ktor.sessions.get
 import io.ktor.sessions.sessions
-import io.ktor.sessions.set
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
-import no.nav.altinn.admin.SWAGGER_URL_V1
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.badRequest
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.get
@@ -25,21 +21,10 @@ import no.nav.altinn.admin.client.azuread.AzureAdClient
 import no.nav.altinn.admin.client.wellknown.getWellKnown
 import no.nav.altinn.admin.common.API_V1
 
-fun Routing.loginAPI(environment: Environment) {
-    getToken(environment)
-    getToken2(environment)
-    getLogin(environment)
-    authenticate("auth-oauth-microsoft") {
-        get("$API_V1/login") {}
-        get("/oauth2/callback") {
-            val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
-            logger.debug { "access token: ${principal?.accessToken}" }
-            logger.info { "Setting user session" }
-            val userSession = UserSession(principal?.accessToken.toString())
-            call.sessions.set(userSession)
-            call.respondRedirect(SWAGGER_URL_V1)
-        }
-    }
+fun Routing.loginAPI(environment: Environment, httpClient: HttpClient) {
+    // getToken(environment)
+    // getToken2(environment)
+    getLogin(environment, httpClient)
 }
 
 internal data class AnError(val error: String)
@@ -51,12 +36,18 @@ private val logger = KotlinLogging.logger { }
 @Location("$API_V1/login")
 class Test
 
-fun Routing.getLogin(environment: Environment) =
+fun Routing.getLogin(environment: Environment, httpClient: HttpClient) =
     get<Test> (
         "Login".responds(
             ok<String>(), serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) {
+        httpClient.get<Any>("/oauth2/login")
+        val userSession: UserSession? = call.sessions.get<UserSession>()
+        if (userSession != null) {
+            logger.info { "Got usersession here" }
+        }
+        call.respond(HttpStatusCode.OK, "Token: MAYBE HERE...")
     }
 
 @Group(GROUP_NAME)

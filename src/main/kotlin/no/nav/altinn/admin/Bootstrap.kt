@@ -4,12 +4,15 @@ import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
+import io.ktor.auth.OAuthAccessTokenResponse
 import io.ktor.auth.OAuthServerSettings
+import io.ktor.auth.authenticate
 import io.ktor.auth.oauth
+import io.ktor.auth.principal
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
+import io.ktor.client.features.json.JacksonSerializer
 import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.DEFAULT
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logger
@@ -182,7 +185,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
 //    )
     val httpClient = HttpClient(CIO) {
         install(JsonFeature) {
-            serializer = KotlinxSerializer()
+            serializer = JacksonSerializer { objectMapper }
         }
         install(Logging) {
             logger = Logger.DEFAULT
@@ -256,15 +259,15 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
             val fileName = call.parameters["fileName"]
             if (fileName == "swagger.json") call.respond(swagger) else swaggerUI.serve(fileName, call)
         }
-//        authenticate("auth-oauth-microsoft") {
-//            get("/oauth2/login") {}
-//            get("/oauth2/callback") {
-//                val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
-//                logger.debug { "access token: ${principal?.accessToken}" }
-//                call.sessions.set(UserSession(principal?.accessToken.toString()))
-//                call.respondRedirect(SWAGGER_URL_V1)
-//            }
-//        }
+        authenticate("auth-oauth-microsoft") {
+            get("/oauth2/login") {}
+            get("/oauth2/callback") {
+                val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
+                logger.debug { "access token: ${principal?.accessToken}" }
+                call.sessions.set(UserSession(principal?.accessToken.toString()))
+                call.respondRedirect(SWAGGER_URL_V1)
+            }
+        }
         get("/hello") {
             val userSession: UserSession? = call.sessions.get<UserSession>()
             if (userSession != null) {
@@ -289,7 +292,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         prefillAPI(altinnPrefillService = altinnPrefillService, environment = environment)
         receiptsAPI(altinnReceiptService = altinnReceiptService, environment = environment)
         nais(readinessCheck = { applicationState.initialized }, livenessCheck = { applicationState.running })
-        loginAPI(environment = environment)
+        loginAPI(environment = environment, httpClient)
         if (environment.application.localEnv == "preprod" && maskinporten != null) {
             logger.info { "Installing routes for altinn/api/serviceowner/" }
             ownerApi(maskinporten, environment)
