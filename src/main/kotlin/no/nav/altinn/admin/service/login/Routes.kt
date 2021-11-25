@@ -6,7 +6,9 @@ import io.ktor.client.request.get
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
 import io.ktor.response.respond
+import io.ktor.response.respondRedirect
 import io.ktor.routing.Routing
+import io.ktor.sessions.clear
 import io.ktor.sessions.get
 import io.ktor.sessions.sessions
 import mu.KotlinLogging
@@ -26,6 +28,7 @@ fun Routing.loginAPI(environment: Environment, httpClient: HttpClient) {
     // getToken(environment)
     // getToken2(environment)
     getLogin(environment, httpClient)
+    getLogout()
 }
 
 internal data class AnError(val error: String)
@@ -35,23 +38,37 @@ private val logger = KotlinLogging.logger { }
 
 @Group(GROUP_NAME)
 @Location("$API_V1/login")
-class Test
+class Login
 
 fun Routing.getLogin(environment: Environment, httpClient: HttpClient) =
-    get<Test> (
+    get<Login> (
         "Login".responds(
-            ok<String>(), serviceUnavailable<AnError>(), unAuthorized<AnError>()
+            ok<LoginInfo>(), serviceUnavailable<AnError>(), unAuthorized<AnError>()
         )
     ) {
         httpClient.get<Any>("https://altinn-admin.dev.intern.nav.no/oauth2/login")
         val userSession: UserSession? = call.sessions.get<UserSession>()
         if (userSession != null) {
             logger.info { "Got usersession here" }
-            call.respond(HttpStatusCode.OK, "{ \"Info\": \"Copy token and paste it at bearer token \"\n \"Token\": \"${userSession.token}\" }")
+            call.respond(HttpStatusCode.OK, LoginInfo("Copy token and paste it as bearer token", userSession.token))
         } else {
             logger.info { "usersession is null" }
             call.respond(HttpStatusCode.Unauthorized, AnError("Could not authorize, try again"))
         }
+    }
+
+@Group(GROUP_NAME)
+@Location("$API_V1/logout")
+class Logout
+
+fun Routing.getLogout() =
+    get<Logout> (
+        "Logout".responds(
+            ok<String>(), serviceUnavailable<AnError>(), unAuthorized<AnError>()
+        )
+    ) {
+        call.sessions.clear<UserSession>()
+        call.respondRedirect("/")
     }
 
 @Group(GROUP_NAME)

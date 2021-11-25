@@ -20,3 +20,8 @@ data class UserInfo(
     val ver: String,
     val groups: List<String>
 )
+
+data class LoginInfo(
+    val info: String,
+    val token: String
+)
