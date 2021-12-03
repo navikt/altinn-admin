@@ -23,6 +23,7 @@ val objectMapper: ObjectMapper = ObjectMapper()
     .registerKotlinModule()
     .registerModule(JavaTimeModule())
     .configure(SerializationFeature.INDENT_OUTPUT, true)
+    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
 fun configuredJacksonMapper() = jacksonObjectMapper().apply(configureJacksonMapper())
 
