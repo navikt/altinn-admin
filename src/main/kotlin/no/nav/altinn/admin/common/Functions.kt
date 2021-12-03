@@ -38,3 +38,7 @@ fun toXmlGregorianCalendar(date: LocalDateTime): XMLGregorianCalendar {
     val gc = GregorianCalendar.from(date.atZone(ZoneId.systemDefault()))
     return DatatypeFactory.newInstance().newXMLGregorianCalendar(gc)
 }
+
+fun isRunningRemote(): Boolean {
+    return System.getenv("APPLICATION_PROFILE") == "remote"
+}

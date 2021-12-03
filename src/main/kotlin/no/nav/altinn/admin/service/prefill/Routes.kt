@@ -24,12 +24,12 @@ import no.altinn.schemas.services.serviceengine.prefill._2009._10.PrefillForm
 import no.altinn.schemas.services.serviceengine.prefill._2009._10.PrefillFormBEList
 import no.altinn.schemas.services.serviceengine.prefill._2009._10.PrefillFormTask
 import no.nav.altinn.admin.Environment
-import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.BasicAuthSecurity
+import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.BearerTokenSecurity
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.badRequest
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ok
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.post
-import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndReponds
+import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndResponse
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.common.API_V1
 import no.nav.altinn.admin.common.dateTimeToXmlGregorianCalendar
@@ -58,8 +58,8 @@ class Prefill
 @KtorExperimentalLocationsAPI
 fun Routing.postPrefill(altinnPrefillService: AltinnPrefillService, environment: Environment) =
     post<Prefill, PostPrefillBody>(
-        "Prefill skjema i altinn innboks til bedrift".securityAndReponds(
-            BasicAuthSecurity(), ok<PrefillResponse>(),
+        "Prefill skjema i altinn innboks til bedrift".securityAndResponse(
+            BearerTokenSecurity(), ok<PrefillResponse>(),
             serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) { _, body ->

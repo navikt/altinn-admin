@@ -98,9 +98,7 @@ shadowJar {
 
 test {
     testLogging.events("passed", "skipped", "failed")
-    useJUnitPlatform {
-        includeEngines 'spek2'
-    }
+    useJUnitPlatform()
 }
 
 repositories {

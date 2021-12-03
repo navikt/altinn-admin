@@ -10,6 +10,7 @@ import mu.KotlinLogging
 import no.altinn.schemas.services.register._2015._06.RegisterSRRRightsType
 import no.altinn.services.register.srr._2015._06.IRegisterSRRAgencyExternalBasicGetRightsBasicAltinnFaultFaultFaultMessage
 import no.nav.altinn.admin.Environment
+import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.BearerTokenSecurity
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.badRequest
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.delete
@@ -17,6 +18,7 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.get
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ok
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.post
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.responds
+import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndResponse
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.common.API_V1
@@ -232,7 +234,7 @@ class PostLeggTilRettighet
 @KtorExperimentalLocationsAPI
 fun Routing.addRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) = post<PostLeggTilRettighet, PostLeggTilRettighetBody>(
     "Legg til rettighet for en virksomhet"
-        .responds(ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
+        .securityAndResponse(BearerTokenSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
 ) { _, body ->
 //    val currentUser = call.principal<UserIdPrincipal>()!!.name
 //
@@ -301,7 +303,7 @@ data class DeleteRettighet(val tjeneste: SrrType, val orgnr: String, val lesElle
 fun Routing.deleteRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
     delete<DeleteRettighet>(
         "Slett rettighet for en virksomhet"
-            .responds(ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
+            .securityAndResponse(BearerTokenSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
     ) { param ->
 //        val currentUser = call.principal<UserIdPrincipal>()!!.name
 //        val approvedUsers = environment.application.users.split(",")
@@ -365,7 +367,7 @@ data class DeleteRettighet2(val tjeneste: String = "sc:sec", val orgnr: String, 
 fun Routing.deleteRightsForReportee2(altinnSrrService: AltinnSRRService, environment: Environment) =
     delete<DeleteRettighet2>(
         "Slett rettighet for en virksomhet"
-            .responds(ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
+            .securityAndResponse(BearerTokenSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>())
     ) { param ->
 //        val currentUser = call.principal<UserIdPrincipal>()!!.name
 //        val approvedUsers = environment.application.users.split(",")

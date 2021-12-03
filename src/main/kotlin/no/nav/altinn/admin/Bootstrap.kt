@@ -1,5 +1,7 @@
 package no.nav.altinn.admin
 
+import com.auth0.jwk.JwkProvider
+import com.auth0.jwk.JwkProviderBuilder
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -7,6 +9,8 @@ import io.ktor.auth.Authentication
 import io.ktor.auth.OAuthAccessTokenResponse
 import io.ktor.auth.OAuthServerSettings
 import io.ktor.auth.authenticate
+import io.ktor.auth.jwt.JWTPrincipal
+import io.ktor.auth.jwt.jwt
 import io.ktor.auth.oauth
 import io.ktor.auth.principal
 import io.ktor.client.HttpClient
@@ -50,17 +54,22 @@ import io.ktor.sessions.sessions
 import io.ktor.sessions.set
 import io.ktor.util.error
 import io.prometheus.client.hotspot.DefaultExports
+import java.net.URL
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.slf4j.MDCContext
 import mu.KotlinLogging
+import net.logstash.logback.argument.StructuredArguments
 import no.nav.altinn.admin.api.nais
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Contact
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Information
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Swagger
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.SwaggerUi
 import no.nav.altinn.admin.client.MaskinportenClient
+import no.nav.altinn.admin.client.wellknown.WellKnown
+import no.nav.altinn.admin.client.wellknown.getWellKnown
 import no.nav.altinn.admin.common.API_V1
 import no.nav.altinn.admin.common.API_V2
 import no.nav.altinn.admin.common.ApplicationState
@@ -84,7 +93,7 @@ import no.nav.altinn.admin.service.srr.ssrAPI
 import no.nav.altinn.admin.ws.Clients
 import org.slf4j.event.Level
 
-const val AUTHENTICATION_BASIC = "basicAuth"
+const val AUTHENTICATION_BEARER = "bearerAuth"
 private val backgroundTasksContext = Executors.newFixedThreadPool(4).asCoroutineDispatcher() + MDCContext()
 
 val swagger = Swagger(
@@ -131,7 +140,27 @@ fun bootstrap(applicationState: ApplicationState, environment: Environment) {
 fun Application.mainModule(environment: Environment, applicationState: ApplicationState) {
     logger.info { "Starting server" }
     System.setProperty("javax.xml.soap.SAAJMetaFactory", "com.sun.xml.messaging.saaj.soap.SAAJMetaFactoryImpl")
+    val httpClient = HttpClient(CIO) {
+        install(JsonFeature) {
+            serializer = JacksonSerializer { objectMapper }
+        }
+        install(Logging) {
+            logger = Logger.DEFAULT
+            level = LogLevel.NONE
+        }
+    }
+    val wellKnown = getWellKnown(environment.azure.azureAppWellKnownUrl)
+    val jwkProvider = JwkProviderBuilder(URL(wellKnown.jwks_uri))
+        // cache up to 10 JWKs for 24 hours
+        .cached(10, 24, TimeUnit.HOURS)
+        // if not cached, only allow max 10 different keys per minute to be fetched from external provider
+        .rateLimited(10, 1, TimeUnit.MINUTES)
+        .build()
+    installAuthentication(environment, httpClient, jwkProvider, wellKnown.issuer, environment.azure.azureAppClientId)
+    installCommon(environment, applicationState, httpClient)
+}
 
+fun Application.installCommon(environment: Environment, applicationState: ApplicationState, httpClient: HttpClient) {
     install(Sessions) {
         cookie<UserSession>("user_session")
     }
@@ -153,62 +182,12 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
             call.respond(HttpStatusCode.InternalServerError)
         }
     }
-//    install(Authentication) {
-//        basic(name = AUTHENTICATION_BASIC) {
-//            realm = "altinn-admin"
-//            validate { credentials ->
-//                LDAPAuthenticate(environment.application).use { ldap ->
-//                    if (ldap.canUserAuthenticate(credentials.name, credentials.password))
-//                        UserIdPrincipal(credentials.name)
-//                    else
-//                        null
-//                }
-//            }
-//        }
-//    }
+
     install(ContentNegotiation) {
         register(ContentType.Application.Json, JacksonConverter(objectMapper))
         register(ContentType.Application.Xml, JacksonConverter(objectMapper))
     }
 
-//    val wellKnownInternalAzureAd = getWellKnown(
-//        wellKnownUrl = environment.azure.azureAppWellKnownUrl
-//    )
-//    installJwtAuthentication(
-//        jwtIssuerList = listOf(
-//            JwtIssuer(
-//                acceptedAudienceList = listOf(environment.azure.azureAppClientId),
-//                jwtIssuerType = JwtIssuerType.INTERNAL_AZUREAD,
-//                wellKnown = wellKnownInternalAzureAd,
-//            ),
-//        ),
-//    )
-    val httpClient = HttpClient(CIO) {
-        install(JsonFeature) {
-            serializer = JacksonSerializer { objectMapper }
-        }
-        install(Logging) {
-            logger = Logger.DEFAULT
-            level = LogLevel.NONE
-        }
-    }
-    install(Authentication) {
-        oauth("auth-oauth-microsoft") {
-            urlProvider = { "https://altinn-admin.dev.intern.nav.no/oauth2/callback" }
-            providerLookup = {
-                OAuthServerSettings.OAuth2ServerSettings(
-                    name = "microsoft",
-                    authorizeUrl = "https://login.microsoftonline.com/common/oauth2/authorize",
-                    accessTokenUrl = "https://login.microsoftonline.com/common/oauth2/token",
-                    requestMethod = HttpMethod.Post,
-                    clientId = environment.azure.azureAppClientId,
-                    clientSecret = environment.azure.azureAppClientSecret,
-                    defaultScopes = listOf("openid"),
-                )
-            }
-            client = httpClient
-        }
-    }
     install(Locations)
     install(CallId) {
         generate { randomUuid() }
@@ -299,3 +278,50 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         }
     }
 }
+
+fun Application.installAuthentication(
+    environment: Environment,
+    httpClient: HttpClient,
+    jwkProvider: JwkProvider,
+    issuer: String,
+    aadb2cClientId: String
+) {
+    install(Authentication) {
+        jwt(name = AUTHENTICATION_BEARER) {
+            verifier(jwkProvider, issuer)
+            validate { credentials ->
+                if (!credentials.payload.audience.contains(aadb2cClientId)) {
+                    logger.warn(
+                        "Auth: Unexpected audience for jwt {}, {}, {}",
+                        StructuredArguments.keyValue("issuer", credentials.payload.issuer),
+                        StructuredArguments.keyValue("audience", credentials.payload.audience),
+                        StructuredArguments.keyValue("expectedAudience", aadb2cClientId)
+                    )
+                    null
+                } else {
+                    JWTPrincipal(credentials.payload)
+                }
+            }
+        }
+        oauth("auth-oauth-microsoft") {
+            urlProvider = { "https://altinn-admin.dev.intern.nav.no/oauth2/callback" }
+            providerLookup = {
+                OAuthServerSettings.OAuth2ServerSettings(
+                    name = "microsoft",
+                    authorizeUrl = "https://login.microsoftonline.com/common/oauth2/authorize",
+                    accessTokenUrl = "https://login.microsoftonline.com/common/oauth2/token",
+                    requestMethod = HttpMethod.Post,
+                    clientId = environment.azure.azureAppClientId,
+                    clientSecret = environment.azure.azureAppClientSecret,
+                    defaultScopes = listOf("openid"),
+                )
+            }
+            client = httpClient
+        }
+    }
+}
+
+private data class AzureAdConfig(
+    val metadata: WellKnown,
+    val clientId: String,
+)
