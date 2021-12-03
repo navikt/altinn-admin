@@ -11,6 +11,7 @@ import io.ktor.routing.Routing
 import io.ktor.sessions.clear
 import io.ktor.sessions.get
 import io.ktor.sessions.sessions
+import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
@@ -45,7 +46,7 @@ fun Routing.getLogin(environment: Environment, httpClient: HttpClient) =
             ok<LoginInfo>(), serviceUnavailable<AnError>(), unAuthorized<AnError>()
         )
     ) {
-        httpClient.get<Any>("https://altinn-admin.dev.intern.nav.no/oauth2/login")
+        runBlocking { httpClient.get<Any>("https://altinn-admin.dev.intern.nav.no/oauth2/login") }
         val userSession: UserSession? = call.sessions.get<UserSession>()
         if (userSession != null) {
             logger.info { "Got usersession here" }
