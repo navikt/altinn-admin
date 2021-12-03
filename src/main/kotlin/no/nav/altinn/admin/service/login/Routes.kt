@@ -11,7 +11,6 @@ import io.ktor.routing.Routing
 import io.ktor.sessions.clear
 import io.ktor.sessions.get
 import io.ktor.sessions.sessions
-import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
