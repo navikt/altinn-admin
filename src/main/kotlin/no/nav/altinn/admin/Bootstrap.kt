@@ -299,6 +299,7 @@ fun Application.installAuthentication(
                     )
                     null
                 } else {
+                    logger.info { "Auth contains expected audience" }
                     JWTPrincipal(credentials.payload)
                 }
             }

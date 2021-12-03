@@ -29,7 +29,7 @@ buildscript {
 
 // test dependencies
     ext.kluentVersion = "1.68"
-    ext.spekVersion = "2.0.15"
+//    ext.spekVersion = "2.0.15"
     ext.junitPlatformVersion = "1.7.0"
 
     ext.generatedSourcesDir = "$buildDir/generated/wsdl"
@@ -151,12 +151,12 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic:$logbackVersion")
     runtimeOnly("com.papertrailapp:logback-syslog4j:1.0.0")
 
-    testImplementation("org.spekframework.spek2:spek-dsl-jvm:$spekVersion") {
-        exclude group: 'org.jetbrains.kotlin'
-    }
-    testRuntimeOnly ("org.spekframework.spek2:spek-runner-junit5:$spekVersion") {
-        exclude group: 'org.jetbrains.kotlin'
-    }
+//    testImplementation("org.spekframework.spek2:spek-dsl-jvm:$spekVersion") {
+//        exclude group: 'org.jetbrains.kotlin'
+//    }
+//    testRuntimeOnly ("org.spekframework.spek2:spek-runner-junit5:$spekVersion") {
+//        exclude group: 'org.jetbrains.kotlin'
+//    }
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") {
         exclude group: "org.eclipse.jetty" // conflicts with WireMock
