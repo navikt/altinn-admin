@@ -68,6 +68,7 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Information
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Swagger
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.SwaggerUi
 import no.nav.altinn.admin.client.MaskinportenClient
+import no.nav.altinn.admin.client.httpClientProxy
 import no.nav.altinn.admin.client.wellknown.WellKnown
 import no.nav.altinn.admin.client.wellknown.getWellKnown
 import no.nav.altinn.admin.common.API_V1
@@ -243,6 +244,7 @@ fun Application.installCommon(environment: Environment, applicationState: Applic
             get("/oauth2/callback") {
                 val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
                 logger.debug { "access token: ${principal?.accessToken}" }
+                environment.azure.accesstoken = principal?.accessToken ?: "Empty"
                 call.sessions.set(UserSession(principal?.accessToken.toString()))
                 call.respondRedirect(SWAGGER_URL_V1)
             }
@@ -250,9 +252,11 @@ fun Application.installCommon(environment: Environment, applicationState: Applic
         get("/hello") {
             val userSession: UserSession? = call.sessions.get<UserSession>()
             if (userSession != null) {
-                val userInfo: UserInfo = httpClient.get("https://login.microsoftonline.com/common/openid/userinfo") {
-                    headers {
-                        append(HttpHeaders.Authorization, "Bearer ${userSession.token}")
+                val userInfo = httpClientProxy().use { client ->
+                    client.get<UserInfo>("https://login.microsoftonline.com/common/openid/userinfo") {
+                        headers {
+                            append(HttpHeaders.Authorization, "Bearer ${userSession.token}")
+                        }
                     }
                 }
                 call.respondText("Hello, ${userInfo.name}!")

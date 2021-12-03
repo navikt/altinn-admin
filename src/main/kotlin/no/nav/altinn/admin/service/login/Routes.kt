@@ -52,7 +52,7 @@ fun Routing.getLogin(environment: Environment, httpClient: HttpClient) =
         val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
         if (userSession != null) {
             logger.info { "Got usersession here, principal is $principal" }
-            call.respond(HttpStatusCode.OK, LoginInfo("Copy token and paste it as bearer token", principal?.accessToken!!))
+            call.respond(HttpStatusCode.OK, LoginInfo("Copy token and paste it as bearer token", environment.azure.accesstoken))
         } else {
             logger.info { "usersession is null" }
             call.respond(HttpStatusCode.Unauthorized, AnError("Could not authorize, try again"))

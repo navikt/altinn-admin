@@ -59,7 +59,8 @@ data class Environment(
         val azureAppClientId: String = config.getOrElse(Key("azure.app.client.id", stringType), "dummyForUnitTest"),
         val azureAppClientSecret: String = config.getOrElse(Key("azure.app.client.secret", stringType), "dummyForUnitTest"),
         val azureAppWellKnownUrl: String = config.getOrElse(Key("azure.app.well.known.url", stringType), "dummyForUnitTest"),
-        val azureOpenidConfigTokenEndpoint: String = config.getOrElse(Key("azure.openid.config.token.endpoint", stringType), "dummyForUnitTest")
+        val azureOpenidConfigTokenEndpoint: String = config.getOrElse(Key("azure.openid.config.token.endpoint", stringType), "dummyForUnitTest"),
+        var accesstoken: String = ""
     )
 
     data class Maskinporten(
