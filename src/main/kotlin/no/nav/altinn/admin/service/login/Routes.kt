@@ -1,6 +1,8 @@
 package no.nav.altinn.admin.service.login
 
 import io.ktor.application.call
+import io.ktor.auth.OAuthAccessTokenResponse
+import io.ktor.auth.principal
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.http.HttpStatusCode
@@ -47,9 +49,10 @@ fun Routing.getLogin(environment: Environment, httpClient: HttpClient) =
     ) {
         httpClient.get<Any>("https://altinn-admin.dev.intern.nav.no/oauth2/login")
         val userSession: UserSession? = call.sessions.get<UserSession>()
+        val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
         if (userSession != null) {
-            logger.info { "Got usersession here" }
-            call.respond(HttpStatusCode.OK, LoginInfo("Copy token and paste it as bearer token", userSession.token))
+            logger.info { "Got usersession here, principal is $principal" }
+            call.respond(HttpStatusCode.OK, LoginInfo("Copy token and paste it as bearer token", principal?.accessToken!!))
         } else {
             logger.info { "usersession is null" }
             call.respond(HttpStatusCode.Unauthorized, AnError("Could not authorize, try again"))
