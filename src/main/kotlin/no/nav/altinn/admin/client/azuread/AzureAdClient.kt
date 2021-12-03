@@ -1,3 +1,4 @@
+/*
 package no.nav.altinn.admin.client.azuread
 
 import io.ktor.client.call.receive
@@ -67,3 +68,5 @@ class AzureAdClient(
         )
     }
 }
+
+*/

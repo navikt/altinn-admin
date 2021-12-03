@@ -2,6 +2,7 @@ package no.nav.altinn.admin.service.owner
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import kotlin.test.Test
+import no.nav.altinn.admin.client.wellknown.WellKnown
 import no.nav.altinn.admin.common.objectMapper
 import no.nav.altinn.admin.getResource
 import no.nav.altinn.admin.service.login.UserInfo
@@ -12,6 +13,7 @@ class OwnerModelTest {
     val rightsRespons = "/rights_response.json".getResource()
     val srrResponse = "/srr_response.json".getResource()
     val userInfoResponse = "/user_info_response.json".getResource()
+    val wellknwonResponse = "/wellknown.json".getResource()
 
     @Test
     fun testReporteesRespons() {
@@ -35,5 +37,11 @@ class OwnerModelTest {
     fun testUserInfoResponse() {
         val userInfo = objectMapper.readValue<UserInfo>(userInfoResponse)
         userInfo.given_name `should be equal to` "Nordmann"
+    }
+
+    @Test
+    fun testWellknownResponse() {
+        val wellknown = objectMapper.readValue<WellKnown>(wellknwonResponse)
+        wellknown.issuer `should be equal to` "https://login.microsoftonline.com/token-guid-here/v2.0"
     }
 }
