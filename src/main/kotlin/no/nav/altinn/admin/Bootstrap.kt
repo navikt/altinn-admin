@@ -21,8 +21,6 @@ import io.ktor.client.features.logging.DEFAULT
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logger
 import io.ktor.client.features.logging.Logging
-import io.ktor.client.request.get
-import io.ktor.client.request.headers
 import io.ktor.client.utils.CacheControl
 import io.ktor.features.AutoHeadResponse
 import io.ktor.features.CallId
@@ -42,14 +40,12 @@ import io.ktor.locations.Locations
 import io.ktor.request.path
 import io.ktor.response.respond
 import io.ktor.response.respondRedirect
-import io.ktor.response.respondText
 import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.sessions.Sessions
 import io.ktor.sessions.cookie
-import io.ktor.sessions.get
 import io.ktor.sessions.sessions
 import io.ktor.sessions.set
 import io.ktor.util.error
@@ -68,7 +64,6 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Information
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Swagger
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.SwaggerUi
 import no.nav.altinn.admin.client.MaskinportenClient
-import no.nav.altinn.admin.client.httpClientProxy
 import no.nav.altinn.admin.client.wellknown.WellKnown
 import no.nav.altinn.admin.client.wellknown.getWellKnown
 import no.nav.altinn.admin.common.API_V1
@@ -81,7 +76,6 @@ import no.nav.altinn.admin.service.correspondence.AltinnCorrespondenceService
 import no.nav.altinn.admin.service.correspondence.correspondenceAPI
 import no.nav.altinn.admin.service.dq.AltinnDQService
 import no.nav.altinn.admin.service.dq.dqAPI
-import no.nav.altinn.admin.service.login.UserInfo
 import no.nav.altinn.admin.service.login.UserSession
 import no.nav.altinn.admin.service.login.loginAPI
 import no.nav.altinn.admin.service.owner.ownerApi
@@ -249,21 +243,21 @@ fun Application.installCommon(environment: Environment, applicationState: Applic
                 call.respondRedirect(SWAGGER_URL_V1)
             }
         }
-        get("/hello") {
-            val userSession: UserSession? = call.sessions.get<UserSession>()
-            if (userSession != null) {
-                val userInfo = httpClientProxy().use { client ->
-                    client.get<UserInfo>("https://login.microsoftonline.com/common/openid/userinfo") {
-                        headers {
-                            append(HttpHeaders.Authorization, "Bearer ${userSession.token}")
-                        }
-                    }
-                }
-                call.respondText("Hello, ${userInfo.name}!")
-            } else {
-                call.respondRedirect("/")
-            }
-        }
+//        get("/hello") {
+//            val userSession: UserSession? = call.sessions.get<UserSession>()
+//            if (userSession != null) {
+//                val userInfo = httpClientProxy().use { client ->
+//                    client.get<UserInfo>("https://login.microsoftonline.com/common/openid/userinfo") {
+//                        headers {
+//                            append(HttpHeaders.Authorization, "Bearer ${userSession.token}")
+//                        }
+//                    }
+//                }
+//                call.respondText("Hello, ${userInfo.name}!")
+//            } else {
+//                call.respondRedirect("/")
+//            }
+//        }
 
         logger.info { "Installing altinn srr api" }
         ssrAPI(altinnSrrService = altinnSRRService, environment = environment)

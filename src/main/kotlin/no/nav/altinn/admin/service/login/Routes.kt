@@ -1,8 +1,6 @@
 package no.nav.altinn.admin.service.login
 
 import io.ktor.application.call
-import io.ktor.auth.OAuthAccessTokenResponse
-import io.ktor.auth.principal
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.http.HttpStatusCode
@@ -11,7 +9,6 @@ import io.ktor.response.respond
 import io.ktor.response.respondRedirect
 import io.ktor.routing.Routing
 import io.ktor.sessions.clear
-import io.ktor.sessions.get
 import io.ktor.sessions.sessions
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
@@ -47,16 +44,16 @@ fun Routing.getLogin(environment: Environment, httpClient: HttpClient) =
             ok<LoginInfo>(), serviceUnavailable<AnError>(), unAuthorized<AnError>()
         )
     ) {
-        httpClient.get<Any>("https://altinn-admin.dev.intern.nav.no/oauth2/login")
-        val userSession: UserSession? = call.sessions.get<UserSession>()
-        val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
-        if (userSession != null) {
-            logger.info { "Got usersession here, principal is $principal" }
-            call.respond(HttpStatusCode.OK, LoginInfo("Copy token and paste it as bearer token", environment.azure.accesstoken))
-        } else {
-            logger.info { "usersession is null" }
-            call.respond(HttpStatusCode.Unauthorized, AnError("Could not authorize, try again"))
-        }
+        httpClient.get<Any>("https://altinn-admin.dev.intern.nav.no/oauth2/login") {}
+//        val userSession: UserSession? = call.sessions.get<UserSession>()
+//        val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
+//        if (userSession != null) {
+//            logger.info { "Got usersession here, principal is $principal" }
+//            call.respond(HttpStatusCode.OK, LoginInfo("Copy token and paste it as bearer token", environment.azure.accesstoken))
+//        } else {
+//            logger.info { "usersession is null" }
+//            call.respond(HttpStatusCode.Unauthorized, AnError("Could not authorize, try again"))
+//        }
     }
 
 @Group(GROUP_NAME)
