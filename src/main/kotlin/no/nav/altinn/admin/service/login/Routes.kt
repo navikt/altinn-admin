@@ -40,9 +40,10 @@ class Login
 
 fun Routing.getLogin(environment: Environment, httpClient: HttpClient) =
     get<Login> (
-        "Login".responds()
+        "Login".responds(ok<Any>())
     ) {
-        httpClient.get("https://altinn-admin.dev.intern.nav.no/oauth2/login")
+        call.respondRedirect("/oauth2/login")
+//        httpClient.get("https://altinn-admin.dev.intern.nav.no/oauth2/login")
 //        val userSession: UserSession? = call.sessions.get<UserSession>()
 //        val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
 //        if (userSession != null) {
