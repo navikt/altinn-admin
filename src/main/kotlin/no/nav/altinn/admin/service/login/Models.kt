@@ -1,6 +1,12 @@
 package no.nav.altinn.admin.service.login
 
-data class UserSession(val token: String)
+import java.security.Principal
+
+data class UserSession(private val name: String, val token: String) : Principal {
+    override fun getName(): String {
+        return name
+    }
+}
 
 data class UserInfo(
     val aio: String?,
