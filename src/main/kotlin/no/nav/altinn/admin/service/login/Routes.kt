@@ -14,6 +14,7 @@ import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.badRequest
+import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.found
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.get
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ok
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.responds
@@ -40,7 +41,7 @@ class Login
 
 fun Routing.getLogin(environment: Environment, httpClient: HttpClient) =
     get<Login> (
-        "Login".responds()
+        "Login".responds(ok<Any>(), found<Any>())
     ) {
         call.respondRedirect("/oauth2/login")
 //        httpClient.get("https://altinn-admin.dev.intern.nav.no/oauth2/login")
