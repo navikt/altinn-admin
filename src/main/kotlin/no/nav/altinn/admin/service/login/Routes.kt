@@ -40,7 +40,7 @@ class Login
 
 fun Routing.getLogin(environment: Environment, httpClient: HttpClient) =
     get<Login> (
-        "Login".responds(ok<Any>())
+        "Login".responds()
     ) {
         call.respondRedirect("/oauth2/login")
 //        httpClient.get("https://altinn-admin.dev.intern.nav.no/oauth2/login")
