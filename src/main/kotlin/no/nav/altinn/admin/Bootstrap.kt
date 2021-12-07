@@ -239,6 +239,7 @@ fun Application.installCommon(environment: Environment, applicationState: Applic
         authenticate("auth-oauth-microsoft") {
             get("/oauth2/login") {}
             get("/oauth2/callback") {
+                logger.info { "oauth callback is called" }
                 val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
                 logger.debug { "access token: ${principal?.accessToken}" }
                 environment.azure.accesstoken = principal?.accessToken ?: "Empty"

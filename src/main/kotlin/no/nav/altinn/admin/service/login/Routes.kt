@@ -3,6 +3,8 @@ package no.nav.altinn.admin.service.login
 import io.ktor.application.call
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
+import io.ktor.client.statement.DefaultHttpResponse
+import io.ktor.client.statement.readText
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
 import io.ktor.response.respond
@@ -10,11 +12,11 @@ import io.ktor.response.respondRedirect
 import io.ktor.routing.Routing
 import io.ktor.sessions.clear
 import io.ktor.sessions.sessions
+import io.ktor.util.InternalAPI
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.badRequest
-import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.found
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.get
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ok
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.responds
@@ -39,12 +41,21 @@ private val logger = KotlinLogging.logger { }
 @Location("$API_V1/login")
 class Login
 
+@OptIn(InternalAPI::class)
 fun Routing.getLogin(environment: Environment, httpClient: HttpClient) =
     get<Login> (
-        "Login".responds(ok<Any>(), found<Any>())
+        "Login".responds(ok<String>())
     ) {
-        call.respondRedirect("/oauth2/login")
-//        httpClient.get("https://altinn-admin.dev.intern.nav.no/oauth2/login")
+        val resp = httpClient.get<DefaultHttpResponse>("http://localhost:8080/oauth2/login")
+        if (resp.status == HttpStatusCode.OK) {
+            logger.info { "Login OK?" }
+            call.respond(HttpStatusCode.OK, "Ok")
+        } else {
+            logger.info { "Login Failed" }
+            call.respond(resp.status, resp.readText())
+        }
+//        call.respondRedirect("/oauth2/login")
+//        httpClient.get("http://localhost:8080/oauth2/login")
 //        val userSession: UserSession? = call.sessions.get<UserSession>()
 //        val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
 //        if (userSession != null) {
