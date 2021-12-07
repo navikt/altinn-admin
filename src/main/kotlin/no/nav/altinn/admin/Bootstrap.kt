@@ -306,7 +306,7 @@ fun Application.installAuthentication(
             }
         }
         oauth("auth-oauth-microsoft") {
-            urlProvider = { "https://altinn-admin.dev.intern.nav.no/oauth2/callback" }
+            urlProvider = { "http://localhost:8080/oauth2/callback" }
             providerLookup = {
                 OAuthServerSettings.OAuth2ServerSettings(
                     name = "microsoft",
