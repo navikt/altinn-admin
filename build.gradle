@@ -102,7 +102,7 @@ test {
 }
 
 repositories {
-    maven { url "https://kotlin.bintray.com/kotlinx" }
+//    maven { url "https://kotlin.bintray.com/kotlinx" }
     maven { url "https://packages.confluent.io/maven/" }
     maven { url "https://plugins.gradle.org/m2/" }
     mavenCentral()
