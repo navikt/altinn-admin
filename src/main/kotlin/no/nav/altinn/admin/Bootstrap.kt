@@ -243,7 +243,7 @@ fun Application.installCommon(environment: Environment, applicationState: Applic
                 val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
                 logger.debug { "access token: ${principal?.accessToken}" }
                 environment.azure.accesstoken = principal?.accessToken ?: "Empty"
-                call.sessions.set(UserSession("some_name", principal?.accessToken.toString()))
+                call.sessions.set(UserSession(principal?.accessToken.toString()))
                 call.respondRedirect(SWAGGER_URL_V1)
             }
         }
