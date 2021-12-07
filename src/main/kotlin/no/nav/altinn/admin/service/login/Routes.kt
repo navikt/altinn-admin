@@ -3,7 +3,8 @@ package no.nav.altinn.admin.service.login
 import io.ktor.application.call
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
-import io.ktor.client.statement.DefaultHttpResponse
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.HttpStatement
 import io.ktor.client.statement.readText
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.Location
@@ -46,13 +47,18 @@ fun Routing.getLogin(environment: Environment, httpClient: HttpClient) =
     get<Login> (
         "Login".responds(ok<String>())
     ) {
-        val resp = httpClient.get<DefaultHttpResponse>("http://localhost:8080/oauth2/login")
-        if (resp.status == HttpStatusCode.OK) {
-            logger.info { "Login OK?" }
-            call.respond(HttpStatusCode.OK, "Ok")
-        } else {
-            logger.info { "Login Failed" }
-            call.respond(resp.status, resp.readText())
+        httpClient.get<HttpStatement>("http://localhost:8080/oauth2/login") {
+        }.execute { response: HttpResponse ->
+            if (response.status == HttpStatusCode.OK) {
+                val test = response.readText()
+                logger.info { "Login OK?" }
+                logger.info { "Content: $test" }
+//            val reps2 = httpClient.get<DefaultHttpResponse>("http://localhost:8080/oauth2/callback")
+                call.respond(HttpStatusCode.OK, "Ok")
+            } else {
+                logger.info { "Login Failed" }
+                call.respond(response.status, response.readText())
+            }
         }
 //        call.respondRedirect("/oauth2/login")
 //        httpClient.get("http://localhost:8080/oauth2/login")
