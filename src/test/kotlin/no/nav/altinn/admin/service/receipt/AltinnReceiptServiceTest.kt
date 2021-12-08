@@ -51,7 +51,14 @@ class AltinnReceiptServiceTest {
         val consumerClientId = "1"
         val acceptedClientId = "2"
         val notAcceptedClientId = "4"
-        engine.application.installAuthentication(testEnvironment, httpClient, jwkProvider, issuerUrl, acceptedClientId)
+        engine.application.installAuthentication(
+            testEnvironment,
+            httpClient,
+            jwkProvider,
+            issuerUrl,
+            acceptedClientId,
+            "https://wellknown.config"
+        )
         engine.application.installCommon(testEnvironment, applicationState, httpClient)
     }
 

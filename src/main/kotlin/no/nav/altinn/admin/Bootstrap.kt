@@ -151,7 +151,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         // if not cached, only allow max 10 different keys per minute to be fetched from external provider
         .rateLimited(10, 1, TimeUnit.MINUTES)
         .build()
-    installAuthentication(environment, httpClient, jwkProvider, wellKnown.issuer, environment.azure.azureAppClientId)
+    installAuthentication(environment, httpClient, jwkProvider, wellKnown.issuer, environment.azure.azureAppClientId, wellKnown.authorization_endpoint)
     installCommon(environment, applicationState, httpClient)
 }
 
@@ -286,7 +286,8 @@ fun Application.installAuthentication(
     httpClient: HttpClient,
     jwkProvider: JwkProvider,
     issuer: String,
-    aadb2cClientId: String
+    aadb2cClientId: String,
+    authorizationEndpoint: String
 ) {
     install(Authentication) {
         jwt(name = AUTHENTICATION_BEARER) {
@@ -311,8 +312,8 @@ fun Application.installAuthentication(
             providerLookup = {
                 OAuthServerSettings.OAuth2ServerSettings(
                     name = "microsoft",
-                    authorizeUrl = "https://login.microsoftonline.com/common/oauth2/authorize",
-                    accessTokenUrl = "https://login.microsoftonline.com/common/oauth2/token",
+                    authorizeUrl = authorizationEndpoint,
+                    accessTokenUrl = environment.azure.azureOpenidConfigTokenEndpoint,
                     requestMethod = HttpMethod.Post,
                     clientId = environment.azure.azureAppClientId,
                     clientSecret = environment.azure.azureAppClientSecret,
