@@ -309,6 +309,7 @@ fun Application.installAuthentication(
             validate { credentials ->
                 val expire = credentials.payload.expiresAt.toLocalDateTime()
                 val now = now()
+                logger.info { "Time now $now and expire $expire" }
                 if (now.isAfter(expire)) {
                     logger.warn { "Credential has expired, logout and login again to get a new token" }
                     return@validate null
