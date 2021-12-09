@@ -91,18 +91,7 @@ import org.slf4j.event.Level
 const val AUTHENTICATION_BEARER = "bearerAuth"
 private val backgroundTasksContext = Executors.newFixedThreadPool(4).asCoroutineDispatcher() + MDCContext()
 
-val swagger = Swagger(
-    info = Information(
-        version = System.getenv("APP_VERSION")?.toString() ?: "",
-        title = "Altinn Admin API",
-        description = "[altinn-admin](https://github.com/navikt/altinn-admin)",
-        contact = Contact(
-            name = "Slack #Team_Altinn",
-            url = "https://github.com/navikt/altinn-admin",
-            email = "nav.altinn.lokalforvaltning@nav.no"
-        )
-    )
-)
+var swagger: Swagger = Swagger(info = Information("", "", "", Contact("", "", "")))
 
 private val logger = KotlinLogging.logger { }
 
@@ -113,12 +102,23 @@ fun main() = bootstrap(ApplicationState(), Environment())
 
 @KtorExperimentalLocationsAPI
 fun bootstrap(applicationState: ApplicationState, environment: Environment) {
+    swagger = Swagger(
+        info = Information(
+            version = System.getenv("APP_VERSION")?.toString() ?: "",
+            title = "Altinn Admin API",
+            description = "[Login](${environment.application.baseUrl}/oauth2/login) <br> [altinn-admin](https://github.com/navikt/altinn-admin) ",
+            contact = Contact(
+                name = "Slack #Team_Altinn",
+                url = "https://github.com/navikt/altinn-admin",
+                email = "nav.altinn.lokalforvaltning@nav.no"
+            )
+        )
+    )
     val applicationServer = embeddedServer(
         Netty, environment.application.port, module = { mainModule(environment, applicationState) }
     )
     applicationState.initialized = true
     logger.info { "Application ready" }
-
     DefaultExports.initialize()
     Runtime.getRuntime().addShutdownHook(
         Thread {
@@ -151,15 +151,20 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         // if not cached, only allow max 10 different keys per minute to be fetched from external provider
         .rateLimited(10, 1, TimeUnit.MINUTES)
         .build()
-    installAuthentication(environment, httpClient, jwkProvider, wellKnown.issuer, environment.azure.azureAppClientId, wellKnown.authorization_endpoint)
+    installAuthentication(
+        environment,
+        httpClient,
+        jwkProvider,
+        wellKnown.issuer,
+        environment.azure.azureAppClientId,
+        wellKnown.authorization_endpoint
+    )
     installCommon(environment, applicationState, httpClient)
 }
 
 fun Application.installCommon(environment: Environment, applicationState: ApplicationState, httpClient: HttpClient) {
     install(Sessions) {
         cookie<UserSession>("user_session") {
-            cookie.path = "/"
-            cookie.maxAgeInSeconds = 120
         }
     }
 
@@ -234,16 +239,21 @@ fun Application.installCommon(environment: Environment, applicationState: Applic
         get("$API_V1/apidocs") { call.respondRedirect(SWAGGER_URL_V1) }
         get("$API_V1/apidocs/{fileName}") {
             val fileName = call.parameters["fileName"]
-            if (fileName == "swagger.json") call.respond(swagger) else swaggerUI.serve(fileName, call)
+            if (fileName == "swagger.json") call.respond(swagger!!) else swaggerUI.serve(fileName, call)
         }
         authenticate("auth-oauth-microsoft") {
             get("/oauth2/login") {}
             get("/oauth2/callback") {
                 logger.info { "oauth callback is called" }
                 val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
-                logger.debug { "access token: ${principal?.accessToken}" }
-                environment.azure.accesstoken = principal?.accessToken ?: "Empty"
-                call.sessions.set(UserSession(principal?.accessToken.toString()))
+                if (principal != null) {
+                    logger.debug { "access token: ${principal.accessToken}" }
+                    environment.azure.accesstoken = principal.accessToken
+                    val idToken = principal.extraParameters["id_token"]
+                    val expiry = principal.expiresIn
+                    val userSession = UserSession(principal.accessToken, idToken, expiry)
+                    call.sessions.set(userSession)
+                }
                 call.respondRedirect(SWAGGER_URL_V1)
             }
         }

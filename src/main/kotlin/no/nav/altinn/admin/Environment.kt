@@ -78,6 +78,7 @@ data class Environment(
         val localEnv: String = config[Key("application.env", stringType)],
         val port: Int = config[Key("application.port", intType)],
         val users: String = config[Key("approved.users.list", stringType)],
+        val baseUrl: String = config[Key("application.baseurl", stringType)],
 
         // common ldap details for both authentication and group management
         val ldapConnTimeout: Int = config[Key("ldap.conntimeout", intType)],

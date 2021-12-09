@@ -1,6 +1,6 @@
 package no.nav.altinn.admin.service.login
 
-data class UserSession(val token: String)
+data class UserSession(val token: String, val idToken: String?, val expiry: Long)
 
 data class UserInfo(
     val aio: String?,

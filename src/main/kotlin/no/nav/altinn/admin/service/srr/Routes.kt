@@ -48,7 +48,7 @@ data class Rettighetsregister(val tjeneste: SrrType)
 
 @KtorExperimentalLocationsAPI
 fun Routing.getRightsList(altinnSrrService: AltinnSRRService, environment: Environment) =
-    get<Rettighetsregister>("hent rettigheter for alle virksomheter".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) { param ->
+    get<Rettighetsregister>("hent rettigheter for alle virksomheter".securityAndResponse(BearerTokenSecurity(), ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) { param ->
         val scList = filterOutServiceCode(environment, param.tjeneste.servicecode)
         if (scList.size == 0) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))

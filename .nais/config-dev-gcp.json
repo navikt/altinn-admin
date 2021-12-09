@@ -12,6 +12,7 @@
     { "name": "ALTINN_PREFILL_URL", "value": "https://tt02.altinn.no/ServiceEngineExternal/PrefillBasic.svc" },
     { "name": "ALTINN_SUBSCRIPTION_URL", "value": "https://tt02.altinn.no/ServiceEngineExternal/SubscriptionBasic.svc" },
     { "name": "ALTINN_ARCHIVE_URL", "value": "https://tt02.altinn.no/ArchiveExternal/ServiceOwnerArchiveExternalBasic.svc" },
-    { "name": "MASKINPORTEN_URL", "value": "https://ver2.maskinporten.no/" }
+    { "name": "MASKINPORTEN_URL", "value": "https://ver2.maskinporten.no/" },
+    { "name": "APPLICATION_BASEURL", "value": "https://altinn-admin.dev.intern.nav.no" }
   ]
 }
