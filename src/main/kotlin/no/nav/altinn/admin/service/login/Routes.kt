@@ -2,7 +2,6 @@ package no.nav.altinn.admin.service.login
 
 import io.ktor.application.call
 import io.ktor.client.HttpClient
-import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.statement.HttpResponse
@@ -15,8 +14,8 @@ import io.ktor.response.respond
 import io.ktor.response.respondRedirect
 import io.ktor.routing.Routing
 import io.ktor.sessions.clear
+import io.ktor.sessions.get
 import io.ktor.sessions.sessions
-import io.ktor.util.InternalAPI
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
@@ -46,35 +45,18 @@ private val logger = KotlinLogging.logger { }
 @Location("$API_V1/login")
 class Login
 
-@OptIn(InternalAPI::class)
 fun Routing.getLogin(environment: Environment, httpClient: HttpClient) =
     get<Login> (
-        "Login".responds(ok<String>())
+        "Login".responds(ok<String>(), unAuthorized<String>())
     ) {
-        httpClient.get<HttpStatement>("http://localhost:8080/oauth2/login") {
-        }.execute { response: HttpResponse ->
-            if (response.status == HttpStatusCode.OK) {
-                val test = response.readText()
-                logger.info { "Login OK?" }
-                logger.info { "Content: $test" }
-//            val reps2 = httpClient.get<DefaultHttpResponse>("http://localhost:8080/oauth2/callback")
-                call.respond(HttpStatusCode.OK, "Ok")
-            } else {
-                logger.info { "Login Failed" }
-                call.respond(response.status, response.readText())
-            }
+        val userSession: UserSession? = call.sessions.get<UserSession>()
+        if (userSession != null) {
+            logger.info { "A user is logged in." }
+            call.respond(HttpStatusCode.OK, "${userSession.idToken}")
+        } else {
+            logger.info { "User is not logged in, use login link at top of home page" }
+            call.respond(HttpStatusCode.Unauthorized, "No user is logged in.")
         }
-//        call.respondRedirect("/oauth2/login")
-//        httpClient.get("http://localhost:8080/oauth2/login")
-//        val userSession: UserSession? = call.sessions.get<UserSession>()
-//        val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
-//        if (userSession != null) {
-//            logger.info { "Got usersession here, principal is $principal" }
-//            call.respond(HttpStatusCode.OK, LoginInfo("Copy token and paste it as bearer token", environment.azure.accesstoken))
-//        } else {
-//            logger.info { "usersession is null" }
-//            call.respond(HttpStatusCode.Unauthorized, AnError("Could not authorize, try again"))
-//        }
     }
 
 @Group(GROUP_NAME)

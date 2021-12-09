@@ -48,9 +48,12 @@ import io.ktor.sessions.Sessions
 import io.ktor.sessions.cookie
 import io.ktor.sessions.sessions
 import io.ktor.sessions.set
+import io.ktor.util.InternalAPI
 import io.ktor.util.error
+import io.ktor.util.toLocalDateTime
 import io.prometheus.client.hotspot.DefaultExports
 import java.net.URL
+import java.time.LocalDateTime.now
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -141,7 +144,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
         }
         install(Logging) {
             logger = Logger.DEFAULT
-            level = LogLevel.ALL
+            level = LogLevel.NONE
         }
     }
     val wellKnown = getWellKnown(environment.azure.azureAppWellKnownUrl)
@@ -291,6 +294,7 @@ fun Application.installCommon(environment: Environment, applicationState: Applic
     }
 }
 
+@OptIn(InternalAPI::class)
 fun Application.installAuthentication(
     environment: Environment,
     httpClient: HttpClient,
@@ -303,6 +307,12 @@ fun Application.installAuthentication(
         jwt(name = AUTHENTICATION_BEARER) {
             verifier(jwkProvider, issuer)
             validate { credentials ->
+                val expire = credentials.payload.expiresAt.toLocalDateTime()
+                val now = now()
+                if (now.isAfter(expire)) {
+                    logger.warn { "Credential has expired, logout and login again to get a new token" }
+                    return@validate null
+                }
                 if (!credentials.payload.audience.contains(aadb2cClientId)) {
                     logger.warn(
                         "Auth: Unexpected audience for jwt {}, {}, {}",
