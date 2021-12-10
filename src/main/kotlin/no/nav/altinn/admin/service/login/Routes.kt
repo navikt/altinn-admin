@@ -8,9 +8,6 @@ import io.ktor.locations.Location
 import io.ktor.response.respond
 import io.ktor.response.respondRedirect
 import io.ktor.routing.Routing
-import io.ktor.sessions.clear
-import io.ktor.sessions.get
-import io.ktor.sessions.sessions
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
@@ -24,7 +21,7 @@ import no.nav.altinn.admin.common.API_V1
 @KtorExperimentalLocationsAPI
 fun Routing.loginAPI(environment: Environment, httpClient: HttpClient) {
     getLogin(environment, httpClient)
-    getLogout()
+    getLogout(environment)
 }
 
 internal data class AnError(val error: String)
@@ -42,10 +39,10 @@ fun Routing.getLogin(environment: Environment, httpClient: HttpClient) =
     get<Login> (
         "Login".responds(ok<String>(), unAuthorized<String>())
     ) {
-        val userSession: UserSession? = call.sessions.get<UserSession>()
-        if (userSession != null) {
+        val idToken = environment.azure.idToken
+        if (idToken != "no-id-token") {
             logger.info { "A user is logged in." }
-            call.respond(HttpStatusCode.OK, "${userSession.idToken}")
+            call.respond(HttpStatusCode.OK, "${environment.azure.idToken}")
         } else {
             logger.info { "User is not logged in, use login link at top of home page" }
             call.respond(HttpStatusCode.Unauthorized, "No user is logged in.")
@@ -58,12 +55,12 @@ fun Routing.getLogin(environment: Environment, httpClient: HttpClient) =
 class Logout
 
 @KtorExperimentalLocationsAPI
-fun Routing.getLogout() =
+fun Routing.getLogout(environment: Environment) =
     get<Logout> (
         "Logout".responds(
             ok<String>(), serviceUnavailable<AnError>(), unAuthorized<AnError>()
         )
     ) {
-        call.sessions.clear<UserSession>()
+        environment.azure.idToken = "no-id-token"
         call.respondRedirect("/")
     }

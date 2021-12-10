@@ -45,9 +45,6 @@ import io.ktor.routing.get
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.sessions.Sessions
-import io.ktor.sessions.cookie
-import io.ktor.sessions.sessions
-import io.ktor.sessions.set
 import io.ktor.util.error
 import io.prometheus.client.hotspot.DefaultExports
 import java.net.URL
@@ -64,7 +61,6 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Information
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Swagger
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.SwaggerUi
 import no.nav.altinn.admin.client.MaskinportenClient
-import no.nav.altinn.admin.client.wellknown.WellKnown
 import no.nav.altinn.admin.client.wellknown.getWellKnown
 import no.nav.altinn.admin.common.API_V1
 import no.nav.altinn.admin.common.API_V2
@@ -76,7 +72,6 @@ import no.nav.altinn.admin.service.correspondence.AltinnCorrespondenceService
 import no.nav.altinn.admin.service.correspondence.correspondenceAPI
 import no.nav.altinn.admin.service.dq.AltinnDQService
 import no.nav.altinn.admin.service.dq.dqAPI
-import no.nav.altinn.admin.service.login.UserSession
 import no.nav.altinn.admin.service.login.loginAPI
 import no.nav.altinn.admin.service.owner.ownerApi
 import no.nav.altinn.admin.service.prefill.AltinnPrefillService
@@ -164,9 +159,7 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
 
 @OptIn(KtorExperimentalLocationsAPI::class)
 fun Application.installCommon(environment: Environment, applicationState: ApplicationState, httpClient: HttpClient) {
-    install(Sessions) {
-        cookie<UserSession>("user_session")
-    }
+    install(Sessions)
 
     install(DefaultHeaders) {
         header(HttpHeaders.CacheControl, CacheControl.NO_CACHE)
@@ -247,12 +240,8 @@ fun Application.installCommon(environment: Environment, applicationState: Applic
                 logger.info { "oauth callback is called" }
                 val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
                 if (principal != null) {
-                    logger.debug { "access token: ${principal.accessToken}" }
-                    environment.azure.accesstoken = principal.accessToken
-                    val idToken = principal.extraParameters["id_token"]
-                    val expiry = principal.expiresIn
-                    val userSession = UserSession(principal.accessToken, idToken, expiry)
-                    call.sessions.set(userSession)
+                    val idToken = principal.extraParameters["id_token"] ?: "no-id-token"
+                    environment.azure.idToken = idToken
                 }
                 call.respondRedirect(SWAGGER_URL_V1)
             }
@@ -334,8 +323,3 @@ fun Application.installAuthentication(
         }
     }
 }
-
-private data class AzureAdConfig(
-    val metadata: WellKnown,
-    val clientId: String,
-)
