@@ -261,7 +261,7 @@ fun Application.installCommon(environment: Environment, applicationState: Applic
 //                call.respondRedirect("/")
 //            }
 //        }
-
+        loginAPI(environment = environment, httpClient)
         logger.info { "Installing altinn srr api" }
         ssrAPI(altinnSrrService = altinnSRRService, environment = environment)
         logger.info { "Installing altinn dq api" }
@@ -272,7 +272,6 @@ fun Application.installCommon(environment: Environment, applicationState: Applic
         prefillAPI(altinnPrefillService = altinnPrefillService, environment = environment)
         receiptsAPI(altinnReceiptService = altinnReceiptService, environment = environment)
         nais(readinessCheck = { applicationState.initialized }, livenessCheck = { applicationState.running })
-        loginAPI(environment = environment, httpClient)
         if (environment.application.localEnv == "preprod" && maskinporten != null) {
             logger.info { "Installing routes for altinn/api/serviceowner/" }
             ownerApi(maskinporten, environment)
