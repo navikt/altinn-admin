@@ -7,11 +7,12 @@ import io.ktor.response.respond
 import io.ktor.routing.Routing
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
+import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.BearerTokenSecurity
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.badRequest
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.get
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ok
-import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.responds
+import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndResponse
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.common.API_V1
 import no.nav.altinn.admin.common.isDate
@@ -32,8 +33,8 @@ data class ArPeriode(val fraDato: String, val tilDato: String)
 
 fun Routing.getInboundReceipts(altinnReceiptService: AltinnReceiptService, environment: Environment) =
     get<ArPeriode>(
-        "Hent liste av mottatt Arkiv Referanser for periode".responds(
-            ok<ReceiptItems>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+        "Hent liste av mottatt Arkiv Referanser for periode".securityAndResponse(
+            BearerTokenSecurity(), ok<ReceiptItems>(), serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) {
         param ->
@@ -75,8 +76,8 @@ data class MeldingsPeriode(val fraDato: String, val tilDato: String)
 
 fun Routing.getCorresondenceReceipts(altinnReceiptService: AltinnReceiptService, environment: Environment) =
     get<MeldingsPeriode>(
-        "Hent liste av sendte meldingskvitteringer for periode".responds(
-            ok<CorrespondenceReceiptItems>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+        "Hent liste av sendte meldingskvitteringer for periode".securityAndResponse(
+            BearerTokenSecurity(), ok<CorrespondenceReceiptItems>(), serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) {
         param ->

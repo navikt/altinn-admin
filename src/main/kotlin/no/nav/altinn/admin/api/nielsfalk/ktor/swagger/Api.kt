@@ -21,6 +21,7 @@ import io.ktor.locations.put
 import io.ktor.request.receive
 import io.ktor.routing.Route
 import io.ktor.util.pipeline.PipelineContext
+import java.util.Locale
 import kotlin.reflect.KClass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -79,7 +80,7 @@ fun <LOCATION : Any, BODY_TYPE : Any> Metadata.applyOperations(
     entityType: KClass<BODY_TYPE>
 ) {
     swagger.paths
-        .getOrPut(location.path) { mutableMapOf() }[method.value.toLowerCase()] =
+        .getOrPut(location.path) { mutableMapOf() }[method.value.lowercase(Locale.getDefault())] =
         Operation(this, location, group, locationType, entityType, method)
 }
 

@@ -28,12 +28,14 @@ import no.altinn.schemas.services.serviceengine.subscription._2009._10.Attachmen
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentExternalBEV2List
 import no.altinn.services.serviceengine.reporteeelementlist._2010._10.BinaryAttachmentV2
 import no.nav.altinn.admin.Environment
+import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.BearerTokenSecurity
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.badRequest
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.get
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ok
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.post
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.responds
+import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndResponse
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
 import no.nav.altinn.admin.common.API_V1
@@ -372,8 +374,8 @@ class SendMelding
 @KtorExperimentalLocationsAPI
 fun Routing.postCorrespondence(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     post<SendMelding, PostCorrespondenceBody>(
-        "Send melding til virksomhet".responds(
-            ok<CorrespondenceResponse>(),
+        "Send melding til virksomhet".securityAndResponse(
+            BearerTokenSecurity(), ok<CorrespondenceResponse>(),
             serviceUnavailable<AnError>(), badRequest<AnError>(), unAuthorized<Unit>()
         )
     ) { _, body ->

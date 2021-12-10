@@ -48,12 +48,9 @@ import io.ktor.sessions.Sessions
 import io.ktor.sessions.cookie
 import io.ktor.sessions.sessions
 import io.ktor.sessions.set
-import io.ktor.util.InternalAPI
 import io.ktor.util.error
-import io.ktor.util.toLocalDateTime
 import io.prometheus.client.hotspot.DefaultExports
 import java.net.URL
-import java.time.LocalDateTime.now
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -109,7 +106,7 @@ fun bootstrap(applicationState: ApplicationState, environment: Environment) {
         info = Information(
             version = System.getenv("APP_VERSION")?.toString() ?: "",
             title = "Altinn Admin API",
-            description = "[Login](${environment.application.baseUrl}/oauth2/login) <br> [altinn-admin](https://github.com/navikt/altinn-admin) ",
+            description = "[Login](${environment.application.baseUrl}/oauth2/login) <br><br> [altinn-admin](https://github.com/navikt/altinn-admin) ",
             contact = Contact(
                 name = "Slack #Team_Altinn",
                 url = "https://github.com/navikt/altinn-admin",
@@ -149,8 +146,8 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     }
     val wellKnown = getWellKnown(environment.azure.azureAppWellKnownUrl)
     val jwkProvider = JwkProviderBuilder(URL(wellKnown.jwks_uri))
-        // cache up to 10 JWKs for 24 hours
-        .cached(10, 24, TimeUnit.HOURS)
+        // cache up to 10 JWKs for 2 hours
+        .cached(10, 2, TimeUnit.HOURS)
         // if not cached, only allow max 10 different keys per minute to be fetched from external provider
         .rateLimited(10, 1, TimeUnit.MINUTES)
         .build()
@@ -165,10 +162,10 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     installCommon(environment, applicationState, httpClient)
 }
 
+@OptIn(KtorExperimentalLocationsAPI::class)
 fun Application.installCommon(environment: Environment, applicationState: ApplicationState, httpClient: HttpClient) {
     install(Sessions) {
-        cookie<UserSession>("user_session") {
-        }
+        cookie<UserSession>("user_session")
     }
 
     install(DefaultHeaders) {
@@ -242,7 +239,7 @@ fun Application.installCommon(environment: Environment, applicationState: Applic
         get("$API_V1/apidocs") { call.respondRedirect(SWAGGER_URL_V1) }
         get("$API_V1/apidocs/{fileName}") {
             val fileName = call.parameters["fileName"]
-            if (fileName == "swagger.json") call.respond(swagger!!) else swaggerUI.serve(fileName, call)
+            if (fileName == "swagger.json") call.respond(swagger) else swaggerUI.serve(fileName, call)
         }
         authenticate("auth-oauth-microsoft") {
             get("/oauth2/login") {}
@@ -294,7 +291,6 @@ fun Application.installCommon(environment: Environment, applicationState: Applic
     }
 }
 
-@OptIn(InternalAPI::class)
 fun Application.installAuthentication(
     environment: Environment,
     httpClient: HttpClient,
@@ -307,13 +303,6 @@ fun Application.installAuthentication(
         jwt(name = AUTHENTICATION_BEARER) {
             verifier(jwkProvider, issuer)
             validate { credentials ->
-                val expire = credentials.payload.expiresAt.toLocalDateTime()
-                val now = now()
-                logger.info { "Time now $now and expire $expire" }
-                if (now.isAfter(expire)) {
-                    logger.warn { "Credential has expired, logout and login again to get a new token" }
-                    return@validate null
-                }
                 if (!credentials.payload.audience.contains(aadb2cClientId)) {
                     logger.warn(
                         "Auth: Unexpected audience for jwt {}, {}, {}",

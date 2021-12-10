@@ -21,7 +21,6 @@ buildscript {
     ext.jaxwsToolsVersion = "2.3.1"
     ext.javaxActivationVersion = "1.1.1"
     ext.cxfVersion = "3.4.1"
-    ext.unboundidVersion = "6.0.0"
     ext.wiremockVersion = "2.27.2"
     ext.joseJwtVersion = "9.0.1"
 
@@ -146,17 +145,10 @@ dependencies {
 
     implementation("javax.activation:activation:$javaxActivationVersion")
     implementation("org.webjars:swagger-ui:$swaggerVersion")
-    implementation("com.unboundid:unboundid-ldapsdk:$unboundidVersion")
 
     runtimeOnly("ch.qos.logback:logback-classic:$logbackVersion")
     runtimeOnly("com.papertrailapp:logback-syslog4j:1.0.0")
 
-//    testImplementation("org.spekframework.spek2:spek-dsl-jvm:$spekVersion") {
-//        exclude group: 'org.jetbrains.kotlin'
-//    }
-//    testRuntimeOnly ("org.spekframework.spek2:spek-runner-junit5:$spekVersion") {
-//        exclude group: 'org.jetbrains.kotlin'
-//    }
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion") {
         exclude group: "org.eclipse.jetty" // conflicts with WireMock

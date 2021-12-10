@@ -15,7 +15,6 @@ import no.altinn.schemas.services.register.srr._2015._06.DeleteRightResponseList
 import no.altinn.schemas.services.register.srr._2015._06.GetRightResponse
 import no.altinn.schemas.services.register.srr._2015._06.GetRightResponseList
 import no.nav.altinn.admin.common.xmlMapper
-import no.nav.altinn.admin.ldap.LDAPBase
 
 private const val vaultApplicationPropertiesPath = "/var/run/secrets/nais.io/vault/application.properties"
 
@@ -79,15 +78,6 @@ data class Environment(
         val port: Int = config[Key("application.port", intType)],
         val users: String = config[Key("approved.users.list", stringType)],
         val baseUrl: String = config[Key("application.baseurl", stringType)],
-
-        // common ldap details for both authentication and group management
-        val ldapConnTimeout: Int = config[Key("ldap.conntimeout", intType)],
-        val ldapUserAttrName: String = config[Key("ldap.userattrname", stringType)],
-
-        // ldap authentication details - production LDAP
-        val ldapAuthHost: String = config[Key("ldap.auth.host", stringType)],
-        val ldapAuthPort: Int = config[Key("ldap.auth.port", intType)],
-        val ldapAuthUserBase: String = config[Key("ldap.auth.userbase", stringType)]
     )
 
     data class SrrService(
@@ -143,8 +133,3 @@ data class Environment(
         //        xmlMapper.readValue(config[Key("mock.ssr.add.response", stringType)], AddRightResponse::class.java))}
     )
 }
-
-fun Environment.Application.getConnectionInfo() = LDAPBase.Companion.ConnectionInfo(ldapAuthHost, ldapAuthPort, ldapConnTimeout)
-
-// Return diverse distinguished name types
-fun Environment.Application.userDN(user: String) = "$ldapUserAttrName=$user,$ldapAuthUserBase"

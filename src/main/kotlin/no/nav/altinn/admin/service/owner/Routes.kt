@@ -24,11 +24,12 @@ import io.ktor.routing.Routing
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
+import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.BearerTokenSecurity
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.Group
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.badRequest
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ok
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.post
-import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.responds
+import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndResponse
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.client.MaskinportenClient
 import no.nav.altinn.admin.common.API_V1
@@ -66,8 +67,8 @@ data class FilterBody(val apikey: String, val subject: String, val sc: String?, 
 
 fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environment) =
     post<Filter, FilterBody>(
-        "Hent reportees på subject".responds(
-            ok<List<Reportee>>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+        "Hent reportees på subject".securityAndResponse(
+            BearerTokenSecurity(), ok<List<Reportee>>(), serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) { param, body ->
 
@@ -126,8 +127,8 @@ data class RightsBody(val apikey: String, val subject: String, val reportee: Str
 
 fun Routing.getRights(maskinporten: MaskinportenClient, environment: Environment) =
     post<Rights, RightsBody>(
-        "Hent rights på subject og reportee".responds(
-            ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+        "Hent rights på subject og reportee".securityAndResponse(
+            BearerTokenSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) { param, body ->
 
@@ -190,8 +191,8 @@ data class SrrBody(val apikey: String, val srr: SrrType, val reportee: String?)
 
 fun Routing.getSrr(maskinporten: MaskinportenClient, environment: Environment) =
     post<SRR, SrrBody>(
-        "Hent info fra tjenesteeier styrt rettighetsregister på tjenesten".responds(
-            ok<List<SrrResponse>>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+        "Hent info fra tjenesteeier styrt rettighetsregister på tjenesten".securityAndResponse(
+            BearerTokenSecurity(), ok<List<SrrResponse>>(), serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) { param, body ->
 
