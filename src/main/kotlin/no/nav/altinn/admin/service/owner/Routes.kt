@@ -18,10 +18,10 @@ import io.ktor.client.statement.HttpStatement
 import io.ktor.client.statement.readBytes
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.response.respond
 import io.ktor.routing.Routing
-import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.BearerTokenSecurity
@@ -36,6 +36,7 @@ import no.nav.altinn.admin.common.API_V1
 import no.nav.altinn.admin.common.objectMapper
 import no.nav.altinn.admin.service.srr.SrrType
 
+@KtorExperimentalLocationsAPI
 fun Routing.ownerApi(maskinporten: MaskinportenClient, environment: Environment) {
     getReportees(maskinporten, environment)
     getRights(maskinporten, environment)
@@ -60,17 +61,19 @@ internal val defaultHttpClient = HttpClient(CIO) {
     }
 }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
 @Location("$API_V1/serviceowner/reportee")
 class Filter
 data class FilterBody(val apikey: String, val subject: String, val sc: String?, val sec: String?)
 
+@KtorExperimentalLocationsAPI
 fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environment) =
     post<Filter, FilterBody>(
         "Hent reportees på subject".securityAndResponse(
             BearerTokenSecurity(), ok<List<Reportee>>(), serviceUnavailable<AnError>(), badRequest<AnError>()
         )
-    ) { param, body ->
+    ) { _, body ->
 
         if (body.apikey.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig apikey"))
@@ -80,11 +83,8 @@ fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environm
             call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig subject"))
             return@post
         }
-        var token = ""
-        runBlocking {
-            token = maskinporten.tokenRequest()
-        }
-        if (token.isNullOrEmpty()) {
+        val token = maskinporten.tokenRequest()
+        if (token.isEmpty()) {
             call.respond(HttpStatusCode.Unauthorized, AnError("No access token"))
             return@post
         }
@@ -120,17 +120,19 @@ fun Routing.getReportees(maskinporten: MaskinportenClient, environment: Environm
         call.respond(output)
     }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
 @Location("$API_V1/serviceowner/authorization/rights")
 class Rights
 data class RightsBody(val apikey: String, val subject: String, val reportee: String)
 
+@KtorExperimentalLocationsAPI
 fun Routing.getRights(maskinporten: MaskinportenClient, environment: Environment) =
     post<Rights, RightsBody>(
         "Hent rights på subject og reportee".securityAndResponse(
             BearerTokenSecurity(), ok<RightsResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>()
         )
-    ) { param, body ->
+    ) { _, body ->
 
         if (body.apikey.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig apikey"))
@@ -144,10 +146,7 @@ fun Routing.getRights(maskinporten: MaskinportenClient, environment: Environment
             call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig reportee"))
             return@post
         }
-        var token = ""
-        runBlocking {
-            token = maskinporten.tokenRequest()
-        }
+        val token = maskinporten.tokenRequest()
         if (token.isEmpty()) {
             call.respond(HttpStatusCode.Unauthorized, AnError("No access token"))
             return@post
@@ -184,17 +183,19 @@ fun Routing.getRights(maskinporten: MaskinportenClient, environment: Environment
         call.respond(output!!)
     }
 
+@KtorExperimentalLocationsAPI
 @Group(GROUP_NAME)
 @Location("$API_V1/serviceowner/srr")
 class SRR
 data class SrrBody(val apikey: String, val srr: SrrType, val reportee: String?)
 
+@KtorExperimentalLocationsAPI
 fun Routing.getSrr(maskinporten: MaskinportenClient, environment: Environment) =
     post<SRR, SrrBody>(
         "Hent info fra tjenesteeier styrt rettighetsregister på tjenesten".securityAndResponse(
             BearerTokenSecurity(), ok<List<SrrResponse>>(), serviceUnavailable<AnError>(), badRequest<AnError>()
         )
-    ) { param, body ->
+    ) { _, body ->
 
         if (body.apikey.isEmpty()) {
             call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig apikey"))
@@ -208,10 +209,7 @@ fun Routing.getSrr(maskinporten: MaskinportenClient, environment: Environment) =
             call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig serviceEditionCode"))
             return@post
         }
-        var token = ""
-        runBlocking {
-            token = maskinporten.tokenRequest()
-        }
+        val token = maskinporten.tokenRequest()
         if (token.isEmpty()) {
             call.respond(HttpStatusCode.Unauthorized, AnError("No access token"))
             return@post
