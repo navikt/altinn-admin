@@ -21,14 +21,12 @@ buildscript {
     ext.jaxwsToolsVersion = "2.3.1"
     ext.javaxActivationVersion = "1.1.1"
     ext.cxfVersion = "3.4.1"
-    ext.wiremockVersion = "2.27.2"
     ext.joseJwtVersion = "9.0.1"
 
     ext.swaggerVersion = "3.6.1"
 
 // test dependencies
     ext.kluentVersion = "1.68"
-//    ext.spekVersion = "2.0.15"
     ext.junitPlatformVersion = "1.7.0"
 
     ext.generatedSourcesDir = "$buildDir/generated/wsdl"
@@ -101,7 +99,6 @@ test {
 }
 
 repositories {
-//    maven { url "https://kotlin.bintray.com/kotlinx" }
     maven { url "https://packages.confluent.io/maven/" }
     maven { url "https://plugins.gradle.org/m2/" }
     mavenCentral()
