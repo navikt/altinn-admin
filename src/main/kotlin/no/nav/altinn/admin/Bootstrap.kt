@@ -45,6 +45,9 @@ import io.ktor.routing.get
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.sessions.Sessions
+import io.ktor.sessions.cookie
+import io.ktor.sessions.sessions
+import io.ktor.sessions.set
 import io.ktor.util.error
 import io.prometheus.client.hotspot.DefaultExports
 import java.net.URL
@@ -72,7 +75,8 @@ import no.nav.altinn.admin.service.correspondence.AltinnCorrespondenceService
 import no.nav.altinn.admin.service.correspondence.correspondenceAPI
 import no.nav.altinn.admin.service.dq.AltinnDQService
 import no.nav.altinn.admin.service.dq.dqAPI
-import no.nav.altinn.admin.service.login.loginAPI
+import no.nav.altinn.admin.service.login.UserSession
+import no.nav.altinn.admin.service.login.sessionAPI
 import no.nav.altinn.admin.service.owner.ownerApi
 import no.nav.altinn.admin.service.prefill.AltinnPrefillService
 import no.nav.altinn.admin.service.prefill.prefillAPI
@@ -157,9 +161,11 @@ fun Application.mainModule(environment: Environment, applicationState: Applicati
     installCommon(environment, applicationState, httpClient)
 }
 
-@OptIn(KtorExperimentalLocationsAPI::class)
+@KtorExperimentalLocationsAPI
 fun Application.installCommon(environment: Environment, applicationState: ApplicationState, httpClient: HttpClient) {
-    install(Sessions)
+    install(Sessions) {
+        cookie<UserSession>("user_session")
+    }
 
     install(DefaultHeaders) {
         header(HttpHeaders.CacheControl, CacheControl.NO_CACHE)
@@ -241,7 +247,8 @@ fun Application.installCommon(environment: Environment, applicationState: Applic
                 val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
                 if (principal != null) {
                     val idToken = principal.extraParameters["id_token"] ?: "no-id-token"
-                    environment.azure.idToken = idToken
+                    val userSession = UserSession(idToken)
+                    call.sessions.set(userSession)
                 }
                 call.respondRedirect(SWAGGER_URL_V1)
             }
@@ -261,7 +268,7 @@ fun Application.installCommon(environment: Environment, applicationState: Applic
 //                call.respondRedirect("/")
 //            }
 //        }
-        loginAPI(environment = environment, httpClient)
+        sessionAPI()
         logger.info { "Installing altinn srr api" }
         ssrAPI(altinnSrrService = altinnSRRService, environment = environment)
         logger.info { "Installing altinn dq api" }

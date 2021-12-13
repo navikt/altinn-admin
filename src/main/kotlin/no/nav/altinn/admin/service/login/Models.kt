@@ -10,7 +10,6 @@ data class UserInfo(
     val groups: List<String>
 )
 
-data class LoginInfo(
-    val info: String,
-    val token: String
+data class UserSession(
+    val idToken: String
 )
