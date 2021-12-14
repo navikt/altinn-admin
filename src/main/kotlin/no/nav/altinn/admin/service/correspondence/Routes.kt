@@ -74,8 +74,8 @@ data class MeldingsFilter(val tjeneste: CorrespondenceType, val fraDato: String,
 @KtorExperimentalLocationsAPI
 fun Routing.getCorrespondenceFiltered(altinnCorrespondenceService: AltinnCorrespondenceService, environment: Environment) =
     get<MeldingsFilter>(
-        "Hent status på filtrerte meldinger fra en meldingstjeneste".responds(
-            ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+        "Hent status på filtrerte meldinger fra en meldingstjeneste".securityAndResponse(
+            BearerTokenSecurity(), ok<CorrespondenceDetails>(), serviceUnavailable<AnError>(), badRequest<AnError>()
         )
     ) { param ->
 
