@@ -36,6 +36,11 @@ spec:
       {{#each outbound-host}}
         - host: "{{this}}"
       {{/each}}
+    inbound:
+      rules:
+        - application: alf-testapp
+          namespace: alf
+          cluster: dev-gcp
   maskinporten:
     enabled: {{use-maskinporten}}
     scopes:
