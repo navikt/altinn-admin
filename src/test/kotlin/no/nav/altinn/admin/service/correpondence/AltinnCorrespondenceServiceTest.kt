@@ -23,6 +23,7 @@ import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.ApplicationState
 import no.nav.altinn.admin.common.encodeBase64
 import no.nav.altinn.admin.common.objectMapper
+import no.nav.altinn.admin.generateJWT
 import no.nav.altinn.admin.installAuthentication
 import no.nav.altinn.admin.installCommon
 import org.amshove.kluent.shouldBeEqualTo
@@ -50,9 +51,7 @@ class AltinnCorrespondenceServiceTest {
         val path = "src/test/resources/jwkset.json"
         val uri = Paths.get(path).toUri().toURL()
         val jwkProvider = JwkProviderBuilder(uri).build()
-        val consumerClientId = "1"
-        val acceptedClientId = "2"
-        val notAcceptedClientId = "4"
+        val acceptedClientId = testEnvironment.azure.azureAppClientId
         engine.application.installAuthentication(
             testEnvironment,
             httpClient,
@@ -99,7 +98,10 @@ class AltinnCorrespondenceServiceTest {
             val req = handleRequest(HttpMethod.Get, "/api/v1/altinn/meldinger/hent/$sc/01-01-2020/2020-07-06/1") {
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
-                addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
             }
 
             req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
@@ -113,7 +115,10 @@ class AltinnCorrespondenceServiceTest {
             val req = handleRequest(HttpMethod.Get, "/api/v1/altinn/meldinger/hent/$sc/2020-01-01/2020-07-06/1") {
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
-                addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
             }
 
             req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest

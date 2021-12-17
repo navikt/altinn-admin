@@ -9,6 +9,7 @@ import io.ktor.client.features.logging.DEFAULT
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logger
 import io.ktor.client.features.logging.Logging
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -21,6 +22,7 @@ import kotlin.test.Test
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.ApplicationState
 import no.nav.altinn.admin.common.objectMapper
+import no.nav.altinn.admin.generateJWT
 import no.nav.altinn.admin.installAuthentication
 import no.nav.altinn.admin.installCommon
 import org.amshove.kluent.shouldBeEqualTo
@@ -48,9 +50,7 @@ class AltinnReceiptServiceTest {
         val path = "src/test/resources/jwkset.json"
         val uri = Paths.get(path).toUri().toURL()
         val jwkProvider = JwkProviderBuilder(uri).build()
-        val consumerClientId = "1"
-        val acceptedClientId = "2"
-        val notAcceptedClientId = "4"
+        val acceptedClientId = testEnvironment.azure.azureAppClientId
         engine.application.installAuthentication(
             testEnvironment,
             httpClient,
@@ -65,7 +65,14 @@ class AltinnReceiptServiceTest {
     @Test
     fun `Hent AR kvitteringer for periode med feil fom dato`() {
         with(engine) {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/arkvitteringer/hent/2020-02-1f/2020-02-18")) {
+            with(
+                handleRequest(HttpMethod.Get, "/api/v1/altinn/arkvitteringer/hent/2020-02-1f/2020-02-18") {
+                    addHeader(
+                        HttpHeaders.Authorization,
+                        "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                    )
+                }
+            ) {
                 response.status() shouldBeEqualTo HttpStatusCode.BadRequest
             }
         }
@@ -74,7 +81,14 @@ class AltinnReceiptServiceTest {
     @Test
     fun `Hent AR kvitteringer for periode med tom fom dato`() {
         with(engine) {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/arkvitteringer/hent/ /2020-02-18")) {
+            with(
+                handleRequest(HttpMethod.Get, "/api/v1/altinn/arkvitteringer/hent/ /2020-02-18") {
+                    addHeader(
+                        HttpHeaders.Authorization,
+                        "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                    )
+                }
+            ) {
                 response.status() shouldBeEqualTo HttpStatusCode.BadRequest
             }
         }
@@ -83,7 +97,14 @@ class AltinnReceiptServiceTest {
     @Test
     fun `Hent AR kvitteringer for periode fom dato etter tom dato`() {
         with(engine) {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/arkvitteringer/hent/2020-02-18/2020-02-10")) {
+            with(
+                handleRequest(HttpMethod.Get, "/api/v1/altinn/arkvitteringer/hent/2020-02-18/2020-02-10") {
+                    addHeader(
+                        HttpHeaders.Authorization,
+                        "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                    )
+                }
+            ) {
                 response.status() shouldBeEqualTo HttpStatusCode.BadRequest
             }
         }
@@ -92,7 +113,14 @@ class AltinnReceiptServiceTest {
     @Test
     fun `Hent AR kvitteringer for periode`() {
         with(engine) {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/arkvitteringer/hent/2020-02-1f/2020-02-18")) {
+            with(
+                handleRequest(HttpMethod.Get, "/api/v1/altinn/arkvitteringer/hent/2020-02-1f/2020-02-18") {
+                    addHeader(
+                        HttpHeaders.Authorization,
+                        "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                    )
+                }
+            ) {
                 response.status() shouldBeEqualTo HttpStatusCode.BadRequest
             }
         }

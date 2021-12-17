@@ -22,6 +22,7 @@ import kotlin.test.Test
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.ApplicationState
 import no.nav.altinn.admin.common.objectMapper
+import no.nav.altinn.admin.generateJWT
 import no.nav.altinn.admin.installAuthentication
 import no.nav.altinn.admin.installCommon
 import org.amshove.kluent.shouldBeEqualTo
@@ -49,9 +50,7 @@ class AltinnDQServiceTest {
         val path = "src/test/resources/jwkset.json"
         val uri = Paths.get(path).toUri().toURL()
         val jwkProvider = JwkProviderBuilder(uri).build()
-        val consumerClientId = "1"
-        val acceptedClientId = "2"
-        val notAcceptedClientId = "4"
+        val acceptedClientId = testEnvironment.azure.azureAppClientId
         engine.application.installAuthentication(
             testEnvironment,
             httpClient,
@@ -83,7 +82,10 @@ class AltinnDQServiceTest {
             val req = handleRequest(HttpMethod.Get, "/api/v1/altinn/dq/elementer/tjeneste/$params") {
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
-                addHeader(HttpHeaders.Authorization, "Bearer 1234567890")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
             }
 
             req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
@@ -97,9 +99,11 @@ class AltinnDQServiceTest {
             val req = handleRequest(HttpMethod.Get, "/api/v1/altinn/dq/hent/$arNummer") {
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
-                addHeader(HttpHeaders.Authorization, "Bearer 1234567890")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
             }
-
             req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
         }
     }
@@ -110,9 +114,11 @@ class AltinnDQServiceTest {
             val arNummer = " "
             val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/dq/slett/$arNummer") {
                 addHeader("Content-Type", "application/json")
-                addHeader(HttpHeaders.Authorization, "Bearer 1234567890")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
             }
-
             req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
         }
     }

@@ -55,7 +55,7 @@ data class Environment(
     )
 
     data class Azure(
-        val azureAppClientId: String = config.getOrElse(Key("azure.app.client.id", stringType), "dummyForUnitTest"),
+        val azureAppClientId: String = config.getOrElse(Key("azure.app.client.id", stringType), "clientid"),
         val azureAppClientSecret: String = config.getOrElse(Key("azure.app.client.secret", stringType), "dummyForUnitTest"),
         val azureAppWellKnownUrl: String = config.getOrElse(Key("azure.app.well.known.url", stringType), "dummyForUnitTest"),
         val azureOpenidConfigTokenEndpoint: String = config.getOrElse(Key("azure.openid.config.token.endpoint", stringType), "dummyForUnitTest"),

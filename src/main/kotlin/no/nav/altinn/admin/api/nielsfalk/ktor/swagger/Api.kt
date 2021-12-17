@@ -26,7 +26,6 @@ import kotlin.reflect.KClass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import no.nav.altinn.admin.AUTHENTICATION_BEARER
-import no.nav.altinn.admin.common.isRunningRemote
 import no.nav.altinn.admin.swagger
 
 /**
@@ -109,11 +108,7 @@ inline fun <reified LOCATION : Any, reified ENTITY : Any> Route.post(
 
     return when (metadata.security) {
         is NoSecurity -> post<LOCATION> { body(this, it, withContext(Dispatchers.IO) { call.receive() }) }
-        is BearerTokenSecurity ->
-            if (isRunningRemote())
-                authenticate(AUTHENTICATION_BEARER) { post<LOCATION> { body(this, it, withContext(Dispatchers.IO) { call.receive() }) } }
-            else
-                post<LOCATION> { body(this, it, withContext(Dispatchers.IO) { call.receive() }) }
+        is BearerTokenSecurity -> authenticate(AUTHENTICATION_BEARER) { post<LOCATION> { body(this, it, withContext(Dispatchers.IO) { call.receive() }) } }
     }
 }
 
@@ -128,11 +123,7 @@ inline fun <reified LOCATION : Any, reified ENTITY : Any> Route.put(
 
     return when (metadata.security) {
         is NoSecurity -> put<LOCATION> { body(this, it, call.receive()) }
-        is BearerTokenSecurity ->
-            if (isRunningRemote())
-                authenticate(AUTHENTICATION_BEARER) { put<LOCATION> { body(this, it, call.receive()) } }
-            else
-                put<LOCATION> { body(this, it, call.receive()) }
+        is BearerTokenSecurity -> authenticate(AUTHENTICATION_BEARER) { put<LOCATION> { body(this, it, call.receive()) } }
     }
 }
 
@@ -147,11 +138,7 @@ inline fun <reified LOCATION : Any> Route.get(
 
     return when (metadata.security) {
         is NoSecurity -> get<LOCATION> { body(this, it) }
-        is BearerTokenSecurity ->
-            if (isRunningRemote())
-                authenticate(AUTHENTICATION_BEARER) { get<LOCATION> { body(this, it) } }
-            else
-                get<LOCATION> { body(this, it) }
+        is BearerTokenSecurity -> authenticate(AUTHENTICATION_BEARER) { get<LOCATION> { body(this, it) } }
     }
 }
 
@@ -166,10 +153,6 @@ inline fun <reified LOCATION : Any> Route.delete(
 
     return when (metadata.security) {
         is NoSecurity -> delete<LOCATION> { body(this, it) }
-        is BearerTokenSecurity ->
-            if (isRunningRemote())
-                authenticate(AUTHENTICATION_BEARER) { delete<LOCATION> { body(this, it) } }
-            else
-                delete<LOCATION> { body(this, it) }
+        is BearerTokenSecurity -> authenticate(AUTHENTICATION_BEARER) { delete<LOCATION> { body(this, it) } }
     }
 }

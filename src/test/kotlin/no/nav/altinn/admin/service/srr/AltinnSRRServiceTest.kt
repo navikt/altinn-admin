@@ -29,6 +29,7 @@ import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.ApplicationState
 import no.nav.altinn.admin.common.objectMapper
 import no.nav.altinn.admin.common.xmlMapper
+import no.nav.altinn.admin.generateJWT
 import no.nav.altinn.admin.installAuthentication
 import no.nav.altinn.admin.installCommon
 import org.amshove.kluent.shouldBeEqualTo
@@ -56,9 +57,7 @@ class AltinnSRRServiceTest {
         val path = "src/test/resources/jwkset.json"
         val uri = Paths.get(path).toUri().toURL()
         val jwkProvider = JwkProviderBuilder(uri).build()
-        val consumerClientId = "1"
-        val acceptedClientId = "2"
-        val notAcceptedClientId = "4"
+        val acceptedClientId = testEnvironment.azure.azureAppClientId
         engine.application.installAuthentication(
             testEnvironment,
             httpClient,
@@ -84,7 +83,10 @@ class AltinnSRRServiceTest {
                 )
             )
             val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
-                addHeader(HttpHeaders.Authorization, "Bearer 1234567890")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
                 setBody(test)
@@ -108,7 +110,10 @@ class AltinnSRRServiceTest {
                 )
             )
             val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
-                addHeader(HttpHeaders.Authorization, "Bearer 1234567890")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
                 setBody(test)
@@ -132,7 +137,10 @@ class AltinnSRRServiceTest {
                 )
             )
             val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
-                addHeader(HttpHeaders.Authorization, "Bearer 1234567890")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
                 setBody(test)
@@ -156,7 +164,10 @@ class AltinnSRRServiceTest {
                 )
             )
             val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
-                addHeader(HttpHeaders.Authorization, "Bearer 1234567890")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
                 setBody(test)
@@ -180,7 +191,10 @@ class AltinnSRRServiceTest {
                 )
             )
             val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
-                addHeader(HttpHeaders.Authorization, "Bearer 1234567890")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
                 setBody(test)
@@ -219,7 +233,10 @@ class AltinnSRRServiceTest {
             )
 
             val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
-                addHeader(HttpHeaders.Authorization, "Bearer 1234567890")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
                 setBody(test)
@@ -258,7 +275,10 @@ class AltinnSRRServiceTest {
             )
 
             val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
-                addHeader(HttpHeaders.Authorization, "Bearer 1234567890")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
                 setBody(test)
@@ -297,7 +317,10 @@ class AltinnSRRServiceTest {
             )
 
             val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
-                addHeader(HttpHeaders.Authorization, "Bearer 1234567890")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
                 setBody(test)
@@ -336,7 +359,10 @@ class AltinnSRRServiceTest {
             )
 
             val req = handleRequest(HttpMethod.Post, "/api/v1/altinn/rettighetsregister/leggtil") {
-                addHeader(HttpHeaders.Authorization, "Bearer 1234567890")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
                 setBody(test)
@@ -355,7 +381,10 @@ class AltinnSRRServiceTest {
             val domene = "*.nav.no"
             val params = "/$tjeneste/$orgnr/$lesEllerSkriv/$domene"
             val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
-                addHeader(HttpHeaders.Authorization, "Bearer 1234567890")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
             }
@@ -372,7 +401,10 @@ class AltinnSRRServiceTest {
             val domene = "*.nav.no"
             val params = "/$tjeneste/$orgnr/$lesEllerSkriv/$domene"
             val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
-                addHeader(HttpHeaders.Authorization, "Bearer 1234567890")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
             }
@@ -406,7 +438,10 @@ class AltinnSRRServiceTest {
             val domene = " "
             val params = "/$tjeneste/$orgnr/$lesEllerSkriv/$domene"
             val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
-                addHeader(HttpHeaders.Authorization, "Bearer 1234567890")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
             }
@@ -423,7 +458,10 @@ class AltinnSRRServiceTest {
             val domene = "*.nav.no"
             val params = "/$tjeneste/$orgnr/$lesEllerSkriv/$domene"
             val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
-                addHeader(HttpHeaders.Authorization, "Bearer 1234567890")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
             }
@@ -453,7 +491,10 @@ class AltinnSRRServiceTest {
             val domene = "*.nav.no"
             val params = "/$tjeneste/$orgnr/$lesEllerSkriv/$domene"
             val req = handleRequest(HttpMethod.Delete, "/api/v1/altinn/rettighetsregister/slett$params") {
-                addHeader(HttpHeaders.Authorization, "Bearer 1234567890")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
             }
@@ -492,7 +533,16 @@ class AltinnSRRServiceTest {
     @Test
     fun `Hent rettigheter for alle virksomheter`() {
         with(engine) {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/tjenester/Samtykke_AAP")) {
+            with(
+                handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/tjenester/Samtykke_AAP") {
+                    addHeader(
+                        HttpHeaders.Authorization,
+                        "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                    )
+                    addHeader(HttpHeaders.Accept, "application/json")
+                    addHeader("Content-Type", "application/json")
+                }
+            ) {
                 response.status() shouldBeEqualTo HttpStatusCode.OK
             }
         }
