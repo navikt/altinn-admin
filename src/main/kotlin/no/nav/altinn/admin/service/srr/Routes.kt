@@ -17,7 +17,6 @@ import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.delete
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.get
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.ok
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.post
-import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.responds
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.securityAndResponse
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.serviceUnavailable
 import no.nav.altinn.admin.api.nielsfalk.ktor.swagger.unAuthorized
@@ -94,7 +93,7 @@ data class RettighetsregisterUtgave(val tjeneste: SrrType)
 
 @KtorExperimentalLocationsAPI
 fun Routing.getRightsListServiceEdition(altinnSrrService: AltinnSRRService, environment: Environment) =
-    get<RettighetsregisterUtgave>("hent rettigheter på tjenesteutgave for alle virksomheter".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) { param ->
+    get<RettighetsregisterUtgave>("hent rettigheter på tjenesteutgave for alle virksomheter".securityAndResponse(BearerTokenSecurity(), ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) { param ->
         val scList = filterOutServiceCode(environment, param.tjeneste.servicecode)
         if (scList.size == 0) {
             call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig tjeneste kode oppgitt"))
@@ -140,7 +139,7 @@ data class FirmaRettigheter(val tjeneste: SrrType, val orgnr: String)
 
 @KtorExperimentalLocationsAPI
 fun Routing.getRightsForReportee(altinnSrrService: AltinnSRRService, environment: Environment) =
-    get<FirmaRettigheter>("hent rettigheter for en virksomhet".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) { param ->
+    get<FirmaRettigheter>("hent rettigheter for en virksomhet".securityAndResponse(BearerTokenSecurity(), ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) { param ->
         val virksomhetsnummer: String? = param.orgnr
         val scList = filterOutServiceCode(environment, param.tjeneste.servicecode)
         if (scList.size == 0) {
@@ -186,7 +185,7 @@ data class FirmaRettigheterUtgave(val tjeneste: SrrType, val orgnr: String)
 
 @KtorExperimentalLocationsAPI
 fun Routing.getRightsForReporteeServiceEdition(altinnSrrService: AltinnSRRService, environment: Environment) =
-    get<FirmaRettigheterUtgave>("hent rettigheter på en tjenesteutgave for en virksomhet".responds(ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) { param ->
+    get<FirmaRettigheterUtgave>("hent rettigheter på en tjenesteutgave for en virksomhet".securityAndResponse(BearerTokenSecurity(), ok<RegistryResponse>(), serviceUnavailable<AnError>(), badRequest<AnError>())) { param ->
         val virksomhetsnummer: String? = param.orgnr
 
         val scList = filterOutServiceCode(environment, param.tjeneste.servicecode)

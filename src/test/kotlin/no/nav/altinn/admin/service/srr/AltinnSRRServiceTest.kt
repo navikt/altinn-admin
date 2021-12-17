@@ -509,7 +509,12 @@ class AltinnSRRServiceTest {
                 handleRequest(
                     HttpMethod.Get,
                     "/api/v1/altinn/rettighetsregister/hent/tjenester/org/Samtykke_AAP/123"
-                )
+                ) {
+                    addHeader(
+                        HttpHeaders.Authorization,
+                        "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                    )
+                }
             ) {
                 response.status() shouldBeEqualTo HttpStatusCode.BadRequest
             }
@@ -523,7 +528,12 @@ class AltinnSRRServiceTest {
                 handleRequest(
                     HttpMethod.Get,
                     "/api/v1/altinn/rettighetsregister/hent/tjenester/org/Samtykke_AAP/123123123"
-                )
+                ) {
+                    addHeader(
+                        HttpHeaders.Authorization,
+                        "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                    )
+                }
             ) {
                 response.status() shouldBeEqualTo HttpStatusCode.OK
             }
@@ -551,7 +561,14 @@ class AltinnSRRServiceTest {
     @Test
     fun `Hent rettigheter på UFORE for alle virksomheter`() {
         with(engine) {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/tjeneste/Samtykke_UFORE")) {
+            with(
+                handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/tjeneste/Samtykke_UFORE") {
+                    addHeader(
+                        HttpHeaders.Authorization,
+                        "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                    )
+                }
+            ) {
                 response.status() shouldBeEqualTo HttpStatusCode.BadRequest
             }
         }
@@ -560,7 +577,14 @@ class AltinnSRRServiceTest {
     @Test
     fun `Hent rettigheter på AAP for alle virksomheter`() {
         with(engine) {
-            with(handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/tjeneste/Samtykke_AAP")) {
+            with(
+                handleRequest(HttpMethod.Get, "/api/v1/altinn/rettighetsregister/hent/tjeneste/Samtykke_AAP") {
+                    addHeader(
+                        HttpHeaders.Authorization,
+                        "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                    )
+                }
+            ) {
                 response.status() shouldBeEqualTo HttpStatusCode.OK
             }
         }

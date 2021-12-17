@@ -21,7 +21,6 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import no.nav.altinn.admin.Environment
 import no.nav.altinn.admin.common.ApplicationState
-import no.nav.altinn.admin.common.encodeBase64
 import no.nav.altinn.admin.common.objectMapper
 import no.nav.altinn.admin.generateJWT
 import no.nav.altinn.admin.installAuthentication
@@ -70,7 +69,10 @@ class AltinnCorrespondenceServiceTest {
             val req = handleRequest(HttpMethod.Get, "/api/v1/altinn/meldinger/hent/$params") {
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
-                addHeader(HttpHeaders.Authorization, "Bearer 1234567890")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
             }
 
             req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
@@ -84,7 +86,10 @@ class AltinnCorrespondenceServiceTest {
             val req = handleRequest(HttpMethod.Get, "/api/v1/altinn/meldinger/hent/$sc/2020-01-01/2020-0706") {
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
-                addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
             }
 
             req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
@@ -132,7 +137,10 @@ class AltinnCorrespondenceServiceTest {
             val req = handleRequest(HttpMethod.Get, "/api/v2/altinn/meldinger/hent/$params") {
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
-                addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000002:itest2".toByteArray())}")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
             }
 
             req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
@@ -146,7 +154,10 @@ class AltinnCorrespondenceServiceTest {
             val req = handleRequest(HttpMethod.Get, "/api/v2/altinn/meldinger/hent/$sc/1/2020-01-01/2020-0706") {
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
-                addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
             }
 
             req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
@@ -160,7 +171,10 @@ class AltinnCorrespondenceServiceTest {
             val req = handleRequest(HttpMethod.Get, "/api/v2/altinn/meldinger/hent/$sc/1/2020-01-01/2020-0706") {
                 addHeader(HttpHeaders.Accept, "application/json")
                 addHeader("Content-Type", "application/json")
-                addHeader(HttpHeaders.Authorization, "Basic ${encodeBase64("n000001:itest1".toByteArray())}")
+                addHeader(
+                    HttpHeaders.Authorization,
+                    "Bearer ${generateJWT("2", testEnvironment.azure.azureAppClientId)}"
+                )
             }
 
             req.response.status() shouldBeEqualTo HttpStatusCode.BadRequest
