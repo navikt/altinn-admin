@@ -58,9 +58,6 @@ application {
     mainClass.set("$bootStrapClass")
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
-
 compileKotlin {
     dependsOn 'wsdl2java'
 }

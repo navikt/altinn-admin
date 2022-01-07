@@ -112,3 +112,46 @@ fun Routing.getCorresondenceReceipts(altinnReceiptService: AltinnReceiptService,
             call.respond(HttpStatusCode.InternalServerError, AnError("IReceiptAgencyExternalBasic.GetReceiptListBasicV2 feilet: ${ee.message}"))
         }
     }
+
+@Group(GROUP_NAME)
+@Location("$API_V1/altinn/formidlingskvitteringer/hent/{fraDato}/{tilDato}")
+data class FormidlingsPeriode(val fraDato: String, val tilDato: String)
+
+fun Routing.geBrokerServiceReceipts(altinnReceiptService: AltinnReceiptService, environment: Environment) =
+    get<FormidlingsPeriode>(
+        "Hent liste av sendte formidlingskvitteringer for periode".securityAndResponse(
+            BearerTokenSecurity(), ok<CorrespondenceReceiptItems>(), serviceUnavailable<AnError>(), badRequest<AnError>()
+        )
+    ) {
+        param ->
+
+        val fraDato = param.fraDato.trim()
+        val tilDato = param.tilDato.trim()
+        if (fraDato.isNullOrEmpty() || tilDato.isNullOrEmpty()) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Mangler gyldig fra eller til dato for periode"))
+            return@get
+        }
+        if (!isDate(fraDato) || !isDate(tilDato)) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Ugyldig fra eller til dato format [yyyy-mm-dd]"))
+            return@get
+        }
+        if (fraDato > tilDato) {
+            call.respond(HttpStatusCode.BadRequest, AnError("Fra dato kan ikke være større enn til dato"))
+            return@get
+        }
+
+        try {
+            val receipts = altinnReceiptService.getBrokerServiceReceipts(fraDato, tilDato)
+            if (receipts.status == "Ok")
+                call.respond(receipts)
+            else
+                call.respond(HttpStatusCode.NotFound, "Failed to get BrokerService receipts")
+        } catch (ee: Exception) {
+            logger.error {
+                "IReceiptAgencyExternalBasic.GetReceiptListBasicV2 feilet  \n" +
+                    "\n ErrorMessage  ${ee.message}" +
+                    "\n LocalizedErrorMessage  ${ee.localizedMessage}"
+            }
+            call.respond(HttpStatusCode.InternalServerError, AnError("IReceiptAgencyExternalBasic.GetReceiptListBasicV2 feilet: ${ee.message}"))
+        }
+    }

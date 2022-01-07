@@ -90,4 +90,41 @@ class AltinnReceiptService(env: Environment, iReceiptAgencyExternalBasicFactory:
             return CorrespondenceReceiptItems("Failed", 0, emptyList())
         }
     }
+
+    fun getBrokerServiceReceipts(fraDato: String, tilDato: String): CorrespondenceReceiptItems {
+        try {
+            if (!isDate(fraDato) || !isDate(tilDato))
+                throw IllegalArgumentException("Wrong date format")
+            val d1 = dateToXmlGregorianCalendar(fraDato)
+            val d2 = dateToXmlGregorianCalendar(tilDato)
+            val receiptItems = iReceiptAgencyExternalBasic.getReceiptListBasicV2(
+                altinnUsername, altinnUserPassword,
+                ReceiptType.BROKER_SERVICE, d1, d2
+            ).receipt
+
+            var receiptIdList = mutableListOf<CorrespondenceReceipt>()
+            for (receipt in receiptItems) {
+                if (receipt.receiptStatus != ReceiptStatusEnum.OK) {
+                    continue
+                }
+
+                val esr = receipt.references.reference.find { it.referenceType == ReferenceType.EXTERNAL_SHIPMENT_REFERENCE }?.referenceValue
+                    ?: continue
+
+                receiptIdList.add(CorrespondenceReceipt(receipt.receiptId.toString(), esr))
+            }
+            return CorrespondenceReceiptItems("Ok", receiptIdList.size, receiptIdList)
+        } catch (e: IReceiptAgencyExternalBasicGetReceiptListBasicV2AltinnFaultFaultFaultMessage) {
+            logger.error {
+                "Exception IReceiptAgencyExternalBasic.getReceiptListBasicV2\n" +
+                    "\n ErrorMessage  ${e.faultInfo.altinnErrorMessage}" +
+                    "\n ExtendedErrorMessage  ${e.faultInfo.altinnExtendedErrorMessage}" +
+                    "\n LocalizedErrorMessage  ${e.faultInfo.altinnLocalizedErrorMessage}" +
+                    "\n ErrorGuid  ${e.faultInfo.errorGuid}" +
+                    "\n UserGuid  ${e.faultInfo.userGuid}" +
+                    "\n UserId  ${e.faultInfo.userId}"
+            }
+            return CorrespondenceReceiptItems("Failed", 0, emptyList())
+        }
+    }
 }
