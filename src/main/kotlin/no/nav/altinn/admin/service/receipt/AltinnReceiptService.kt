@@ -103,6 +103,7 @@ class AltinnReceiptService(env: Environment, iReceiptAgencyExternalBasicFactory:
             ).receipt
 
             var receiptIdList = mutableListOf<CorrespondenceReceipt>()
+            logger.info { "Found ${receiptItems.size} BrokerServices receipts" }
             for (receipt in receiptItems) {
                 if (receipt.receiptStatus != ReceiptStatusEnum.OK) {
                     continue
