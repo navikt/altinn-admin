@@ -20,6 +20,7 @@ import no.nav.altinn.admin.common.isDate
 fun Routing.receiptsAPI(altinnReceiptService: AltinnReceiptService, environment: Environment) {
     getInboundReceipts(altinnReceiptService, environment)
     getCorresondenceReceipts(altinnReceiptService, environment)
+    geBrokerServiceReceipts(altinnReceiptService, environment)
 }
 
 internal data class AnError(val error: String)
