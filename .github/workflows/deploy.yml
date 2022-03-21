@@ -81,7 +81,6 @@ jobs:
 #          CLUSTER: dev-fss
 #          RESOURCE: .nais/naiserator.yaml
 #          VARS: .nais/config-dev.yaml
-
   deploy-dev-gcp:
     name: Deploy to dev gcp
     needs: build
