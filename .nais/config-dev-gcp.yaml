@@ -2,3 +2,4 @@ ingresses: ["https://altinn-admin.dev.intern.nav.no"]
 profile: preprod
 outbound-host:
   - tt02.altinn.no
+  - ldapgw.preprod.local
