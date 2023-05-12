@@ -15,12 +15,12 @@ buildscript {
     ext.benManesVersion = '0.39.0'
     ext.shadowVersion = '7.0.0'
     ext.kotlinterVersion = '3.4.5'
-    ext.wsdl2javaVersion = '2.0'
+    ext.wsdl2javaVersion = '3.0.0'
 
     ext.jaxwsVersion = "2.3.1"
     ext.jaxwsToolsVersion = "2.3.1"
     ext.javaxActivationVersion = "1.1.1"
-    ext.cxfVersion = "3.4.1"
+    ext.cxf_version = "3.4.1"
     ext.unboundidVersion = "6.0.0"
     ext.tjenestespesifikasjonerVersion = "1.2019.09.25-00.21-49b69f0625e0"
     ext.wiremockVersion = "2.27.2"
@@ -65,11 +65,11 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 compileKotlin {
-    dependsOn 'wsdl2java'
+    dependsOn 'wsdl2javaTask'
 }
 
 lintKotlinMain {
-    dependsOn 'wsdl2java'
+    dependsOn 'wsdl2javaTask'
 }
 
 wsdl2java {
@@ -79,6 +79,9 @@ wsdl2java {
             ["-xjc", "-b", "$projectDir/src/main/xjb/binding.xml", "$projectDir/src/main/resources/wsdl/ReceiptAgencyExternalBasic.wsdl"],
             ["-xjc", "-b", "$projectDir/src/main/xjb/binding.xml", "$projectDir/src/main/resources/wsdl/ServiceOwnerArchiveExternalBasic.wsdl"]
     ]
+
+    cxfVersion = cxf_version
+    cxfPluginVersion = cxf_version
 }
 
 shadowJar {
@@ -99,7 +102,6 @@ test {
 }
 
 repositories {
-    maven { url "https://kotlin.bintray.com/kotlinx" }
     maven { url "https://packages.confluent.io/maven/" }
     maven { url "https://plugins.gradle.org/m2/" }
     mavenCentral()
@@ -127,10 +129,10 @@ dependencies {
             "no.nav.tjenestespesifikasjoner:altinn-download-queue-external:$tjenestespesifikasjonerVersion",
             "no.nav.tjenestespesifikasjoner:altinn-correspondence-agency-external-basic:$tjenestespesifikasjonerVersion",
             "no.nav.tjenestespesifikasjoner:altinn-pre-fill:$tjenestespesifikasjonerVersion",
-            "org.apache.cxf:cxf-rt-frontend-jaxws:$cxfVersion",
-            "org.apache.cxf:cxf-rt-features-logging:$cxfVersion",
-            "org.apache.cxf:cxf-rt-transports-http:$cxfVersion",
-            "org.apache.cxf:cxf-rt-ws-security:$cxfVersion",
+            "org.apache.cxf:cxf-rt-frontend-jaxws:$cxf_version",
+            "org.apache.cxf:cxf-rt-features-logging:$cxf_version",
+            "org.apache.cxf:cxf-rt-transports-http:$cxf_version",
+            "org.apache.cxf:cxf-rt-ws-security:$cxf_version",
             "org.apache.ws.xmlschema:xmlschema-core:2.2.4" // Force newer version of XMLSchema to fix illegal reflective access warning
 
     implementation("com.sun.xml.ws:jaxws-tools:$jaxwsToolsVersion") {

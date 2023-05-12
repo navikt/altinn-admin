@@ -1,6 +1,7 @@
 name: Build, push, and deploy
 
 on:
+  workflow_dispatch:
   push:
     paths-ignore:
       - 'alerts.yaml'
@@ -82,18 +83,18 @@ jobs:
           RESOURCE: .nais/naiserator.yaml
           VARS: .nais/config-dev.yaml
 
-#  deploy-dev-gcp:
-#    name: Deploy to dev gcp
-#    needs: deploy-dev
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v1
-#      - uses: nais/deploy/actions/deploy@v1
-#        env:
-#          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-#          CLUSTER: dev-gcp
-#          RESOURCE: .nais/naiserator-gcp.yaml
-#          VARS: .nais/config-dev-gcp.yaml
+  deploy-dev-gcp:
+    name: Deploy to dev gcp
+    needs: deploy-dev
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/naiserator-gcp.yaml
+          VARS: .nais/config-dev-gcp.yaml
 
   deploy-prod:
     name: Deploy to prod fss
