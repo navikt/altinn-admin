@@ -1,39 +1,61 @@
-apiVersion: "nais.io/v1"
-kind: "Alert"
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
 metadata:
   name: altinn-admin-alerts
   namespace: alf
   labels:
     team: alf
 spec:
-  receivers: # receivers for all alerts below
-    slack:
-      channel: '#alf-alerts'
-      prependText: '<!here> | ' # this text will be prepended to the Slack alert title
-  alerts:
-    - alert: altinn-admin er nede
-      expr: up{app="altinn-admin", job="kubernetes-pods"} == 0
-      for: 2m
-      description: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
-      action: "`kubectl describe pod {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for logger"
-      severity: danger
-    - alert: altinn-admin feil i selftest
-      expr: 'selftests_aggregate_result_status{app="altinn-admin"} > 0'
-      for: 1m
-      action: "Sjekk {{ $labels.app }} i {{ $labels.kubernetes_namespace }} sine selftest for å se hva som er galt"
-      severity: danger
-    - alert: altinn-admin DSOP AAP har rettighetsregler som har kort gyldighetstid igjen
-      expr: 'altinn_admin_expiring_rettighetsregler{sc="5252", sec="1", app="altinn-admin"} > 0'
-      for: 1m
-      action: "Sjekk <https://logs.adeo.no/goto/c0f05189ab7a15724bf0659352360760|*error og warning log i kibana*> for å se hvilke virksomheter det gjelder"
-      severity: warning
-    - alert: altinn-admin DSOP AAP og UFO har rettighetsregler som har kort gyldighetstid igjen
-      expr: 'altinn_admin_expiring_rettighetsregler{sc="5252", sec="2", app="altinn-admin"} > 0'
-      for: 1m
-      action: "Sjekk <https://logs.adeo.no/goto/c0f05189ab7a15724bf0659352360760|*error og warning log i kibana*> for å se hvilke virksomheter det gjelder"
-      severity: warning
-    - alert: altinn-admin DSOP UFO har rettighetsregler som har kort gyldighetstid igjen
-      expr: 'altinn_admin_expiring_rettighetsregler{sc="5382", app="altinn-admin"} > 0'
-      for: 1m
-      action: "Sjekk <https://logs.adeo.no/goto/c0f05189ab7a15724bf0659352360760|*error og warning log i kibana*> for å se hvilke virksomheter det gjelder"
-      severity: warning
+  groups:
+    - name: alf-alerts
+      rules:
+        - alert: altinn-admin er nede
+          expr: up{app="altinn-admin", job="kubernetes-pods"} == 0
+          for: 2m
+          annotations:
+            consequence: Application is unavailable
+            action: "`kubectl describe pod {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }} -n {{ $labels.kubernetes_namespace }}` for logger"
+            summary: "{{ $labels.app }} er nede i {{ $labels.kubernetes_namespace }}"
+          labels:
+            namespace: alf
+            severity: danger
+        - alert: altinn-admin feil i selftest
+          expr: 'selftests_aggregate_result_status{app="altinn-admin"} > 0'
+          for: 1m
+          annotations:
+            consequence: Application is running with an error
+            action: "Sjekk {{ $labels.app }} i {{ $labels.kubernetes_namespace }} sine selftest for å se hva som er galt"
+            summary: "Selftest feiler. Sjekk hva som er galt!"
+          labels:
+            namespace: alf
+            severity: danger
+        - alert: altinn-admin DSOP AAP har rettighetsregler som har kort gyldighetstid igjen
+          expr: 'altinn_admin_expiring_rettighetsregler{sc="5252", sec="1", app="altinn-admin"} > 0'
+          for: 1m
+          annotations:
+            consequence: Application may be unavailable for clients
+            action: "Sjekk <https://logs.adeo.no/goto/c0f05189ab7a15724bf0659352360760|*error og warning log i kibana*> for å se hvilke virksomheter det gjelder"
+            summary: "altinn-admin DSOP AAP har rettighetsregler som har kort gyldighetstid igjen"
+          labels:
+            namespace: alf
+            severity: warning
+        - alert: altinn-admin DSOP AAP og UFO har rettighetsregler som har kort gyldighetstid igjen
+          expr: 'altinn_admin_expiring_rettighetsregler{sc="5252", sec="2", app="altinn-admin"} > 0'
+          for: 1m
+          annotations:
+            consequence: Application may be unavailable for clients
+            action: "Sjekk <https://logs.adeo.no/goto/c0f05189ab7a15724bf0659352360760|*error og warning log i kibana*> for å se hvilke virksomheter det gjelder"
+            summary: "altinn-admin DSOP AAP og UFO har rettighetsregler som har kort gyldighetstid igjen"
+          labels:
+            namespace: alf
+            severity: warning
+        - alert: altinn-admin DSOP UFO har rettighetsregler som har kort gyldighetstid igjen
+          expr: 'altinn_admin_expiring_rettighetsregler{sc="5382", app="altinn-admin"} > 0'
+          for: 1m
+          annotations:
+            consequence: Application may be unavailable for clients
+            action: "Sjekk <https://logs.adeo.no/goto/c0f05189ab7a15724bf0659352360760|*error og warning log i kibana*> for å se hvilke virksomheter det gjelder"
+            summary: "altinn-admin DSOP UFO har rettighetsregler som har kort gyldighetstid igjen"
+          labels:
+            namespace: alf
+            severity: warning
