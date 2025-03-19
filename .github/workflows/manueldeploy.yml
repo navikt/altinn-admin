@@ -1,0 +1,61 @@
+name: Manual deploy
+on:
+  workflow_dispatch:
+    inputs:
+      image_navn:
+        description: 'Docker image'
+        required: true
+        type: string
+      prod:
+        description: 'deploy prod?'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  deploy-dev:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: nais/deploy/actions/deploy@7c152a10f4da3ca352d57a25eba0b3a8e04882f9
+        env:
+          CLUSTER: dev-fss
+          RESOURCE: .nais/naiserator.yaml
+          VARS: .nais/config-dev.yaml
+          IMAGE: ${{ inputs.image_navn }}
+
+  deploy-dev-gcp:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: nais/deploy/actions/deploy@7c152a10f4da3ca352d57a25eba0b3a8e04882f9
+        env:
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/naiserator-gcp.yaml
+          VARS: .nais/config-dev-gcp.yaml
+          IMAGE: ${{ inputs.image_navn }}
+
+  deploy-prod:
+    if: ${{ inputs.prod == true }}
+    needs: [deploy-dev, deploy-dev-gcp]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: nais/deploy/actions/deploy@7c152a10f4da3ca352d57a25eba0b3a8e04882f9
+        env:
+          CLUSTER: prod-fss
+          RESOURCE: .nais/naiserator.yaml
+          VARS: .nais/config-prod.yaml
+          IMAGE: ${{ inputs.image_navn }}
