@@ -4,12 +4,12 @@ buildscript {
     ext.kotlinVersion = "1.5.21"
     ext.ktorVersion = "1.6.1"
     ext.kotlinxCoroutinesVersion = "1.5.1"
-    ext.jacksonVersion = "2.13.0-rc1"
+    ext.jacksonVersion = "2.15.3"
 
     ext.prometheusVersion = "0.11.0"
     ext.kotlinloggingVersion = "2.0.10"
     ext.logstashEncoderVersion = "6.6"
-    ext.logbackVersion = "1.3.0-alpha5"
+    ext.logbackVersion = "1.4.14"
 
     ext.konfigVersion = "1.6.10.0"
     ext.benManesVersion = '0.39.0'
@@ -20,12 +20,12 @@ buildscript {
     ext.jaxwsVersion = "2.3.1"
     ext.jaxwsToolsVersion = "2.3.1"
     ext.javaxActivationVersion = "1.1.1"
-    ext.cxf_version = "3.4.1"
+    ext.cxf_version = "3.6.7"
     ext.unboundidVersion = "6.0.0"
     ext.tjenestespesifikasjonerVersion = "1.2019.09.25-00.21-49b69f0625e0"
     ext.wiremockVersion = "2.27.2"
 
-    ext.swaggerVersion = "3.6.1"
+    ext.swaggerVersion = "5.26.2"
 
 // test dependencies
     ext.kluentVersion = "1.68"
@@ -104,6 +104,7 @@ test {
 repositories {
     maven { url "https://packages.confluent.io/maven/" }
     maven { url "https://plugins.gradle.org/m2/" }
+    maven { url "https://build.shibboleth.net/nexus/content/repositories/releases/" }
     mavenCentral()
 }
 
@@ -132,8 +133,20 @@ dependencies {
             "org.apache.cxf:cxf-rt-frontend-jaxws:$cxf_version",
             "org.apache.cxf:cxf-rt-features-logging:$cxf_version",
             "org.apache.cxf:cxf-rt-transports-http:$cxf_version",
-            "org.apache.cxf:cxf-rt-ws-security:$cxf_version",
             "org.apache.ws.xmlschema:xmlschema-core:2.2.4" // Force newer version of XMLSchema to fix illegal reflective access warning
+
+    implementation("org.apache.cxf:cxf-rt-ws-security:$cxf_version") {
+        exclude group: 'commons-collections', module: 'commons-collections'
+    }
+    implementation "commons-collections:commons-collections:3.2.2" // patched version
+
+    configurations {
+        all { resolutionStrategy {
+            force 'io.netty:netty-codec:4.1.123.Final'
+            force 'io.netty:netty-codec-http:4.1.123.Final'
+            force 'io.netty:netty-common:4.1.123.Final'
+        }}
+    }
 
     implementation("com.sun.xml.ws:jaxws-tools:$jaxwsToolsVersion") {
         exclude group: 'com.sun.xml.ws', module: 'policy'
