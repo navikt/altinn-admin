@@ -1,4 +1,4 @@
-# altinn-admin
+# Altinn-admin
 
 [![Github Actions](https://github.com/navikt/altinn-admin/workflows/Build,%20push,%20and%20deploy/badge.svg)](https://github.com/navikt/altinn-admin/actions?query=workflow%3A%22Build%2C+push%2C+and+deploy%22)
 
