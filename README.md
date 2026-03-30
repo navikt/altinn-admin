@@ -24,7 +24,8 @@ serviceowners rights register (SRR).
 
 #### Build and run tests
 
-`./gradlew clean build`
+`./gradlew clean build --refresh-dependencies`
+`./gradlew -q dependencies --configuration testRuntimeClasspath`
 
 #### Running locally
 
